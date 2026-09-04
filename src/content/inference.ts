@@ -1,12 +1,2 @@
-import type { ThreeStoriesChallenge, BestExplanationChallenge, MissingVariableChallenge, BaseRateChallenge, CounterfactualChallenge, AnomalyChallenge, HowSureChallenge, InformationValueChallenge, LadderChallenge, CausalChallenge, FastSlowChallenge } from "@/lib/domain/content";
-export const THREE_STORIES: ThreeStoriesChallenge[] = [];
-export const BEST_EXPLANATION: BestExplanationChallenge[] = [];
-export const MISSING_VARIABLE: MissingVariableChallenge[] = [];
-export const BASE_RATE: BaseRateChallenge[] = [];
-export const COUNTERFACTUAL: CounterfactualChallenge[] = [];
-export const ANOMALY: AnomalyChallenge[] = [];
-export const HOW_SURE: HowSureChallenge[] = [];
-export const INFORMATION_VALUE: InformationValueChallenge[] = [];
-export const LADDER: LadderChallenge[] = [];
-export const CAUSAL: CausalChallenge[] = [];
-export const FAST_SLOW: FastSlowChallenge[] = [];
+export { THREE_STORIES, BEST_EXPLANATION, MISSING_VARIABLE, BASE_RATE, COUNTERFACTUAL, ANOMALY } from "./inference-a";
+export { HOW_SURE, INFORMATION_VALUE, LADDER, CAUSAL, FAST_SLOW } from "./inference-b";
