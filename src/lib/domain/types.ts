@@ -1008,7 +1008,7 @@ export interface SessionItem {
   title: string;
   minutes: number;
   /** Why the engine chose this item */
-  reason: "due" | "thread" | "current" | "serendipity" | "strength" | "foundation" | "ritual";
+  reason: "due" | "thread" | "current" | "serendipity" | "strength" | "foundation" | "ritual" | "transfer";
   reasonText: string;
   href: string;
   refId?: string;
