@@ -289,3 +289,21 @@ export function facultyForModule(kind: SessionModuleKind): FacultyId | null {
 }
 
 export { facultyOf };
+
+/** Today's file: the one case waiting on the desk. */
+export async function todaysCase(db: StudyDatabase, profile: UserProfile, dateKey = todayKey()) {
+  const [estimates, attempts] = await Promise.all([db.store("skill_estimates").list(), db.store("case_attempts").list()]);
+  const tested = estimates.filter((e) => e.evidenceCount >= 2).sort((a, b) => a.value - b.value);
+  const weakest = tested.slice(0, 6).map((e) => ({ subskill: e.subskill, faculty: e.faculty, value: e.value }));
+  const level = tested.length ? tested.reduce((s, e) => s + e.value, 0) / tested.length : 0.55;
+  return pickCase(
+    {
+      weakest,
+      completedCases: new Set(attempts.filter((a) => a.status === "completed").map((a) => a.caseId)),
+      activeCase: attempts.find((a) => a.status === "active")?.caseId,
+      interests: profile.interests,
+    },
+    dateKey,
+    level,
+  );
+}
