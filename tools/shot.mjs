@@ -1,0 +1,14 @@
+import { chromium } from "@playwright/test";
+const [,, url, out, w="1280", h="800", theme=""] = process.argv;
+const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" }).catch(async () => chromium.launch());
+const ctx = await browser.newContext({ viewport: { width: +w, height: +h }, deviceScaleFactor: 1, colorScheme: theme === "dark" ? "dark" : "light" });
+const page = await ctx.newPage();
+const errors = [];
+page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
+page.on("pageerror", (e) => errors.push("PAGEERROR " + e.message));
+if (theme) await page.addInitScript((t) => localStorage.setItem("the-study:appearance", t), theme);
+await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
+await page.waitForTimeout(800);
+await page.screenshot({ path: out, fullPage: false });
+console.log(JSON.stringify({ url, errors: errors.slice(0, 10), title: await page.title() }));
+await browser.close();
