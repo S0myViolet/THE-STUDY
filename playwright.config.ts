@@ -1,4 +1,8 @@
+import { existsSync } from "node:fs";
 import { defineConfig } from "@playwright/test";
+
+// Use a preinstalled Chromium when one is present (the build environment); otherwise Playwright's own.
+const chromium = process.env.STUDY_CHROMIUM ?? (existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined);
 
 /**
  * End-to-end journeys against the dev server. The tests create their own local
@@ -17,7 +21,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.STUDY_BASE_URL ?? "http://localhost:3000",
     viewport: { width: 1280, height: 860 },
-    launchOptions: { executablePath: process.env.STUDY_CHROMIUM ?? "/opt/pw-browsers/chromium" },
+    launchOptions: chromium ? { executablePath: chromium } : {},
     trace: "retain-on-failure",
   },
   webServer: process.env.STUDY_BASE_URL
