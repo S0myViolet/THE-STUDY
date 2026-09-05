@@ -59,7 +59,10 @@ export function calibrationVerdict(entries: Pick<ConfidenceEntry, "confidence" |
   return { verdict: "well_calibrated", gap, n };
 }
 
-/** Score in [0,1] used as calibration evidence for one entry: rewards matching confidence to correctness. */
+/**
+ * Score in [0,1] used as calibration evidence for one entry. Twice the Brier penalty, so a
+ * confident miss scores zero and only genuinely accurate confidence reads as calibrated.
+ */
 export function calibrationScore(confidence: number, correct: boolean): number {
-  return 1 - brier(confidence, correct);
+  return Math.max(0, Math.round((1 - 2 * brier(confidence, correct)) * 1000) / 1000);
 }

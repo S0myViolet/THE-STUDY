@@ -263,8 +263,18 @@ export interface DetectionResult {
   resolved: RedThread[];
 }
 
-/** Run detection over recent errors and evidence. Safe to call after any exercise. */
-export async function detectRedThreads(db: StudyDatabase, now = new Date()): Promise<DetectionResult> {
+let inflight: Promise<DetectionResult> | null = null;
+
+/** Run detection over recent errors and evidence. Safe to call after any exercise; concurrent calls share one run. */
+export function detectRedThreads(db: StudyDatabase, now = new Date()): Promise<DetectionResult> {
+  if (inflight) return inflight;
+  inflight = runDetection(db, now).finally(() => {
+    inflight = null;
+  });
+  return inflight;
+}
+
+async function runDetection(db: StudyDatabase, now: Date): Promise<DetectionResult> {
   const since = new Date(now.getTime() - WINDOW_DAYS * 86400000).toISOString();
   const [errors, evidence, existing, confidences] = await Promise.all([
     db.store("error_events").list({ filter: (e) => e.createdAt >= since }),
@@ -274,6 +284,18 @@ export async function detectRedThreads(db: StudyDatabase, now = new Date()): Pro
   ]);
   const result: DetectionResult = { created: [], updated: [], improved: [], resolved: [] };
   const store = db.store("red_threads");
+
+  // Merge any duplicate threads for the same pattern (keep the best-evidenced one).
+  const byKey = new Map<string, RedThread[]>();
+  for (const t of existing) byKey.set(t.patternKey, [...(byKey.get(t.patternKey) ?? []), t]);
+  for (const [, list] of byKey) {
+    if (list.length < 2) continue;
+    list.sort((a, b) => b.evidenceIds.length - a.evidenceIds.length || a.createdAt.localeCompare(b.createdAt));
+    for (const dup of list.slice(1)) {
+      await store.delete(dup.id);
+      existing.splice(existing.indexOf(dup), 1);
+    }
+  }
 
   for (const def of PATTERNS) {
     const relevant = errors.filter((e) => def.errorTypes.includes(e.type)).sort((a, b) => a.createdAt.localeCompare(b.createdAt));

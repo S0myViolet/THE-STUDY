@@ -1,0 +1,13 @@
+import { chromium } from "@playwright/test";
+const dir = process.argv[2];
+const ctx = await chromium.launchPersistentContext(dir, { executablePath: "/opt/pw-browsers/chromium", viewport: { width: 1280, height: 900 } });
+const page = ctx.pages()[0] ?? (await ctx.newPage());
+await page.goto("http://localhost:3000/red-thread", { waitUntil: "networkidle" });
+await page.waitForTimeout(800);
+const titles = await page.locator("a[href^='/red-thread/'] .serif").allTextContents();
+const first = await page.locator("a[href^='/red-thread/rt_']").first().getAttribute("href");
+await page.goto("http://localhost:3000" + first, { waitUntil: "networkidle" });
+await page.waitForTimeout(1200);
+await page.screenshot({ path: "/tmp/claude-0/-home-user-THE-STUDY/3ab2e634-fb47-534f-9fe7-c6bbbf105fc0/scratchpad/rt-detail.png" });
+console.log(JSON.stringify({ titles }));
+await ctx.close();

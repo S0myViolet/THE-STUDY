@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
-import { PageHeader } from "@/components/ui/primitives";
+import { Consultation } from "./Consultation";
 
+/**
+ * /curator                  a new consultation (?mode=<CuratorMode> preselects, ?q=<text> prefills)
+ * /curator/<conversationId> resume a consultation
+ */
 export function CuratorRoom({ slug }: { slug: string[] }) {
-  return (
-    <div className="page">
-      <PageHeader eyebrow="curator" title="CuratorRoom" lede={"Route: /curator/" + slug.join("/")} />
-    </div>
-  );
+  const id = slug[0];
+  return <Consultation key={id ?? "new"} conversationId={id} />;
 }
