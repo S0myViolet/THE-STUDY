@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useStudy } from "@/lib/persistence/provider";
 import { stamp } from "@/lib/persistence/store";
+import { ensureOne } from "@/lib/persistence/ensure";
 import type { SalonScenario, SalonSession, ConversationTurn } from "@/lib/domain/types";
 import { ai, useAIStatus } from "@/lib/ai/client";
 import { recordError, recordEvidence } from "@/lib/services/evidence";
@@ -16,7 +17,7 @@ import { I } from "@/components/ui/icons";
 import { classifyUserTurn, objectivesMet, reviewConversation, scriptedTurn } from "./engine";
 import { cx, minutes } from "@/lib/util/format";
 
-export function Conversation({ scenario }: { scenario: SalonScenario }) {
+export function Conversation({ scenario, pastId }: { scenario: SalonScenario; pastId?: string }) {
   const { db, prefs } = useStudy();
   const router = useRouter();
   const aiStatus = useAIStatus();
@@ -33,19 +34,20 @@ export function Conversation({ scenario }: { scenario: SalonScenario }) {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const existing = (await db.store("salon_sessions").list({ where: { scenarioId: scenario.id, status: "active" }, orderBy: "createdAt", desc: true, limit: 1 }))[0];
-      if (existing) {
-        if (alive) setSession(existing);
+      if (pastId) {
+        const past = await db.store("salon_sessions").get(pastId);
+        if (alive && past) setSession(past);
         return;
       }
-      const s = stamp<SalonSession>(db.userId, "salon", { scenarioId: scenario.id, status: "active", turns: [{ role: "character", text: scenario.opening, at: new Date().toISOString() }], rapport: 0.35, revealedFacts: [], objectivesMet: [], sessionId: sessionId ?? undefined });
-      await db.store("salon_sessions").put(s);
+      const s = await ensureOne(db, "salon_sessions", { scenarioId: scenario.id, status: "active" }, () =>
+        stamp<SalonSession>(db.userId, "salon", { scenarioId: scenario.id, status: "active", turns: [{ role: "character", text: scenario.opening, at: new Date().toISOString() }], rapport: 0.35, revealedFacts: [], objectivesMet: [], sessionId: sessionId ?? undefined }),
+      );
       if (alive) setSession(s);
     })();
     return () => {
       alive = false;
     };
-  }, [db, scenario, sessionId]);
+  }, [db, scenario, sessionId, pastId]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });

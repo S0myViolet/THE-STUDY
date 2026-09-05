@@ -1,0 +1,33 @@
+// The Curator without a model: Think First, a knowledge answer from the Archive, progress and threads.
+import { chromium } from "@playwright/test";
+const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+const errors = [];
+page.on("pageerror", (e) => errors.push(e.message));
+page.on("console", (m) => { if (m.type() === "error") errors.push(m.text().slice(0, 200)); });
+await page.goto("http://localhost:3000/enter?skip=1&name=Ismail", { waitUntil: "networkidle" });
+await page.goto("http://localhost:3000/curator", { waitUntil: "networkidle" });
+await page.waitForSelector("textarea");
+const ask = async (t) => {
+  await page.fill("textarea", t);
+  await page.click("button:has-text('Ask')");
+  await page.waitForFunction(() => ![...document.querySelectorAll("button")].some((b) => b.textContent?.includes("Considering")), null, { timeout: 15000 });
+  await page.waitForTimeout(400);
+};
+const replies = async () => page.locator("ol li").allInnerTexts();
+await ask("Why do you think the porter delivered the bag to the wrong room?");
+const r1 = (await replies()).at(-1);
+await ask("What was the Hanseatic League?");
+const r2 = (await replies()).at(-1);
+const offers = await page.locator("button:has-text('Save to Archive'), button:has-text('Test me later')").count();
+await ask("What should I work on next?");
+const r3 = (await replies()).at(-1);
+await ask("What patterns have you noticed in my mistakes?");
+const r4 = (await replies()).at(-1);
+await page.screenshot({ path: "/tmp/shots/rooms/curator-offline.png", fullPage: true });
+const url = page.url();
+await page.reload({ waitUntil: "networkidle" });
+await page.waitForTimeout(600);
+const persisted = (await replies()).length;
+console.log(JSON.stringify({ thinkFirst: r1?.slice(0, 160), knowledge: r2?.slice(0, 160), offers, recommend: r3?.slice(0, 160), threads: r4?.slice(0, 160), url, persistedMessages: persisted, errors }, null, 1));
+await browser.close();

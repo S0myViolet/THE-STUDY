@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useStudyQuery } from "@/lib/persistence/provider";
 import { PageHeader, Empty } from "@/components/ui/primitives";
 import { I } from "@/components/ui/icons";
@@ -13,12 +14,14 @@ import { GenerateSalon } from "./GenerateSalon";
 import type { SalonScenario } from "@/lib/domain/types";
 
 export function SalonRoom({ slug }: { slug: string[] }) {
+  const params = useSearchParams();
+  const past = params.get("past") ?? undefined;
   const generated = useStudyQuery((db) => db.store("generated_content").list({ where: { kind: "salon" } }), ["generated_content"]);
   const all: SalonScenario[] = [...SALON_SCENARIOS, ...((generated.data ?? []).map((g) => g.payload as SalonScenario))];
   if (slug[0]) {
     const s = all.find((x) => x.id === slug[0]);
     if (!s) return generated.loading ? null : <div className="page"><Empty title="No one by that name in the Salon." action={<Link href="/salon" className="btn btn-secondary">Back</Link>} /></div>;
-    return <Conversation key={s.id} scenario={s} />;
+    return <Conversation key={`${s.id}:${past ?? "live"}`} scenario={s} pastId={past} />;
   }
   return <Index scenarios={all} />;
 }
@@ -61,6 +64,24 @@ function Index({ scenarios }: { scenarios: SalonScenario[] }) {
           })}
         </ul>
         <aside className="space-y-6">
+          {completed.length ? (
+            <div className="border-t border-line pt-3">
+              <div className="eyebrow mb-2">Past conversations</div>
+              <ul className="space-y-2">
+                {completed.slice(0, 8).map((s) => {
+                  const sc = scenarios.find((x) => x.id === s.scenarioId);
+                  return (
+                    <li key={s.id}>
+                      <Link href={`/salon/${s.scenarioId}?past=${s.id}`} className="group flex items-baseline justify-between gap-3 text-[13px]">
+                        <span className="text-ink-2 group-hover:text-ink truncate">{sc?.character.name ?? s.scenarioId}</span>
+                        <span className="numeral text-ink-3 shrink-0">{Math.round((s.review?.score ?? 0) * 100)} · {s.completedAt ? shortDate(s.completedAt) : ""}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ) : null}
           <div className="border-t border-line pt-3"><div className="eyebrow">Questions per new fact</div><div className="numeral text-[28px] mt-1">{forcing ? (asked / forcing).toFixed(1) : "—"}</div><div className="text-[12px] text-ink-3 mt-1">{completed.length ? `${asked} questions, ${forcing} that forced information, across ${completed.length} conversation${completed.length === 1 ? "" : "s"}` : "Lower is better, once you have talked to someone."}</div></div>
           <div className="border-t border-line pt-3 text-[12px] text-ink-3 space-y-2">
             <p>Leading questions produce agreement or defensiveness, not information. Open questions attached to a specific observation produce the most.</p>

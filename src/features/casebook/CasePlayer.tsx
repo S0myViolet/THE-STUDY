@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { CaseAttempt, CaseDefinition, CaseStage, CaseStageAttempt, RecallQuestion, SeparateStatement } from "@/lib/domain/types";
 import { useStudy } from "@/lib/persistence/provider";
 import { stamp } from "@/lib/persistence/store";
+import { ensureOne } from "@/lib/persistence/ensure";
 import { recordConfidence, recordError, recordEvidence } from "@/lib/services/evidence";
 import { writeAfterAction } from "@/lib/services/after-action";
 import { reachMilestone } from "@/lib/services/notifications";
@@ -60,12 +61,9 @@ export function CasePlayer({ kase, onComplete, sourceKind = "case" }: { kase: Ca
   useEffect(() => {
     let alive = true;
     (async () => {
-      const store = db.store("case_attempts");
-      let a = (await store.list({ where: { caseId: kase.id, status: "active" }, orderBy: "createdAt", desc: true, limit: 1 }))[0];
-      if (!a) {
-        a = stamp<CaseAttempt>(db.userId, "att", { caseId: kase.id, status: "active", currentStageIndex: 0, startedAt: new Date().toISOString(), sessionId: sessionId ?? undefined });
-        await store.put(a);
-      }
+      const a = await ensureOne(db, "case_attempts", { caseId: kase.id, status: "active" }, () =>
+        stamp<CaseAttempt>(db.userId, "att", { caseId: kase.id, status: "active", currentStageIndex: 0, startedAt: new Date().toISOString(), sessionId: sessionId ?? undefined }),
+      );
       const stageAttempts = await db.store("case_stage_attempts").list({ where: { attemptId: a.id } });
       const o: StageOutcomes = {};
       for (const sa of stageAttempts) {
@@ -81,7 +79,7 @@ export function CasePlayer({ kase, onComplete, sourceKind = "case" }: { kase: Ca
       }
       const reveal = kase.stages.find((s) => s.kind === "evidence")?.reveal;
       if (reveal) o.reveal = reveal;
-      const prior = await store.list({ where: { status: "completed" } });
+      const prior = await db.store("case_attempts").list({ where: { status: "completed" } });
       const alts = prior.map((p) => p.summary?.alternativesCount).filter((x): x is number => typeof x === "number");
       if (!alive) return;
       setBaselineAlt(alts.length >= 2 ? alts.reduce((s, x) => s + x, 0) / alts.length / 3 : undefined);

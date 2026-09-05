@@ -1,0 +1,30 @@
+// Salon: converse, review, and check what is actually persisted.
+import { chromium } from "@playwright/test";
+import { idbCounts } from "./idb.mjs";
+
+const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+const errors = [];
+page.on("pageerror", (e) => errors.push("PAGEERROR " + e.message));
+page.on("console", (m) => { if (m.type() === "error") errors.push(m.text().slice(0, 200)); });
+await page.goto("http://localhost:3000/enter?skip=1&name=Ismail", { waitUntil: "networkidle" });
+await page.goto("http://localhost:3000/salon/sal-professor-print", { waitUntil: "networkidle" });
+await page.waitForSelector("textarea");
+const ask = async (t) => { await page.fill("textarea", t); await page.click("button:has-text('Say it')"); await page.waitForTimeout(900); };
+await ask("What was literacy like around 1500? Who could actually read?");
+await ask("What about the Hussites in Bohemia, before printing existed?");
+await ask("Which counterexample do you personally find most awkward for the thesis?");
+const before = await idbCounts(page, ["salon_sessions"]);
+console.log("before end:", before.salon_sessions.map((s) => [s.id, s.status, s.turns.length]));
+await page.click("button:has-text('End the conversation')");
+await page.click("button:has-text('Review the conversation')");
+await page.waitForTimeout(2500);
+const reviewVisible = await page.locator("text=Post-conversation review").count();
+const after = await idbCounts(page, ["salon_sessions", "after_actions", "skill_evidence"]);
+console.log("after end:", { reviewVisible, sessions: after.salon_sessions.map((s) => [s.id, s.status, s.turns.length, !!s.review]), afterActions: after.after_actions.length, evidence: after.skill_evidence.length });
+await page.screenshot({ path: "/tmp/shots/salon-after-end.png" });
+await page.reload({ waitUntil: "networkidle" });
+await page.waitForTimeout(800);
+console.log("after reload review visible:", await page.locator("text=Post-conversation review").count(), "url:", page.url());
+console.log("errors:", errors);
+await browser.close();

@@ -769,5 +769,109 @@ export const ARCHIVE_B: ArchiveEntry[] = [
 ];
 
 export const ARCHIVE_PATHS: ArchiveEntry[] = [
-  // __APPEND_PATHS__
+  {
+    id: "how-money-works",
+    kind: "path",
+    domain: "economics",
+    title: "How Money Works",
+    subtitle: "Six entries, from the ledger to the central bank",
+    summary:
+      "Six entries that take money apart in the order it was built: first the ledger that made a business legible, then the question of what a currency is worth and who decides, then the institutions that manage it, and last the quiet tax that falls on everyone when they fail.",
+    what:
+      "The path begins with Double-Entry Bookkeeping because money is easiest to understand as a record before it is understood as a thing. Once you can see that every transaction is a claim on someone else, Fiat Money stops looking like a trick: a currency is a claim on a state that taxes in it, and the ledger is what makes the claim enforceable. The Gold Standard is the older answer to the same question, with the claim fixed to a weight of metal, and Bretton Woods is the compromise that ran from 1944 to 1971 with a dollar convertible into gold at the centre. By then you have met every kind of anchor and can read Central Banks as the institution that replaced the metal one, and Inflation as the thing it exists to prevent, and what it does to creditors and debtors when it fails.\n\nRead in this order, each entry answers a question the previous one raised. Read out of order, you meet the answers before the questions.",
+    why:
+      "You will be able to explain why a note that promises nothing holds its value, what a country gives up when it fixes its exchange rate, what a central bank is actually deciding when it moves a rate by a quarter of a point, and who pays when prices rise. You will also be able to hear the phrase 'printing money' and ask the right next question: printed against what, and lent to whom.",
+    before:
+      "Before this path most people hold a picture of money as a stock of valuable stuff kept somewhere, occasionally debased by governments. It is not a foolish picture; it was roughly true under a metallic standard. It stopped being true in 1971, and most public argument about money is still conducted in its terms.",
+    after:
+      "After the path, The Prisoner's Dilemma and Game Theory explain why the states at Bretton Woods needed rules none of them could break alone, and The Dutch East India Company shows the ledger becoming a share. The Venetian Republic and The Hanseatic League are where the bookkeeping came from and where credit first crossed borders at scale.",
+    connects:
+      "Double-Entry Bookkeeping is the Venetian method Pacioli printed in 1494, which puts The Printing Press and The Venetian Republic one step behind the first entry. Central Banks and Inflation lead into Game Theory, since a credible inflation target is a promise about how you will behave on the day breaking it would pay.",
+    remember: [
+      "Money is a record of claims before it is a thing; the ledger comes first.",
+      "Fiat money holds value because the state taxes in it and everyone expects to spend it tomorrow; every major currency has been fiat since 1971.",
+      "A metal anchor fixes exchange rates and forbids devaluation, so downturns become deflations; Bretton Woods (1944–1971) was the last compromise between anchor and discretion.",
+      "A central bank sets the short rate, lends last, and since the 1990s is judged by an inflation target it is meant to keep at arm's length from government.",
+      "Inflation is a transfer from those who hold money and are owed it to those who owe it, governments included.",
+    ],
+    tags: ["money", "currency", "ledger", "central bank", "inflation", "gold", "path"],
+    recall: [
+      { prompt: "In one sentence, why does fiat money hold value?", answer: "Because the state accepts it for taxes, the law makes it legal tender and people expect others to take it tomorrow." },
+      { prompt: "What does a country give up by fixing its currency to gold?", answer: "The ability to devalue or expand the money supply in a downturn; adjustment has to come through falling prices and wages instead." },
+      { prompt: "Who gains and who loses from unexpected inflation?", answer: "Debtors, including governments, gain; creditors, savers and anyone holding money lose." },
+    ],
+    readingMinutes: 4,
+    origin: "seeded",
+    pathEntries: ["double-entry-bookkeeping", "fiat-money", "gold-standard", "bretton-woods", "central-banks", "inflation"],
+  },
+  {
+    id: "why-istanbul",
+    kind: "path",
+    domain: "geography",
+    title: "Why Istanbul",
+    subtitle: "Six entries on the city that a strait built",
+    summary:
+      "Start with the water, then the city, then the routes that ended there, the empire that ruled from it, the republic that traded and fought with it, and finally the room in which its habit of conversation was exported to Europe.",
+    what:
+      "The path begins with The Bosporus because the city is an effect and the strait is the cause: thirty-one kilometres of water that decide who reaches the Black Sea, with one defensible peninsula at the southern end. Istanbul, three names and sixteen centuries as a capital, is the human answer to that geography. The Silk Road explains what the city was for, as the western terminus where overland goods met Mediterranean shipping. The Ottoman Empire explains who held it longest, from the conquest of 1453 to 1922, and why controlling the strait came before taking the city. The Venetian Republic is the rival and customer across the water, which shows how a place becomes valuable to more than its owner. Coffeehouses close the path with an institution born in the city in the 1550s and copied in London, Vienna and Paris: the city's most successful export was a way of talking.\n\nThe order moves from what cannot change, the water, to what changed most, the conversation.",
+    why:
+      "You will be able to look at a map and say why a city is where it is, then say what that position was worth in each century and to whom. You will be able to tell a capital from a hub, and to read an empire's strategy off a strait. And you will have a worked example of a question you can ask about any city: what does it sit at the crossing of, and who else wants the crossing.",
+    before:
+      "Before the path Istanbul is usually a name attached to a skyline. Byzantium, Constantinople and Istanbul feel like three cities rather than one place renamed; the Ottomans are a vague late act; Venice is a canal. The path replaces the skyline with a mechanism.",
+    after:
+      "From here The Mongol Empire and The Black Death follow the Silk Road in both directions, The Printing Press explains why the Ottoman capital printed in Greek and Armenian long before Arabic, and The Suez Canal and Dubai show what happens to a crossing when the sea route changes or a new one is built.",
+    connects:
+      "Every entry in the path is connected to Istanbul directly in the Archive: the strait it depends on, the routes that ended there, the empire that ruled from it, the republic that kept an ambassador there and the coffeehouse that began there. The Renaissance is one step away, through the scholars who left the city before and after 1453.",
+    remember: [
+      "The strait is the cause and the city is the effect: one defensible peninsula at the only crossing between two seas and two continents.",
+      "One place, three names: Byzantium (c. 657 BCE), Constantinople (330 CE), Istanbul (official from 1930); a capital for sixteen centuries.",
+      "Mehmed II fortified the Bosporus at Rumeli Hisarı in 1452, before the siege of 1453; control of the water came first.",
+      "Venice was rival and customer at once; a crossing is valuable to more than its owner.",
+      "The coffeehouse is an Ottoman institution of the 1550s that London (1652) and Vienna (1680s) copied.",
+    ],
+    tags: ["istanbul", "bosporus", "constantinople", "trade routes", "ottoman", "venice", "path"],
+    recall: [
+      { prompt: "Why is Istanbul where it is?", answer: "It sits on a defensible peninsula at the southern end of the Bosporus, the only water passage between the Black Sea and the Mediterranean and the narrowest crossing between Europe and Asia." },
+      { prompt: "What did the Ottomans do before besieging Constantinople in 1453?", answer: "Built Rumeli Hisarı on the Bosporus in 1452 to control the strait and cut the city off from the Black Sea." },
+      { prompt: "Which institution did Europe copy from Istanbul in the seventeenth century?", answer: "The coffeehouse: Istanbul had them from the 1550s, London from 1652, Vienna after 1683." },
+    ],
+    readingMinutes: 4,
+    origin: "seeded",
+    pathEntries: ["bosporus", "istanbul", "silk-road", "ottoman-empire", "venetian-republic", "coffeehouses"],
+  },
+  {
+    id: "reading-evidence",
+    kind: "path",
+    domain: "science",
+    title: "Reading Evidence",
+    subtitle: "Six entries on how much a fact should move you",
+    summary:
+      "The arithmetic of updating first, then the two habits that break it, then the test that separates a claim from a slogan, and finally what happens to evidence when the other people in the room are also reasoning about you.",
+    what:
+      "Bayes' Theorem comes first because it states the whole problem in one line: how much a piece of evidence should move you depends on how likely it was under each hypothesis, and on where you started. The Base-Rate Fallacy is what happens when you forget where you started, and The Availability Heuristic is what happens when the evidence that comes to mind is not the evidence that exists; both are Bayes done badly, and both were documented by Kahneman and Tversky in 1973. Falsifiability then turns from weighing evidence to asking whether a claim can be weighed at all: a theory that forbids nothing cannot be moved by anything. The last two entries change the setting. In The Prisoner's Dilemma and Game Theory the evidence you see is produced by people who know you are watching, so a signal has to be read together with the incentive to send it.\n\nThe order is deliberate: the rule, two failures of the rule, the precondition for applying it, and then the strategic case where the rule alone is not enough.",
+    why:
+      "You will be able to say, for a given piece of evidence, roughly how much it should change your mind, and to notice the two commonest reasons your instinct gets the number wrong. You will be able to ask of any confident claim what would show it to be false. And you will be able to treat a statement from an interested party as a move rather than a measurement, which is most of what negotiation, hiring and reading the news require.",
+    before:
+      "Most people already update on evidence; the trouble is the size of the update. Vivid evidence moves them too far, rare conditions with good tests are treated as near certainties, and a theory that explains everything feels strongest when it is weakest. The path names these habits so they can be caught in the act.",
+    after:
+      "The Case Files and the Inference Room are where this path is used rather than read: every case asks how sure you are and then shows you the base rate. From here The Odyssey is a study in evidence from interested parties, and Central Banks are an institution built around the credibility problem the last two entries describe.",
+    connects:
+      "Bayes' Theorem underpins The Base-Rate Fallacy, which is the theorem forgotten, and contrasts with The Availability Heuristic, which is the theorem fed the wrong sample. Falsifiability is Popper's answer to a question Bayes leaves open. Game Theory uses the same probabilities and adds a second mind; The Prisoner's Dilemma is its most portable example.",
+    remember: [
+      "Update in proportion to how much more likely the evidence is under one hypothesis than the other, starting from the base rate.",
+      "The base-rate fallacy is forgetting the prior; the availability heuristic is mistaking what comes to mind for what exists.",
+      "A claim that could not be shown false cannot be supported by evidence either.",
+      "When evidence is produced by someone who knows you are watching, read the incentive with the signal.",
+      "Four dates anchor the path: Popper 1934, von Neumann and Morgenstern 1944, RAND 1950, Kahneman and Tversky 1973.",
+    ],
+    tags: ["evidence", "bayes", "probability", "heuristics", "popper", "game theory", "path"],
+    recall: [
+      { prompt: "Name the two habits that make Bayesian updating go wrong in practice.", answer: "Ignoring the base rate (the base-rate fallacy) and judging frequency by ease of recall (the availability heuristic)." },
+      { prompt: "What is Popper's test for whether a claim is scientific?", answer: "That it forbids something: it makes predictions that could turn out false." },
+      { prompt: "Why is evidence from an interested party different?", answer: "It is a move as well as a measurement; the incentive to send the signal has to be read along with the signal, which is the setting game theory describes." },
+    ],
+    readingMinutes: 4,
+    origin: "seeded",
+    pathEntries: ["bayes-theorem", "base-rate-fallacy", "availability-heuristic", "falsifiability", "prisoners-dilemma", "game-theory"],
+  },
 ];

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useStudy } from "@/lib/persistence/provider";
 import { stamp } from "@/lib/persistence/store";
+import { ensureOne } from "@/lib/persistence/ensure";
 import type { StrategyActor, StrategyMove, StrategyRun, StrategyScenario } from "@/lib/domain/types";
 import type { SubskillId } from "@/lib/domain/faculties";
 import { ai, useAIStatus } from "@/lib/ai/client";
@@ -48,17 +49,13 @@ export function Player({ scenario }: { scenario: StrategyScenario }) {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const existing = (await db.store("strategy_runs").list({ where: { scenarioId: scenario.id, status: "active" }, orderBy: "createdAt", desc: true, limit: 1 }))[0];
-      if (existing) {
-        if (alive) {
-          setRun(existing);
-          setPhase(existing.path.length ? "play" : "map");
-        }
-        return;
+      const r = await ensureOne(db, "strategy_runs", { scenarioId: scenario.id, status: "active" }, () =>
+        stamp<StrategyRun>(db.userId, "srun", { scenarioId: scenario.id, status: "active", path: [], currentNodeId: scenario.rootNodeId, sessionId: sessionId ?? undefined }),
+      );
+      if (alive) {
+        setRun(r);
+        setPhase(r.path.length ? "play" : "map");
       }
-      const r = stamp<StrategyRun>(db.userId, "srun", { scenarioId: scenario.id, status: "active", path: [], currentNodeId: scenario.rootNodeId, sessionId: sessionId ?? undefined });
-      await db.store("strategy_runs").put(r);
-      if (alive) setRun(r);
     })();
     return () => {
       alive = false;

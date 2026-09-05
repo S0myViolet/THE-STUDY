@@ -259,14 +259,14 @@ export function Consultation({ conversationId }: { conversationId?: string }) {
                     {m.role === "curator" && m.thinkFirst ? <span className="text-wine">· Think first</span> : null}
                     {m.role === "curator" && m.offline ? <span className="text-ink-4">· from the record</span> : null}
                   </div>
-                  <RichText text={m.text} className={m.role === "curator" ? "serif text-[18px] text-ink leading-relaxed max-w-[68ch]" : "text-[15px] text-ink-2 leading-relaxed max-w-[68ch]"} />
+                  <RichText text={m.text} className={m.role === "curator" ? "serif text-[17px] md:text-[18px] text-ink leading-relaxed max-w-[68ch]" : "text-[15px] text-ink-2 leading-relaxed max-w-[68ch]"} />
                   {m.role === "curator" && m.knowledge ? <Offers msg={m} onSave={() => saveToArchive(i)} onTest={() => testLater(i)} /> : null}
                 </li>
               ))}
               {streaming !== null ? (
                 <li className="anim-fade">
                   <div className="eyebrow mb-1.5 flex items-center gap-2"><span>The Curator</span><span className="text-ink-4">· {meta.label}</span></div>
-                  <RichText text={streaming} streaming className="serif text-[18px] text-ink leading-relaxed max-w-[68ch]" />
+                  <RichText text={streaming} streaming className="serif text-[17px] md:text-[18px] text-ink leading-relaxed max-w-[68ch]" />
                 </li>
               ) : busy ? (
                 <li className="serif text-[16px] text-ink-3 anim-fade">The Curator considers that.</li>

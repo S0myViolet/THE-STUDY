@@ -1,4 +1,5 @@
 import type { StudyDatabase } from "@/lib/persistence/store";
+import { COLLECTIONS } from "@/lib/persistence/collections";
 import { stamp } from "@/lib/persistence/store";
 import type { AfterAction, CaseAttempt, DailySession, DecisionEntry, Forecast, InferenceAttempt, MemoryItem, MemoryReview, ObservationAttempt, SalonSession, StrategyRun } from "@/lib/domain/types";
 import type { SubskillId, Difficulty } from "@/lib/domain/faculties";
@@ -46,7 +47,9 @@ const TARGET: Partial<Record<SubskillId, number>> = {
 };
 
 export async function seedDemo(db: StudyDatabase): Promise<void> {
-  await db.wipe();
+  // Clear everything except the profile and preferences: wiping those would
+  // send the gate back to the entrance while the seed is still running.
+  for (const c of COLLECTIONS) if (c !== "profiles" && c !== "preferences") await db.store(c).clear();
   await updateProfile(db, { displayName: "Demonstration", goals: ["thinking", "seeing", "knowledge"], interests: ["history", "economics", "psychology", "geopolitics"], onboardingComplete: true, baselineComplete: true, isDemo: true, enteredAt: at(DAYS) });
   await updatePrefs(db, { sessionLength: "standard", thinkFirst: true });
 
