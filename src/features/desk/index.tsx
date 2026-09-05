@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useStudy, useStudyQuery } from "@/lib/persistence/provider";
@@ -47,6 +47,13 @@ export function DeskRoom({ slug: _slug }: { slug?: string[] } = {}) {
   useEffect(() => {
     if (params.get("begin") === "case" && kase.data) router.replace(`/casebook/${kase.data.id}`);
   }, [params, kase.data, router]);
+  const autoBegun = useRef(false);
+  useEffect(() => {
+    if (params.get("session") !== "1" || autoBegun.current || session.loading) return;
+    autoBegun.current = true;
+    void beginSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params, session.loading]);
 
   const unreadEntry = useMemo(() => {
     const read = new Set((progress.data ?? []).filter((p) => p.status !== "unread").map((p) => p.entryId));

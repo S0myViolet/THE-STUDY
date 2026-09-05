@@ -35,7 +35,7 @@ const STAGE_LABEL: Record<CaseStage["kind"], string> = {
   debrief: "Debrief",
 };
 
-export function CasePlayer({ kase }: { kase: CaseDefinition }) {
+export function CasePlayer({ kase, onComplete, sourceKind = "case" }: { kase: CaseDefinition; onComplete?: () => void; sourceKind?: "case" | "baseline" }) {
   const { db } = useStudy();
   const router = useRouter();
   const { inSession, sessionId, finish } = useSessionItem();
@@ -95,7 +95,7 @@ export function CasePlayer({ kase }: { kase: CaseDefinition }) {
   }, [db, kase, sessionId]);
 
   const stage = kase.stages[stageIndex];
-  const source = useMemo(() => ({ kind: "case" as const, refId: kase.id, label: `Case ${kase.number} · ${kase.title}` }), [kase]);
+  const source = useMemo(() => ({ kind: sourceKind, refId: kase.id, label: `Case ${kase.number} · ${kase.title}` }), [kase, sourceKind]);
 
   const persistStage = useCallback(
     async (s: CaseStage, response: Record<string, unknown>, evaluation: Record<string, unknown> | undefined, score?: number) => {
@@ -260,6 +260,7 @@ export function CasePlayer({ kase }: { kase: CaseDefinition }) {
   async function onFinish() {
     if (!attempt) return;
     if (attempt.status === "completed") {
+      if (onComplete) return onComplete();
       if (!(await finish())) router.push("/desk");
       return;
     }
@@ -279,6 +280,7 @@ export function CasePlayer({ kase }: { kase: CaseDefinition }) {
     if (completed >= 10) await reachMilestone(db, "cases_10");
     await detectRedThreads(db);
     setAttempt({ ...attempt, status: "completed", summary });
+    if (onComplete) return onComplete();
     if (!(await finish())) router.push(`/after-action`);
   }
 
@@ -289,9 +291,13 @@ export function CasePlayer({ kase }: { kase: CaseDefinition }) {
   return (
     <div className="page">
       <div className="flex items-center justify-between gap-4 mb-6">
-        <Link href="/casebook" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
-          <I.ArrowLeft size={12} /> Casebook
-        </Link>
+        {sourceKind === "baseline" ? (
+          <span className="text-[12px] text-ink-3">The first case</span>
+        ) : (
+          <Link href="/casebook" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
+            <I.ArrowLeft size={12} /> Casebook
+          </Link>
+        )}
         <div className="flex items-center gap-4 text-[11px] text-ink-3">
           {inSession ? <span className="mark"><span className="mark-dot" /> Today&apos;s session</span> : null}
           <span className="mono">CASE {kase.number}</span>

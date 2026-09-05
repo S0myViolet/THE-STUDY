@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { StudyProvider, useStudyBoot } from "@/lib/persistence/provider";
 import { applyAppearance, applyReducedMotion } from "@/lib/theme";
+import { AuthScreen } from "@/features/onboarding/Auth";
 
 /**
  * Boots persistence and gates the rooms behind onboarding.
@@ -15,8 +16,8 @@ export function StudyGate({ children, requireOnboarding = true }: { children: Re
   const pathname = usePathname();
 
   useEffect(() => {
-    if (boot.status === "auth-required") router.replace("/enter?auth=1");
-  }, [boot.status, router]);
+    if (boot.status === "auth-required" && pathname !== "/enter") router.replace("/enter?auth=1");
+  }, [boot.status, router, pathname]);
 
   useEffect(() => {
     if (boot.status !== "ready") return;
@@ -27,6 +28,9 @@ export function StudyGate({ children, requireOnboarding = true }: { children: Re
     }
   }, [boot, requireOnboarding, router, pathname]);
 
+  if (boot.status === "auth-required" && pathname === "/enter") {
+    return <AuthScreen />;
+  }
   if (boot.status === "loading" || boot.status === "auth-required") {
     return (
       <div className="min-h-dvh flex items-center justify-center">

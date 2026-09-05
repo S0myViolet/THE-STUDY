@@ -351,4 +351,417 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
       "Ebbinghaus observed it on himself in 1885, and it has replicated across ages, materials and decades since; a review that arrives just as memory starts to fade does more work than one made while the material is still fresh. Cramming feels productive because performance is high at the end of the session, which is exactly when it is least informative.",
     difficulty: 3,
   },
+  /* ---------------- philosophy ---------------- */
+  {
+    id: "kq-phi-01",
+    domain: "philosophy",
+    prompt: "Which is the correct statement of Occam's razor?",
+    options: [
+      "The simplest explanation is always the true one",
+      "Among explanations that account for the evidence equally well, prefer the one that assumes least",
+      "Complex explanations should be rejected without examination",
+      "The explanation with the fewest words is to be preferred",
+    ],
+    answer: 1,
+    explanation:
+      "The razor is a tie-breaker, not a truth test: it only applies once the competing explanations fit the evidence equally, and it counts assumptions rather than sentences. William of Ockham, a fourteenth-century Franciscan, never wrote the famous 'entities should not be multiplied' in those words; the principle is older than his name for it.",
+    difficulty: 2,
+  },
+  {
+    id: "kq-phi-02",
+    domain: "philosophy",
+    prompt: "What was David Hume's problem of induction?",
+    options: [
+      "That we can never observe enough cases to be sure of anything",
+      "That reasoning from observed regularities to unobserved cases cannot be justified without assuming that nature is uniform, which is the thing in question",
+      "That deduction is unreliable because premises may be false",
+      "That the senses systematically deceive us",
+    ],
+    answer: 1,
+    explanation:
+      "Hume's point in 1748 was not that the sun might not rise, but that no argument shows it must: any defence of 'the future will resemble the past' appeals to past experience, which is circular. Popper's falsificationism was one answer, treating science as conjecture and refutation rather than accumulation of confirmations.",
+    archiveRef: "falsifiability",
+    difficulty: 4,
+  },
+  {
+    id: "kq-phi-03",
+    domain: "philosophy",
+    prompt: "In Bayesian reasoning, what does it mean when a piece of evidence has a likelihood ratio of 1 between two hypotheses?",
+    options: [
+      "The hypothesis in question is exactly 50 per cent likely",
+      "The evidence is equally probable under both hypotheses and should not move your belief between them",
+      "The evidence proves the first hypothesis",
+      "The prior probability must be revised to 1",
+    ],
+    answer: 1,
+    explanation:
+      "Bayes' theorem multiplies your prior odds by the likelihood ratio, the probability of the evidence if one hypothesis is true divided by its probability if the other is; a ratio of 1 leaves the odds unchanged. This is why 'consistent with' is such a weak phrase: evidence that fits your story equally well whether or not it is true tells you nothing.",
+    archiveRef: "bayes-theorem",
+    difficulty: 6,
+  },
+  /* ---------------- art ---------------- */
+  {
+    id: "kq-art-01",
+    domain: "art",
+    prompt: "Where did the name 'Impressionism' come from?",
+    options: [
+      "The painters chose it to describe their aim of capturing fleeting impressions",
+      "A critic mocked Monet's 'Impression, Sunrise' at the group's 1874 exhibition, and the label stuck",
+      "It was the title of Manet's manifesto",
+      "It was a term from the Paris Salon's categories of painting",
+    ],
+    answer: 1,
+    explanation:
+      "Louis Leroy's review in Le Charivari sneered that wallpaper in its embryonic state was more finished than the canvas; the painters adopted the insult within a few years. Movements are often named by their enemies, which is worth remembering when a label seems to explain a group's intentions.",
+    archiveRef: "impressionism",
+    difficulty: 2,
+  },
+  {
+    id: "kq-art-02",
+    domain: "art",
+    prompt: "What does a flying buttress do for a Gothic cathedral?",
+    options: [
+      "It supports the roof timbers from below",
+      "It carries the outward thrust of the stone vault to external piers, so the walls can be thin and pierced with windows",
+      "It is purely decorative, a display of the mason's skill",
+      "It braces the towers against wind",
+    ],
+    answer: 1,
+    explanation:
+      "A stone vault pushes outward as well as down; Romanesque builders answered with thick walls and small windows. Moving the resistance outside the building, through arches leaning against the wall, freed it to become a frame for glass, which is why Chartres and Sainte-Chapelle look the way they do.",
+    difficulty: 3,
+  },
+  {
+    id: "kq-art-03",
+    domain: "art",
+    prompt: "Which practical development made it feasible for the Impressionists to paint finished pictures outdoors?",
+    options: [
+      "The invention of canvas",
+      "The collapsible metal paint tube, patented in 1841, together with railways out of Paris",
+      "Electric lighting in studios",
+      "The camera obscura",
+    ],
+    answer: 1,
+    explanation:
+      "Before John Goffe Rand's tin tube, oil paint was ground and stored in pig bladders that dried and burst; painters sketched outdoors and finished in the studio. Portable paint, ready-primed canvases and a train to Argenteuil changed what a painting could be about. Renoir is reported as saying that without tubes there would have been no Cézanne, no Monet and no Impressionism.",
+    archiveRef: "impressionism",
+    difficulty: 5,
+  },
+  /* ---------------- literature ---------------- */
+  {
+    id: "kq-lit-01",
+    domain: "literature",
+    prompt: "How is the Odyssey structured?",
+    options: [
+      "It runs chronologically from the fall of Troy to Odysseus's return",
+      "It begins near the end, with Odysseus held by Calypso, and he narrates his earlier adventures to the Phaeacians",
+      "It begins with Odysseus's childhood on Ithaca",
+      "It is a sequence of unrelated episodes with no fixed order",
+    ],
+    answer: 1,
+    explanation:
+      "The poem opens in the tenth year after Troy, with Telemachus searching for news; the Cyclops, Circe and the Sirens arrive in books nine to twelve as a story told at a dinner table. Starting in the middle and folding the past into a character's own account is the technique later critics called in medias res, and most novels still use it.",
+    archiveRef: "the-odyssey",
+    difficulty: 3,
+  },
+  {
+    id: "kq-lit-02",
+    domain: "literature",
+    prompt: "Why is Don Quixote often called the first modern novel?",
+    options: [
+      "It was the first long prose work printed in Europe",
+      "It was the first work of fiction written in Spanish",
+      "It treats fiction self-consciously: its hero is deranged by reading romances, and in Part Two characters have read Part One",
+      "It was the first novel to be translated into English",
+    ],
+    answer: 2,
+    explanation:
+      "Cervantes published Part One in 1605 and, after an unauthorised sequel appeared, a Part Two in 1615 in which people recognise Quixote from the book and stage adventures for him. A story that knows it is a story, and asks what reading does to a reader, is the move that separates the novel from the romance.",
+    difficulty: 4,
+  },
+  {
+    id: "kq-lit-03",
+    domain: "literature",
+    prompt: "What was significant about the tablet George Smith read out in London in 1872?",
+    options: [
+      "It was the first Egyptian text deciphered from the Rosetta Stone",
+      "It contained a Babylonian flood story from the Epic of Gilgamesh, older than the written book of Genesis",
+      "It was the earliest known copy of Homer",
+      "It recorded the law code of Hammurabi",
+    ],
+    answer: 1,
+    explanation:
+      "The tablet came from Ashurbanipal's library at Nineveh and told of Utnapishtim, warned by a god to build a boat and save the animals from a flood. Gilgamesh survives in versions going back to around 1800 BCE, which makes it the oldest substantial work of literature we can read, and its flood is one of several Mesopotamian versions that predate the biblical text.",
+    difficulty: 5,
+  },
+  /* ---------------- music ---------------- */
+  {
+    id: "kq-mus-01",
+    domain: "music",
+    prompt: "Why does a note an octave higher sound like 'the same' note?",
+    options: [
+      "Its frequency is exactly double",
+      "Its frequency is twelve hertz higher",
+      "It is twice as loud",
+      "Its wavelength is twice as long",
+    ],
+    answer: 0,
+    explanation:
+      "Every partial in the higher note's overtone series coincides with one in the lower note's, so the ear hears the two as the same pitch class; the 2:1 ratio is the one interval nearly every musical culture treats as equivalence. Wavelength halves rather than doubles, and loudness has nothing to do with pitch.",
+    difficulty: 1,
+  },
+  {
+    id: "kq-mus-02",
+    domain: "music",
+    prompt: "What does Bach's Well-Tempered Clavier demonstrate?",
+    options: [
+      "That the harpsichord could play as loudly as the organ",
+      "A prelude and fugue in every one of the twenty-four major and minor keys, showing a tuning in which all keys were usable",
+      "The first use of the piano in a published work",
+      "That fugues could be written for full orchestra",
+    ],
+    answer: 1,
+    explanation:
+      "In older tunings some keys sounded sweet and others unbearable, so composers avoided them; Bach's two books of 1722 and around 1742 walk through all twenty-four to prove a well-tempered keyboard could go anywhere. Whether 'well-tempered' meant modern equal temperament or one of several unequal systems is still argued; it did not mean the piano.",
+    archiveRef: "johann-sebastian-bach",
+    difficulty: 3,
+  },
+  {
+    id: "kq-mus-03",
+    domain: "music",
+    prompt: "What does equal temperament trade away, and what does it buy?",
+    options: [
+      "It gives up perfectly pure fifths and thirds in return for the freedom to modulate to any key",
+      "It gives up the ability to play in minor keys in return for louder instruments",
+      "It gives up the octave in return for more notes",
+      "It gives up nothing; it is simply the most natural tuning",
+    ],
+    answer: 0,
+    explanation:
+      "Twelve pure fifths of 3:2 stacked on top of each other overshoot seven octaves by a small amount, the Pythagorean comma, so no tuning can have every interval pure. Equal temperament spreads the error evenly, narrowing each fifth by about two cents, so every key is equally and slightly out of tune, and a piece can wander anywhere and come home.",
+    difficulty: 5,
+  },
+  /* ---------------- food ---------------- */
+  {
+    id: "kq-food-01",
+    domain: "food",
+    prompt: "How did Lloyd's of London begin?",
+    options: [
+      "As a royal charter granted to a family of bankers",
+      "As a coffeehouse where ship-owners, captains and underwriters met to trade shipping news",
+      "As a department of the Royal Navy",
+      "As a guild of shipwrights on the Thames",
+    ],
+    answer: 1,
+    explanation:
+      "Edward Lloyd's house on Tower Street, later Lombard Street, took in the best maritime news in London, and men who wanted to insure a voyage went where the information was. The lesson is general: institutions form where the relevant people keep meeting, and the penny coffeehouse was the meeting room of the seventeenth-century city.",
+    archiveRef: "coffeehouses",
+    difficulty: 2,
+  },
+  {
+    id: "kq-food-02",
+    domain: "food",
+    prompt: "Why did a tyre company publish the first Michelin Guide in 1900?",
+    options: [
+      "To review the restaurants that the Michelin brothers owned",
+      "To give the few thousand French motorists reasons to drive further, and so wear out more tyres",
+      "As a government commission to promote tourism",
+      "To advertise the company's new restaurant in Paris",
+    ],
+    answer: 1,
+    explanation:
+      "André and Édouard Michelin gave the guide away free, full of maps, mechanics and places to sleep, when France had well under 3,000 cars; the star ratings for food came only in 1926. It is a durable example of a business paying to create the demand for its product rather than merely serving it.",
+    archiveRef: "michelin-guide",
+    difficulty: 3,
+  },
+  {
+    id: "kq-food-03",
+    domain: "food",
+    prompt: "What produces the brown crust and savoury flavour when meat is seared?",
+    options: [
+      "Caramelisation of the sugars in the meat",
+      "The Maillard reaction between amino acids and sugars at high surface temperature",
+      "The sealing of juices inside the meat by the hot pan",
+      "The burning of the fat on the surface",
+    ],
+    answer: 1,
+    explanation:
+      "Above roughly 140 degrees Celsius, amino acids and reducing sugars react into hundreds of new flavour compounds; caramelisation is the separate browning of sugar alone. Searing does not seal in juices, a claim tested and refuted repeatedly since Harold McGee revisited it: a seared steak loses at least as much moisture as an unseared one, and is worth it for the flavour.",
+    difficulty: 4,
+  },
+  /* ---------------- business ---------------- */
+  {
+    id: "kq-bus-01",
+    domain: "business",
+    prompt: "What is the core rule of double-entry bookkeeping?",
+    options: [
+      "Every transaction is written down twice in case one copy is lost",
+      "Every transaction is recorded as an equal debit and credit in two accounts, so the books must balance",
+      "Income and expenses are kept in two separate books",
+      "Two clerks must independently record each transaction",
+    ],
+    answer: 1,
+    explanation:
+      "A sale increases cash and decreases stock; a loan increases cash and increases liabilities. Because every entry has an equal counterpart, an arithmetic error shows up as an imbalance, and the same ledger can produce both a statement of profit and a statement of what the business owns and owes. Luca Pacioli described the Venetian method in print in 1494; the merchants had used it for a century and more.",
+    archiveRef: "double-entry-bookkeeping",
+    difficulty: 2,
+  },
+  {
+    id: "kq-bus-02",
+    domain: "business",
+    prompt: "Where did the main saving from the shipping container come from?",
+    options: [
+      "Faster ships crossing the ocean",
+      "Cheaper fuel because containers are lighter than crates",
+      "Cutting the labour and days spent loading and unloading cargo piece by piece in port",
+      "Lower insurance because containers are watertight",
+    ],
+    answer: 2,
+    explanation:
+      "Before 1956 a ship could spend as long in port as at sea while gangs of longshoremen handled sacks and crates one at a time; Marc Levinson estimates the cost of loading loose cargo at about 5.80 dollars a ton against 16 cents a ton for a container. Trade responded to the collapse in handling cost, not to any change in the ocean crossing.",
+    archiveRef: "containerization",
+    difficulty: 3,
+  },
+  {
+    id: "kq-bus-03",
+    domain: "business",
+    prompt: "What was novel about the Dutch East India Company, founded in 1602?",
+    options: [
+      "It was the first company to trade with Asia",
+      "Its shares could be bought and sold by the public on a secondary market, and its capital was not returned after each voyage",
+      "It was owned entirely by the Dutch state",
+      "It was the first company to employ salaried managers",
+    ],
+    answer: 1,
+    explanation:
+      "Earlier ventures raised money for a single voyage and paid it back with the profits; the VOC kept its capital invested, and investors who wanted out sold their shares to someone else in Amsterdam. That separation of a permanent enterprise from its shifting owners is the design that every listed company still uses.",
+    archiveRef: "dutch-east-india-company",
+    difficulty: 4,
+  },
+  {
+    id: "kq-bus-04",
+    domain: "business",
+    prompt: "In an ascending-bid auction where bidders know their own valuations, what mainly determines the price the winner pays?",
+    options: [
+      "The winner's own valuation of the item",
+      "The point at which the second-highest bidder stops bidding",
+      "The auctioneer's opening price",
+      "The average of all bids made",
+    ],
+    answer: 1,
+    explanation:
+      "Bidding continues until everyone but one has dropped out, so the winner pays roughly the runner-up's limit plus one increment, however much more the item was worth to them. This is why an English auction resembles a sealed second-price auction in theory, and why a seller's revenue depends on attracting two serious bidders, not one.",
+    archiveRef: "english-auction",
+    difficulty: 6,
+  },
+  /* ---------------- technology ---------------- */
+  {
+    id: "kq-tech-01",
+    domain: "technology",
+    prompt: "What is Moore's law?",
+    options: [
+      "A physical law stating that transistors cannot be made smaller than a certain size",
+      "An observation that the number of transistors on a chip has doubled roughly every two years",
+      "A rule that software slows down as fast as hardware speeds up",
+      "A law passed to regulate semiconductor exports",
+    ],
+    answer: 1,
+    explanation:
+      "Gordon Moore made the observation in a 1965 article and revised the pace in 1975; it held because manufacturers treated it as a target and invested to meet it. It is an economic and engineering trend, not a law of nature, which is why its slowing in the 2010s was a business event rather than a scientific surprise.",
+    difficulty: 2,
+  },
+  {
+    id: "kq-tech-02",
+    domain: "technology",
+    prompt: "What does the Haber-Bosch process make, and why does it matter?",
+    options: [
+      "Steel from iron ore; it built the railways",
+      "Ammonia from atmospheric nitrogen and hydrogen; it supplies the fertiliser that feeds roughly half the world's people",
+      "Petrol from crude oil; it made the motor car practical",
+      "Aluminium from bauxite; it made aircraft possible",
+    ],
+    answer: 1,
+    explanation:
+      "Plants need nitrogen and cannot use the inert N2 that makes up most of the air; Fritz Haber found how to combine it with hydrogen under high pressure in 1909 and Carl Bosch made it industrial by 1913. Vaclav Smil estimates that about half the nitrogen in the average human body has passed through the process, and that without it the planet could feed several billion fewer people.",
+    difficulty: 3,
+  },
+  {
+    id: "kq-tech-03",
+    domain: "technology",
+    prompt: "In public-key cryptography, why can the key used to encrypt a message be published openly?",
+    options: [
+      "Because the message is also encrypted with a password only the sender knows",
+      "Because working out the private key from the public one requires solving a problem believed to be computationally infeasible, such as factoring a very large number",
+      "Because the public key changes with every message",
+      "Because the key is only valid on a secure network",
+    ],
+    answer: 1,
+    explanation:
+      "The two keys are linked mathematically, but the link runs easily in only one direction: multiplying two large primes is quick, and recovering them from the product is not. Diffie and Hellman published the idea in 1976 and RSA followed in 1977; British government cryptographers had found it a few years earlier and kept it secret until 1997.",
+    difficulty: 4,
+  },
+  {
+    id: "kq-tech-04",
+    domain: "technology",
+    prompt: "Why must GPS satellites correct their clocks for relativity?",
+    options: [
+      "Because radio signals slow down as they pass through the atmosphere",
+      "Because the satellites' clocks run fast by about 38 microseconds a day relative to clocks on the ground, which would produce errors of kilometres within a day",
+      "Because the Earth's rotation changes the length of a second",
+      "They do not; relativity has no measurable effect at satellite speeds",
+    ],
+    answer: 1,
+    explanation:
+      "Motion slows the satellite clocks by about 7 microseconds a day and the weaker gravity at altitude speeds them up by about 45, a net gain of some 38 microseconds; at the speed of light that is more than 10 kilometres of position error per day. The system's designers built the correction into the satellite clocks before launch, and GPS is the most everyday confirmation of Einstein there is.",
+    difficulty: 5,
+  },
+  /* ---------------- law ---------------- */
+  {
+    id: "kq-law-01",
+    domain: "law",
+    prompt: "Under the 1961 Vienna Convention, what can a host country do about a diplomat it believes has committed a serious crime?",
+    options: [
+      "Arrest and try the diplomat in its own courts",
+      "Declare the diplomat persona non grata and require their departure, or ask the sending state to waive immunity",
+      "Confiscate the embassy until the diplomat is handed over",
+      "Nothing at all",
+    ],
+    answer: 1,
+    explanation:
+      "Immunity protects the office, not the person: it belongs to the sending state, which alone can waive it, and the host's remedy is expulsion. The rule exists so that envoys can work in hostile capitals without being held hostage, and the price of that is the occasional unpunished offence, which each state tolerates because its own diplomats depend on the same protection.",
+    archiveRef: "diplomatic-immunity",
+    difficulty: 2,
+  },
+  {
+    id: "kq-law-02",
+    domain: "law",
+    prompt: "What was Magna Carta in 1215?",
+    options: [
+      "A constitution establishing Parliament",
+      "A declaration of rights for all English people",
+      "A peace treaty between King John and rebel barons, annulled by the Pope within months and reissued in revised form by later kings",
+      "A charter granting independence to the City of London",
+    ],
+    answer: 2,
+    explanation:
+      "Innocent III declared it void in August 1215, John died the next year, and the versions that entered English law were the reissues of 1216, 1217 and 1225. Its later fame rests on clause 39, that no free man may be imprisoned except by lawful judgement or the law of the land, which seventeenth-century lawyers turned into a principle its authors had not intended.",
+    archiveRef: "magna-carta",
+    difficulty: 4,
+  },
+  {
+    id: "kq-law-03",
+    domain: "law",
+    prompt: "What is the main structural difference between civil-law and common-law systems?",
+    options: [
+      "Civil-law systems have no criminal courts",
+      "In civil-law systems judges reason from a comprehensive written code; in common-law systems earlier judicial decisions are themselves binding sources of law",
+      "Common-law systems have no written statutes",
+      "Civil-law systems use juries and common-law systems do not",
+    ],
+    answer: 1,
+    explanation:
+      "Napoleon's Civil Code of 1804 is the model of the first: a single text meant to be applied, not interpreted, spread by conquest and imitation across Europe, Latin America and beyond. England's judges built law case by case and bound later courts to their reasoning, and that habit travelled with the empire; both systems now have statutes and precedent, but the centre of gravity differs.",
+    archiveRef: "napoleon-bonaparte",
+    difficulty: 5,
+  },
 ];
