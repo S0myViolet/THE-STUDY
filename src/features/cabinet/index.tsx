@@ -1,12 +1,16 @@
 "use client";
 
 import React from "react";
-import { PageHeader } from "@/components/ui/primitives";
+import { CabinetIndex } from "./Cabinet";
+import { CuriosityPage } from "./Curiosity";
 
+/**
+ * The Cabinet of Curiosities.
+ *   /cabinet             the cabinet: today's curiosity, drawers by domain
+ *   /cabinet?random=1    opens a random unseen curiosity
+ *   /cabinet/<id>        one curiosity (also opened by the daily session with ?session=&item=)
+ */
 export function CabinetRoom({ slug }: { slug: string[] }) {
-  return (
-    <div className="page">
-      <PageHeader eyebrow="cabinet" title="CabinetRoom" lede={"Route: /cabinet/" + slug.join("/")} />
-    </div>
-  );
+  if (slug[0]) return <CuriosityPage id={slug[0]} />;
+  return <CabinetIndex />;
 }
