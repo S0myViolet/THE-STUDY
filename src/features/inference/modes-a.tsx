@@ -25,7 +25,7 @@ export function ThreeStories({ id }: { id?: string }) {
 
   async function submit() {
     setBusy(true);
-    const { matched, unmatched } = matchList(stories, ch!.plausible);
+    const { matched, unmatched } = matchList(stories, ch!.plausible.map((p) => ({ text: p.title, keywords: p.keywords })));
     const distinct = new Set(matched).size;
     const obviousOnly = distinct <= 1 && keyPointCoverage(stories.join(" "), [ch!.obvious]).ratio > 0;
     let feedback: string | undefined;

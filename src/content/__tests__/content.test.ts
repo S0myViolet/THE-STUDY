@@ -107,8 +107,8 @@ describe("memory and people", () => {
 
 describe("inference and observation", () => {
   it("challenges have valid answers", () => {
-    for (const h of C.HOW_SURE) expect(h.options.some((o) => o.id === h.correct), h.id).toBe(true);
-    for (const f of C.FAST_SLOW) expect(f.options.some((o) => o.id === f.correct), f.id).toBe(true);
+    for (const h of C.HOW_SURE) expect(h.options.some((o: { id: string }) => o.id === h.correct), h.id).toBe(true);
+    for (const f of C.FAST_SLOW) expect(f.options.some((o: { id: string }) => o.id === f.correct), f.id).toBe(true);
     for (const b of C.BASE_RATE) expect(b.options.filter((o) => o.correct).length, b.id).toBe(1);
     for (const c of C.CAUSAL) expect(c.options.filter((o) => o.correct).length, c.id).toBe(1);
     for (const a of C.ANOMALY) expect(a.anomalyIndex, a.id).toBeLessThan(a.evidence.length);

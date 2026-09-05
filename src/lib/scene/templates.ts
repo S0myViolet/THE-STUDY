@@ -587,7 +587,10 @@ const trainCompartment: Blueprint = {
     (c) => fixed(c, "shelf", 400, 326, { w: 160, h: 14, color: "walnut" }),
     (c) => fixed(c, "bench", 170, 346, { w: 620, h: 124, color: c.rng.pick(["burgundy", "navy", "forest", "teal", "olive"]), text: "seat" }),
     (c) => fixed(c, "door", 820, 120, { w: 110, h: 350, color: c.rng.pick(["walnut", "slate", "charcoal"]), text: "sliding" }),
-    (c) => put(c, "sign", "wall", { label: `Coach ${c.rng.int(1, 9)}`, text: `Seats ${c.rng.int(1, 6) * 10 + 1}–${c.rng.int(1, 6) * 10 + 6}`, w: 120, h: 40 }),
+    (c) => {
+      const base = c.rng.int(1, 6) * 10;
+      return put(c, "sign", "wall", { label: `Coach ${c.rng.int(1, 9)}`, text: `Seats ${base + 1}–${base + 6}`, w: 120, h: 40 });
+    },
     (c) => put(c, "suitcase", "rack", { h: 80 }),
     (c) => ticket(c, c.rng.pick(["ledge", "seat"])),
   ],

@@ -2,6 +2,7 @@ import type { Scene, SceneObject, SceneTemplate, SceneColor } from "./types";
 import { createRng } from "./rng";
 import type { ObservationFact } from "@/lib/scoring/observation";
 import { TEMPLATES } from "./templates";
+import { adjacentPairs } from "./layout";
 
 export const COLOR_HEX: Record<SceneColor, string> = {
   burgundy: "#6b1f2a",
@@ -80,6 +81,9 @@ export function sceneFacts(scene: Scene): ObservationFact[] {
     if (o.zone) {
       facts.push({ id: `pos:${o.id}`, text: `The ${o.type} is ${o.zone}`, keywords: [`${o.type} ${o.zone}`], category: "position", importance: 1 });
     }
+  }
+  for (const p of adjacentPairs(scene.objects).slice(0, 4)) {
+    facts.push({ id: `adj:${p.a.id}:${p.b.id}`, text: `The ${p.a.type} is next to the ${p.b.type}`, keywords: [`${p.a.type} next to ${p.b.type}`, `${p.b.type} next to ${p.a.type}`, `${p.a.type} beside ${p.b.type}`, `${p.b.type} beside ${p.a.type}`, `${p.a.type} and ${p.b.type}`], category: "relationship", importance: 1 });
   }
   return facts;
 }
