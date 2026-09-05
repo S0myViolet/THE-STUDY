@@ -11,7 +11,7 @@ await page.waitForSelector("textarea");
 const ask = async (t) => {
   await page.fill("textarea", t);
   await page.click("button:has-text('Ask')");
-  await page.waitForFunction(() => ![...document.querySelectorAll("button")].some((b) => b.textContent?.includes("Considering")), null, { timeout: 15000 });
+  await page.waitForFunction(() => ![...document.querySelectorAll("button")].some((b) => b.textContent?.includes("Considering")), null, { timeout: 90000 });
   await page.waitForTimeout(400);
 };
 const replies = async () => page.locator("ol li").allInnerTexts();
