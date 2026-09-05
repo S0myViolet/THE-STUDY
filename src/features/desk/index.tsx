@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useStudy, useStudyQuery } from "@/lib/persistence/provider";
 import { greeting, longDate, minutes, plural, todayKey } from "@/lib/util/format";
+import { BASELINE_CASE } from "@/features/onboarding/baseline-case";
 import { todaysCase, todaysSession, planSession, startSession, currentItem, sessionHref, LENGTH_MINUTES, completeSessionItem } from "@/lib/adaptation/session";
 import { computeInsights } from "@/lib/adaptation/insights";
 import { dueMemoryItems } from "@/lib/services/memory";
@@ -196,7 +197,7 @@ export function DeskRoom({ slug: _slug }: { slug?: string[] } = {}) {
             <div id="continue" className="eyebrow mb-4">Continue</div>
             <ul className="divide-y divide-line border-t border-line">
               <ContinueRow label="Active book" title={reading.data?.[0]?.title} href={reading.data?.[0] ? `/archive/reading/${reading.data[0].id}` : "/archive/reading"} empty="Nothing open. Add a book to the shelf." />
-              <ContinueRow label="Active case" title={activeCase.data?.[0] ? C.CASES.find((c) => c.id === activeCase.data![0].caseId)?.title : undefined} href={activeCase.data?.[0] ? `/casebook/${activeCase.data[0].caseId}` : "/casebook"} empty="No case left open." />
+              <ContinueRow label="Active case" title={activeCase.data?.[0] ? [...C.CASES, BASELINE_CASE].find((c) => c.id === activeCase.data![0].caseId)?.title : undefined} href={activeCase.data?.[0] ? `/casebook/${activeCase.data[0].caseId}` : "/casebook"} empty="No case left open." />
               <ContinueRow label="Knowledge trail" title={(() => { const path = C.ARCHIVE_ENTRIES.find((e) => e.kind === "path" && (progress.data ?? []).some((p) => e.pathEntries?.includes(p.entryId))); return path?.title; })()} href={(() => { const path = C.ARCHIVE_ENTRIES.find((e) => e.kind === "path" && (progress.data ?? []).some((p) => e.pathEntries?.includes(p.entryId))); return path ? `/archive/${path.id}` : "/archive/paths"; })()} empty="No trail started." />
               <ContinueRow label="Strategic scenario" title={activeStrategy.data?.[0] ? C.STRATEGY_SCENARIOS.find((s) => s.id === activeStrategy.data![0].scenarioId)?.title : undefined} href={activeStrategy.data?.[0] ? `/strategy/${activeStrategy.data[0].scenarioId}` : "/strategy"} empty="No scenario in progress." />
               <ContinueRow label="Investigation" title={investigations.data?.[0]?.title} href={investigations.data?.[0] ? `/investigations/${investigations.data[0].id}` : "/investigations"} empty="No open question." />
@@ -206,6 +207,7 @@ export function DeskRoom({ slug: _slug }: { slug?: string[] } = {}) {
 
         {/* Secondary column */}
         <aside className="space-y-8 lg:pt-1">
+          {!profile.baselineComplete && !profile.isDemo ? <SecondaryItem label="The baseline" value="Not taken yet" href="/enter?again=1&step=baseline" sub="Nine short challenges. Fifteen minutes. The first map gets a lot sharper." /> : null}
           <SecondaryItem label="Memory due" value={due.data ? (due.data.length ? `${due.data.length} items` : "Nothing due") : "…"} href="/memory/review" sub={due.data?.length ? "Retention decays fastest right after learning." : "That is not the same as having nothing to learn."} />
           <SecondaryItem label="The Archive" value={unreadEntry ? unreadEntry.title : "All read"} href={unreadEntry ? `/archive/${unreadEntry.id}` : "/archive"} sub={unreadEntry ? "One new piece waiting." : "Add a question to the Archive."} serif />
           <SecondaryItem label="Open thread" value={threads.data?.[0]?.title ?? "Nothing yet"} href={threads.data?.[0] ? `/red-thread/${threads.data[0].id}` : "/red-thread"} sub={threads.data?.[0] ? `${threads.data[0].status} · ${threads.data[0].confidence} confidence` : "Nothing has repeated enough to call a pattern."} />

@@ -6,6 +6,7 @@ import { useStudy, useStudyQuery } from "@/lib/persistence/provider";
 import { PageHeader, Empty, Button } from "@/components/ui/primitives";
 import { I } from "@/components/ui/icons";
 import { CASES } from "@/content";
+import { BASELINE_CASE } from "@/features/onboarding/baseline-case";
 import type { CaseDefinition } from "@/lib/domain/types";
 import { DIFFICULTY_LABEL, FACULTY_META } from "@/lib/domain/faculties";
 import { minutes, shortDate, cx } from "@/lib/util/format";
@@ -14,7 +15,7 @@ import { GenerateCase } from "./GenerateCase";
 
 export function CasebookRoom({ slug }: { slug: string[] }) {
   const generated = useStudyQuery((db) => db.store("generated_content").list({ where: { kind: "case" } }), ["generated_content"]);
-  const all: CaseDefinition[] = [...CASES, ...((generated.data ?? []).map((g) => g.payload as CaseDefinition))];
+  const all: CaseDefinition[] = [...CASES, BASELINE_CASE, ...((generated.data ?? []).map((g) => g.payload as CaseDefinition))];
   if (slug[0]) {
     const kase = all.find((c) => c.id === slug[0]);
     if (!kase) {

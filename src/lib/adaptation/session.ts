@@ -65,7 +65,11 @@ const DIFFICULTY_FOR = (value: number): number => (value < 0.45 ? 2 : value < 0.
 
 /** Choose today's case deterministically for the date, preferring weak faculties and unseen cases. */
 export function pickCase(signals: Pick<Signals, "weakest" | "completedCases" | "activeCase" | "interests">, dateKey: string, level = 0.55) {
-  if (signals.activeCase) return C.CASES.find((c) => c.id === signals.activeCase) ?? null;
+  if (signals.activeCase) {
+    const active = C.CASES.find((c) => c.id === signals.activeCase);
+    if (active) return active;
+    // An active attempt on a case outside the seeded list (the entrance case) does not block today's file.
+  }
   const unseen = C.CASES.filter((c) => !signals.completedCases.has(c.id));
   const pool = unseen.length ? unseen : C.CASES;
   if (!pool.length) return null;

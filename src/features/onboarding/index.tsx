@@ -109,6 +109,8 @@ export function Onboarding() {
   useEffect(() => {
     const d = load();
     if (!d.name && profile.displayName && profile.displayName !== "You") d.name = profile.displayName;
+    const step = params.get("step");
+    if (params.get("again") === "1" && STEPS.includes(step as Step)) d.step = step as Step;
     setDraft(d);
     setHydrated(true);
     setAuth(params.get("auth") === "1");
@@ -136,17 +138,19 @@ export function Onboarding() {
   async function finish() {
     if (busy) return;
     setBusy(true);
-    const preferred = Array.from(new Set(draft.goals.flatMap((g) => GOALS.find((x) => x.id === g)?.faculty ?? [])));
+    const returning = params.get("again") === "1";
+    const goals = draft.goals.length ? draft.goals : profile.goals;
+    const preferred = Array.from(new Set(goals.flatMap((g) => GOALS.find((x) => x.id === g)?.faculty ?? [])));
     await updateProfile(db, {
-      displayName: draft.name.trim() || "You",
-      goals: draft.goals,
-      interests: draft.interests,
+      displayName: draft.name.trim() || profile.displayName || "You",
+      goals,
+      interests: draft.interests.length ? draft.interests : profile.interests,
       onboardingComplete: true,
-      baselineComplete: !draft.baselineSkipped,
-      enteredAt: new Date().toISOString(),
+      baselineComplete: profile.baselineComplete || !draft.baselineSkipped,
+      enteredAt: profile.onboardingComplete ? profile.enteredAt : new Date().toISOString(),
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
-    await updatePrefs(db, { sessionLength: draft.length, preferredFaculties: preferred as FacultyId[] });
+    if (!returning) await updatePrefs(db, { sessionLength: draft.length, preferredFaculties: preferred as FacultyId[] });
     try {
       localStorage.removeItem(KEY);
     } catch {}
