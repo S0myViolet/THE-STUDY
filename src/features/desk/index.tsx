@@ -159,7 +159,7 @@ export function DeskRoom({ slug: _slug }: { slug?: string[] } = {}) {
                 <Link href={`/casebook/${kase.data.id}`} className="btn btn-lg">
                   {activeCase.data?.[0]?.caseId === kase.data.id ? "Resume" : "Begin"} <I.ArrowRight size={14} />
                 </Link>
-                <div className="flex items-center gap-3 ml-auto">
+                <div className="flex flex-wrap items-center gap-3 md:ml-auto">
                   <Segmented value={length} onChange={setLength} label="Session length" options={[{ value: "quick", label: "Quick" }, { value: "standard", label: "Standard" }, { value: "deep", label: "Deep" }, { value: "immersion", label: "Immersion" }]} />
                   <Button variant="secondary" onClick={beginSession}>
                     Session · {LENGTH_MINUTES[length]} min

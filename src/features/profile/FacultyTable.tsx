@@ -10,7 +10,7 @@ import { cx } from "@/lib/util/format";
 /** The faculty list as an editorial table. Each row opens the faculty. */
 export function FacultyTable({ views }: { views: FacultyView[] }) {
   return (
-    <div className="overflow-x-auto -mx-3 px-3">
+    <div className="relative overflow-x-auto -mx-3 px-3">
       <table className="w-full border-collapse text-[13px] min-w-[560px]">
         <thead>
           <tr className="border-b border-line-2">

@@ -100,7 +100,7 @@ function CapabilityMap() {
             {current ? <FacultyPanel view={current} /> : null}
           </div>
 
-          <section className="mt-14" aria-labelledby="faculties">
+          <section className="mt-14 min-w-0" aria-labelledby="faculties">
             <div className="flex items-baseline justify-between gap-4 mb-3">
               <div id="faculties" className="eyebrow">
                 The twelve faculties
