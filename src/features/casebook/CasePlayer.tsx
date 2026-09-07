@@ -93,6 +93,12 @@ export function CasePlayer({ kase, onComplete, sourceKind = "case" }: { kase: Ca
   }, [db, kase, sessionId]);
 
   const stage = kase.stages[stageIndex];
+  // Looking back at an earlier, untimed stage. Nothing there can be changed; the
+  // attempt stays where it is.
+  const [viewIndex, setViewIndex] = useState<number | null>(null);
+  const reviewing = viewIndex !== null && viewIndex < stageIndex && !isTimedStage(kase.stages[viewIndex]) ? viewIndex : null;
+  const shown = reviewing !== null ? kase.stages[reviewing] : stage;
+  const returnToCurrent = useCallback(() => setViewIndex(null), []);
   const source = useMemo(() => ({ kind: sourceKind, refId: kase.id, label: `Case ${kase.number} · ${kase.title}` }), [kase, sourceKind]);
 
   const persistStage = useCallback(
@@ -303,14 +309,9 @@ export function CasePlayer({ kase, onComplete, sourceKind = "case" }: { kase: Ca
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-8">
-        <ol className="hidden md:block sticky top-8 self-start space-y-1" aria-label="Stages">
-          {kase.stages.map((s, i) => (
-            <li key={s.id} className={cx("flex items-center gap-2 text-[12px] py-1", i === stageIndex ? "text-ink" : i < stageIndex ? "text-ink-3" : "text-ink-4")}>
-              <span className={cx("w-[5px] h-[5px] rounded-full", i === stageIndex ? "bg-wine" : i < stageIndex ? "bg-ink-3" : "bg-line-2")} />
-              {STAGE_LABEL[s.kind]}
-            </li>
-          ))}
-        </ol>
+        <div className="hidden md:block sticky top-8 self-start">
+          <StageNav stages={kase.stages} current={stageIndex} viewing={reviewing} onSelect={setViewIndex} />
+        </div>
 
         <div className="min-w-0">
           <div className="md:hidden mb-4">
@@ -321,21 +322,45 @@ export function CasePlayer({ kase, onComplete, sourceKind = "case" }: { kase: Ca
               </span>
             </div>
             <HairlineProgress value={progress} />
+            {stageIndex > 0 ? (
+              <div className="mt-3">
+                <StageNav stages={kase.stages} current={stageIndex} viewing={reviewing} onSelect={setViewIndex} compact />
+              </div>
+            ) : null}
           </div>
 
-          <div key={stage.id} className="anim-place">
-            {stage.kind === "enter" ? <EnterStage kase={kase} stage={stage} onNext={advance} /> : null}
-            {stage.kind === "notice" ? <NoticeStage stage={stage} onNext={advance} /> : null}
-            {stage.kind === "recall" ? <RecallStage stage={stage} questions={sceneQuestions ?? stage.questions ?? []} result={outcomes.recall} onSubmit={onRecall} onNext={advance} /> : null}
-            {stage.kind === "separate" ? <SeparateStage stage={stage} result={outcomes.separate} onSubmit={onSeparate} onNext={advance} /> : null}
-            {stage.kind === "hypotheses" ? <HypothesesStage stage={stage} result={outcomes.hypotheses} onSubmit={onHypotheses} onNext={advance} /> : null}
-            {stage.kind === "question" ? <QuestionStage stage={stage} result={outcomes.question} onSubmit={onQuestion} onNext={advance} /> : null}
-            {stage.kind === "evidence" ? <EvidenceStage stage={stage} onNext={advance} /> : null}
-            {stage.kind === "update" ? <UpdateStage stage={stage} before={outcomes.hypotheses?.confidenceBefore ?? 0.5} reveal={outcomes.reveal} result={outcomes.update} onSubmit={onUpdate} onNext={advance} /> : null}
-            {stage.kind === "decision" ? <DecisionStage stage={stage} result={outcomes.decision} onSubmit={onDecision} onNext={advance} /> : null}
-            {stage.kind === "explain" ? <ExplainStage stage={stage} result={outcomes.explain} onSubmit={onExplain} onNext={advance} /> : null}
-            {stage.kind === "debrief" ? <DebriefStage kase={kase} stage={stage} outcomes={outcomes} baselineAlt={baselineAlt} completed={attempt.status === "completed"} onFinish={onFinish} inSession={inSession} /> : null}
+          {reviewing !== null ? (
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3 text-[12px] text-ink-3">
+              <span>
+                Looking back at <span className="text-ink">{STAGE_LABEL[shown.kind]}</span>. Nothing here can be changed.
+              </span>
+              <Button variant="secondary" size="sm" onClick={returnToCurrent}>
+                Back to {STAGE_LABEL[stage.kind]} <I.ArrowRight size={12} />
+              </Button>
+            </div>
+          ) : null}
+
+          <div key={`${shown.id}:${reviewing === null ? "live" : "review"}`} className="anim-place">
+            {shown.kind === "enter" ? <EnterStage kase={kase} stage={shown} onNext={reviewing === null ? advance : returnToCurrent} review={reviewing !== null} /> : null}
+            {shown.kind === "notice" ? <NoticeStage stage={shown} onNext={advance} /> : null}
+            {shown.kind === "recall" ? <RecallStage stage={shown} questions={sceneQuestions ?? shown.questions ?? []} result={outcomes.recall} onSubmit={onRecall} onNext={reviewing === null ? advance : returnToCurrent} /> : null}
+            {shown.kind === "separate" ? <SeparateStage stage={shown} result={outcomes.separate} onSubmit={onSeparate} onNext={reviewing === null ? advance : returnToCurrent} /> : null}
+            {shown.kind === "hypotheses" ? <HypothesesStage stage={shown} result={outcomes.hypotheses} onSubmit={onHypotheses} onNext={reviewing === null ? advance : returnToCurrent} /> : null}
+            {shown.kind === "question" ? <QuestionStage stage={shown} result={outcomes.question} onSubmit={onQuestion} onNext={reviewing === null ? advance : returnToCurrent} /> : null}
+            {shown.kind === "evidence" ? <EvidenceStage stage={shown} onNext={reviewing === null ? advance : returnToCurrent} /> : null}
+            {shown.kind === "update" ? <UpdateStage stage={shown} before={outcomes.hypotheses?.confidenceBefore ?? 0.5} reveal={outcomes.reveal} result={outcomes.update} onSubmit={onUpdate} onNext={reviewing === null ? advance : returnToCurrent} /> : null}
+            {shown.kind === "decision" ? <DecisionStage stage={shown} result={outcomes.decision} onSubmit={onDecision} onNext={reviewing === null ? advance : returnToCurrent} /> : null}
+            {shown.kind === "explain" ? <ExplainStage stage={shown} result={outcomes.explain} onSubmit={onExplain} onNext={reviewing === null ? advance : returnToCurrent} /> : null}
+            {shown.kind === "debrief" ? <DebriefStage kase={kase} stage={shown} outcomes={outcomes} baselineAlt={baselineAlt} completed={attempt.status === "completed"} onFinish={onFinish} inSession={inSession} /> : null}
           </div>
+
+          {reviewing !== null ? (
+            <div className="mt-8 border-t border-line pt-4">
+              <Button variant="secondary" onClick={returnToCurrent}>
+                Back to {STAGE_LABEL[stage.kind]} <I.ArrowRight size={14} />
+              </Button>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
@@ -357,7 +382,7 @@ function StageHeader({ stage, children }: { stage: CaseStage; children?: React.R
   );
 }
 
-function EnterStage({ kase, stage, onNext }: { kase: CaseDefinition; stage: CaseStage; onNext: () => void }) {
+function EnterStage({ kase, stage, onNext, review }: { kase: CaseDefinition; stage: CaseStage; onNext: () => void; review?: boolean }) {
   return (
     <div className="sheet-raised paper-texture case-edge p-6 md:p-10">
       <div className="flex items-baseline justify-between">
@@ -376,12 +401,56 @@ function EnterStage({ kase, stage, onNext }: { kase: CaseDefinition; stage: Case
           <span key={f}>{FACULTY_META[f].label}</span>
         ))}
       </div>
-      <div className="mt-8">
-        <Button size="lg" onClick={onNext}>
-          Open the file <I.ArrowRight size={14} />
-        </Button>
-      </div>
+      {!review ? (
+        <div className="mt-8">
+          <Button size="lg" onClick={onNext}>
+            Open the file <I.ArrowRight size={14} />
+          </Button>
+        </div>
+      ) : null}
     </div>
+  );
+}
+
+/** Stages whose material is shown against a clock. Once they have passed, they stay closed. */
+function isTimedStage(s: CaseStage | undefined): boolean {
+  return !!s && (s.kind === "notice" || !!s.material?.seconds);
+}
+
+/**
+ * The stage list. Completed, untimed stages open for reading; the timed stage
+ * shows why it will not, and the stages ahead stay quiet.
+ */
+function StageNav({ stages, current, viewing, onSelect, compact }: { stages: CaseStage[]; current: number; viewing: number | null; onSelect: (i: number | null) => void; compact?: boolean }) {
+  return (
+    <ol className={cx(compact ? "flex gap-1 overflow-x-auto -mx-1 px-1 pb-1" : "space-y-1")} aria-label="Stages">
+      {stages.map((s, i) => {
+        const done = i < current;
+        const timed = isTimedStage(s);
+        const active = viewing === null ? i === current : i === viewing;
+        const label = STAGE_LABEL[s.kind];
+        const tone = active ? "text-ink" : done ? "text-ink-3" : "text-ink-4";
+        const dot = <span className={cx("w-[5px] h-[5px] rounded-full shrink-0", active ? "bg-wine" : done ? "bg-ink-3" : "bg-line-2")} />;
+        const base = cx("flex items-center gap-2 text-[12px] py-1 whitespace-nowrap", compact && "px-2 border border-line rounded-sm", tone);
+        if (i === current || (done && !timed)) {
+          return (
+            <li key={s.id}>
+              <button type="button" className={cx(base, "hover:text-ink text-left")} aria-current={active ? "step" : undefined} onClick={() => onSelect(i === current ? null : i)} title={i === current ? "Where you are" : `Look back at ${label}`}>
+                {dot}
+                {label}
+              </button>
+            </li>
+          );
+        }
+        return (
+          <li key={s.id} className={base} title={done && timed ? "Shown against a clock. It does not reopen." : undefined} aria-disabled="true">
+            {dot}
+            {label}
+            {done && timed ? <span className="text-[10px] uppercase tracking-wide text-ink-4">closed</span> : null}
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
