@@ -12,9 +12,9 @@ export function ProfileNav({ current }: { current: "map" | "evidence" | "methodo
   );
   return (
     <nav aria-label="Profile sections" className="flex items-center gap-6 mb-8 border-b border-line">
-      {item("map", "/profile", "Capability map")}
-      {item("evidence", "/profile/evidence", "Evidence")}
-      {item("methodology", "/profile/methodology", "Methodology")}
+      {item("map", "/v1/profile", "Capability map")}
+      {item("evidence", "/v1/profile/evidence", "Evidence")}
+      {item("methodology", "/v1/profile/methodology", "Methodology")}
     </nav>
   );
 }

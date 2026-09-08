@@ -61,7 +61,7 @@ export function Timeline() {
   }, [selected, placed]);
 
   function activate(id: string) {
-    if (selected === id) router.push(`/archive/${id}`);
+    if (selected === id) router.push(`/v1/archive/${id}`);
     else setSelected(id);
   }
 
@@ -71,7 +71,7 @@ export function Timeline() {
     return (
       <div className="page">
         <ArchiveHeader eyebrow="The Archive · Timeline" title="When the ideas happened" />
-        <Empty title="Nothing dated yet." action={<Link href="/archive" className="btn btn-secondary">Back to the Archive</Link>} />
+        <Empty title="Nothing dated yet." action={<Link href="/v1/archive" className="btn btn-secondary">Back to the Archive</Link>} />
       </div>
     );
   }
@@ -160,7 +160,7 @@ export function Timeline() {
                 return (
                   <a
                     key={p.entry.id}
-                    href={`/archive/${p.entry.id}`}
+                    href={`/v1/archive/${p.entry.id}`}
                     onClick={(e) => { e.preventDefault(); activate(p.entry.id); }}
                     onMouseEnter={() => setHover(p.entry.id)}
                     onMouseLeave={() => setHover(null)}
@@ -236,7 +236,7 @@ export function Timeline() {
                         {isSel ? (
                           <div className="mt-2 ml-[76px] anim-unfold">
                             <p className="text-[13px] text-ink-2 leading-snug">{d.entry.summary}</p>
-                            <Link href={`/archive/${d.entry.id}`} className="btn btn-sm mt-3">Open entry <I.ArrowRight size={12} /></Link>
+                            <Link href={`/v1/archive/${d.entry.id}`} className="btn btn-sm mt-3">Open entry <I.ArrowRight size={12} /></Link>
                             {same.length ? (
                               <div className="mt-4">
                                 <div className="eyebrow">At the same time</div>
@@ -244,7 +244,7 @@ export function Timeline() {
                                   {same.slice(0, 8).map((o) => (
                                     <li key={o.entry.id} className="flex items-baseline gap-3">
                                       <span className="numeral text-[11px] text-ink-4 w-[64px] shrink-0">{formatYear(o.start)}</span>
-                                      <Link href={`/archive/${o.entry.id}`} className="serif text-[15px] text-ink-2 hover:text-ink">{o.entry.title}</Link>
+                                      <Link href={`/v1/archive/${o.entry.id}`} className="serif text-[15px] text-ink-2 hover:text-ink">{o.entry.title}</Link>
                                     </li>
                                   ))}
                                 </ul>
@@ -283,7 +283,7 @@ function SamePanel({ sel, same, status, onPick, onClose }: { sel: Dated; same: D
       <h2 className="serif text-[24px] text-ink leading-tight mt-1.5">{e.title}</h2>
       <p className="serif text-[15px] text-ink-2 leading-snug mt-2">{e.summary}</p>
       <div className="mt-3 flex items-center gap-2 text-[12px] text-ink-3"><StatusMark status={s} /> {STATUS_LABEL[s]}</div>
-      <Link href={`/archive/${e.id}`} className="btn mt-4">Open entry <I.ArrowRight size={14} /></Link>
+      <Link href={`/v1/archive/${e.id}`} className="btn mt-4">Open entry <I.ArrowRight size={14} /></Link>
 
       <div className="mt-8 border-t border-line pt-3">
         <div className="flex items-baseline justify-between">
@@ -298,7 +298,7 @@ function SamePanel({ sel, same, status, onPick, onClose }: { sel: Dated; same: D
                   <span className="block text-[11px] numeral text-ink-4">{eraLabel(o.entry)}</span>
                   <span className="serif text-[16px] text-ink group-hover:text-ink-2 leading-snug block truncate">{o.entry.title}</span>
                 </button>
-                <Link href={`/archive/${o.entry.id}`} className="text-ink-3 hover:text-ink shrink-0" aria-label={`Open ${o.entry.title}`}>
+                <Link href={`/v1/archive/${o.entry.id}`} className="text-ink-3 hover:text-ink shrink-0" aria-label={`Open ${o.entry.title}`}>
                   <I.ArrowRight size={13} />
                 </Link>
               </li>

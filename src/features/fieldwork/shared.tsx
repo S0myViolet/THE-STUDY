@@ -54,7 +54,7 @@ export function NotFound({ what = "assignment" }: { what?: string }) {
       <Empty
         title={`No such ${what}.`}
         action={
-          <Link href="/fieldwork" className="btn btn-secondary">
+          <Link href="/v1/fieldwork" className="btn btn-secondary">
             Fieldwork
           </Link>
         }

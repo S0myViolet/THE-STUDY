@@ -31,7 +31,7 @@ export function ConceptWeb() {
   }, [centre]);
   const [text, setText] = useState("");
   const [result, setResult] = useState<{ hit: string[]; extra: string[] } | null>(null);
-  if (!centre) return <div className="page"><MemoryHeader title="Concept Web" /><Empty title="The web needs the Archive." action={<Link href="/archive" className="btn btn-secondary">Open the Archive</Link>} /></div>;
+  if (!centre) return <div className="page"><MemoryHeader title="Concept Web" /><Empty title="The web needs the Archive." action={<Link href="/v1/archive" className="btn btn-secondary">Open the Archive</Link>} /></div>;
 
   async function submit() {
     const lines = text.split(/\n|,/).map((s) => normalize(s)).filter(Boolean);
@@ -78,7 +78,7 @@ export function ConceptWeb() {
               );
             })}
           </svg>
-          <ul className="space-y-1">{neighbours.map((n) => <li key={n.id} className={cx("text-[14px] pl-3 border-l", result.hit.includes(n.id) ? "border-forest" : "border-line-2 text-ink-2")}><Link href={`/archive/${n.id}`} className="serif text-[16px] hover:underline underline-offset-4">{n.entry!.title}</Link> <span className="text-[11px] uppercase tracking-wider text-ink-3 ml-2">{n.relation.toLowerCase().replace("_", " ")}</span>{n.note ? <span className="block text-[12px] text-ink-3">{n.note}</span> : null}</li>)}</ul>
+          <ul className="space-y-1">{neighbours.map((n) => <li key={n.id} className={cx("text-[14px] pl-3 border-l", result.hit.includes(n.id) ? "border-forest" : "border-line-2 text-ink-2")}><Link href={`/v1/archive/${n.id}`} className="serif text-[16px] hover:underline underline-offset-4">{n.entry!.title}</Link> <span className="text-[11px] uppercase tracking-wider text-ink-3 ml-2">{n.relation.toLowerCase().replace("_", " ")}</span>{n.note ? <span className="block text-[12px] text-ink-3">{n.note}</span> : null}</li>)}</ul>
           {result.extra.length ? <p className="text-[12px] text-ink-3">Not in the Archive's graph (yet): {result.extra.join(", ")}. Add them as connections from the entry page if they are real.</p> : null}
           <Finish onAgain={() => { setRound((r) => r + 1); setText(""); setResult(null); }} againLabel="Another idea" />
         </div>

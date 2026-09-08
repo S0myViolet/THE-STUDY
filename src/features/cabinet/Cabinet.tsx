@@ -63,12 +63,12 @@ export function CabinetIndex() {
   useEffect(() => {
     if (!wantRandom || cab.loading) return;
     const pick = randomUnseen(cab.items, cab.views);
-    if (pick) router.replace(`/cabinet/${pick.id}`);
+    if (pick) router.replace(`/v1/cabinet/${pick.id}`);
   }, [wantRandom, cab.loading, cab.items, cab.views, router]);
 
   function strange() {
     const pick = randomUnseen(cab.items, cab.views);
-    if (pick) router.push(`/cabinet/${pick.id}`);
+    if (pick) router.push(`/v1/cabinet/${pick.id}`);
   }
 
   function toggle(d: ArchiveDomain) {
@@ -103,7 +103,7 @@ export function CabinetIndex() {
         const cur = coerceCuriosity(res.data, new Set(cab.items.map((c) => c.id)));
         await db.store("generated_content").put(stamp<GeneratedContent>(db.userId, "gen", { kind: "curiosity", refId: cur.id, payload: cur, model: res.model }));
         setBusy(false);
-        router.push(`/cabinet/${cur.id}?fresh=1`);
+        router.push(`/v1/cabinet/${cur.id}?fresh=1`);
         return;
       }
       if (res.reason !== "unconfigured") message = "The model did not return a curiosity.";
@@ -151,7 +151,7 @@ export function CabinetIndex() {
                 Today&apos;s curiosity · {DOMAIN_LABEL[today.domain]}
                 {seenState(cab.views, today.id) !== "unseen" ? " · seen" : ""}
               </div>
-              <Link href={`/cabinet/${today.id}`} className="block mt-2 group">
+              <Link href={`/v1/cabinet/${today.id}`} className="block mt-2 group">
                 <h2 className="display text-[28px] md:text-[36px] text-ink group-hover:text-ink-2 leading-tight">{today.title}</h2>
               </Link>
               <p className="serif text-[18px] md:text-[19px] text-ink-2 mt-3 max-w-[60ch] leading-snug">{today.hook}</p>
@@ -160,7 +160,7 @@ export function CabinetIndex() {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 mt-6 md:mt-0 shrink-0">
-              <Link href={`/cabinet/${today.id}`} className="btn btn-lg">
+              <Link href={`/v1/cabinet/${today.id}`} className="btn btn-lg">
                 Open <I.ArrowRight size={14} />
               </Link>
               <Button variant="secondary" size="lg" onClick={strange}>
@@ -217,7 +217,7 @@ export function CabinetIndex() {
             {offer.pick ? (
               <>
                 {offer.lead}{" "}
-                <Link href={`/cabinet/${offer.pick.id}`} className="serif text-[15px] text-ink underline underline-offset-4 decoration-line-2 hover:decoration-ink">
+                <Link href={`/v1/cabinet/${offer.pick.id}`} className="serif text-[15px] text-ink underline underline-offset-4 decoration-line-2 hover:decoration-ink">
                   {offer.pick.title}
                 </Link>
                 .
@@ -236,7 +236,7 @@ export function CabinetIndex() {
           <ul className="divide-y divide-line">
             {recent.map(({ view, item }) => (
               <li key={view.id}>
-                <Link href={`/cabinet/${item.id}`} className="flex items-baseline justify-between gap-4 py-2.5 -mx-2 px-2 rounded-sm hover:bg-paper-3">
+                <Link href={`/v1/cabinet/${item.id}`} className="flex items-baseline justify-between gap-4 py-2.5 -mx-2 px-2 rounded-sm hover:bg-paper-3">
                   <span className="min-w-0 serif text-[16px] text-ink truncate">{item.title}</span>
                   <span className="shrink-0 inline-flex items-baseline gap-3 text-[11px] text-ink-4">
                     {view.note ? <span>note</span> : null}
@@ -291,7 +291,7 @@ function DrawerView({ drawer, open, onToggle, views }: { drawer: Drawer; open: b
 function Row({ c, views }: { c: Curiosity; views: Map<string, CuriosityView> }) {
   const state = seenState(views, c.id);
   return (
-    <Link href={`/cabinet/${c.id}`} className="group flex items-start gap-3 py-2.5 -mx-2 px-2 rounded-sm hover:bg-paper-3">
+    <Link href={`/v1/cabinet/${c.id}`} className="group flex items-start gap-3 py-2.5 -mx-2 px-2 rounded-sm hover:bg-paper-3">
       <SeenMark state={state} className="mt-[7px]" />
       <span className="min-w-0">
         <span className="serif text-[17px] leading-snug text-ink group-hover:text-ink-2 block">

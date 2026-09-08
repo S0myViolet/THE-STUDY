@@ -22,7 +22,7 @@ export function CasebookRoom({ slug }: { slug: string[] }) {
       if (generated.loading) return null;
       return (
         <div className="page">
-          <Empty title="No such file in the Casebook." action={<Link href="/casebook" className="btn btn-secondary">Back to the Casebook</Link>} />
+          <Empty title="No such file in the Casebook." action={<Link href="/v1/casebook" className="btn btn-secondary">Back to the Casebook</Link>} />
         </div>
       );
     }
@@ -53,7 +53,7 @@ function CaseList({ cases }: { cases: CaseDefinition[] }) {
     const s = byCase.get(c.id);
     return (
       <li>
-        <Link href={`/casebook/${c.id}`} className="group grid grid-cols-[64px_1fr_auto] md:grid-cols-[72px_1fr_180px_120px] gap-4 items-baseline py-4 border-t border-line hover:bg-paper-3 -mx-3 px-3 rounded-sm">
+        <Link href={`/v1/casebook/${c.id}`} className="group grid grid-cols-[64px_1fr_auto] md:grid-cols-[72px_1fr_180px_120px] gap-4 items-baseline py-4 border-t border-line hover:bg-paper-3 -mx-3 px-3 rounded-sm">
           <span className="mono text-[12px] text-ink-3">{c.number}</span>
           <span className="min-w-0">
             <span className="serif text-[20px] text-ink group-hover:text-ink-2 block truncate">{c.title}</span>

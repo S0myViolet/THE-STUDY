@@ -156,3 +156,23 @@ export const CHORDS: { key: string; href: string; label: string }[] = [...SECTIO
 export function chordTarget(key: string): string | undefined {
   return CHORDS.find((c) => c.key === key)?.href;
 }
+
+/** V1 rooms that used to live at the top level. Their old addresses redirect into the archive. */
+export const V1_MOVED_ROOMS = ["casebook", "observation", "inference", "salon", "strategy", "archive", "rhetoric", "cabinet", "investigations", "fieldwork", "red-thread", "after-action", "profile"] as const;
+export type V1MovedRoom = (typeof V1_MOVED_ROOMS)[number];
+
+/**
+ * The archive address for an old top-level V1 path, keeping the remaining
+ * segments and the query string: `v1Href("casebook", ["case-1"], { stage: "2" })`
+ * → `/v1/casebook/case-1?stage=2`.
+ */
+export function v1Href(room: V1MovedRoom | "desk" | "memory" | "curator" | "enter", slug?: string[], search?: Record<string, string | string[] | undefined>): string {
+  const path = ["/v1", room, ...(slug ?? []).filter((s) => s.length > 0).map(encodeURIComponent)].join("/");
+  const qs = new URLSearchParams();
+  for (const [key, value] of Object.entries(search ?? {})) {
+    if (Array.isArray(value)) for (const v of value) qs.append(key, v);
+    else if (value !== undefined) qs.set(key, value);
+  }
+  const q = qs.toString();
+  return q ? `${path}?${q}` : path;
+}

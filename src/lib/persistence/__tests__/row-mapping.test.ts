@@ -2,9 +2,34 @@ import "fake-indexeddb/auto";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { CaseAttempt, MemoryItem, Preferences, RedThread, UserProfile } from "@/lib/domain/types";
-import type { ConceptMastery, DailyPlan, ExamAttempt, PracticeAttempt, Project, RetrievalItem } from "@/lib/v2/types";
-import { COLLECTIONS, LOCAL_INDEXES, V2_COLLECTIONS } from "@/lib/persistence/collections";
+import type { CaseAttempt, Entity, MemoryItem, Preferences, RedThread, UserProfile } from "@/lib/domain/types";
+import type {
+  ApplicationRecord,
+  AssistanceEvent,
+  ConceptEvidence,
+  ConceptMastery,
+  DailyPlan,
+  ErrorRecord,
+  ExamAttempt,
+  GeneratedV2,
+  KnowledgeEdge,
+  KnowledgeNode,
+  LessonSession,
+  LibrarySource,
+  PracticeAttempt,
+  Project,
+  ReadingRecall,
+  ReadingSession,
+  RetrievalItem,
+  RetrievalReview,
+  SpeakingSession,
+  StudyLog,
+  TutorConversation,
+  WritingEntry,
+  WritingFeedback,
+  WritingVersion,
+} from "@/lib/v2/types";
+import { COLLECTIONS, LOCAL_INDEXES, V2_COLLECTIONS, type CollectionName } from "@/lib/persistence/collections";
 import { LocalDatabase } from "@/lib/persistence/local";
 import { stamp } from "@/lib/persistence/store";
 import { fromRow, toRow } from "@/lib/persistence/supabase";
@@ -18,7 +43,10 @@ const T0 = "2026-09-01T09:00:00.000Z";
 const T1 = "2026-09-01T09:25:00.000Z";
 const T2 = "2026-09-08T09:00:00.000Z";
 
-const caseAttempt: CaseAttempt = {
+/** Every field present, optional ones included, so a missing column cannot hide behind `undefined`. */
+type Full<T> = Required<T>;
+
+const caseAttempt: Full<CaseAttempt> = {
   id: "ca_sample01",
   userId: USER,
   createdAt: T0,
@@ -54,7 +82,7 @@ const caseAttempt: CaseAttempt = {
   },
 };
 
-const memoryItem: MemoryItem = {
+const memoryItem: Full<MemoryItem> = {
   id: "mi_sample01",
   userId: USER,
   createdAt: T0,
@@ -78,7 +106,7 @@ const memoryItem: MemoryItem = {
   tags: ["venice", "people"],
 };
 
-const redThread: RedThread = {
+const redThread: Full<RedThread> = {
   id: "rt_sample01",
   userId: USER,
   createdAt: T0,
@@ -102,7 +130,7 @@ const redThread: RedThread = {
 
 /* ---- V2 (migration 0002) ---- */
 
-const profile: UserProfile = {
+const profile: Full<UserProfile> = {
   id: "profile_sample01",
   userId: USER,
   createdAt: T0,
@@ -128,7 +156,7 @@ const profile: UserProfile = {
   },
 };
 
-const preferences: Preferences = {
+const preferences: Full<Preferences> = {
   id: "prefs_sample01",
   userId: USER,
   createdAt: T0,
@@ -151,7 +179,7 @@ const preferences: Preferences = {
   readingPace: 2,
 };
 
-const conceptMastery: ConceptMastery = {
+const conceptMastery: Full<ConceptMastery> = {
   id: "cm_sample01",
   userId: USER,
   createdAt: T0,
@@ -178,7 +206,7 @@ const conceptMastery: ConceptMastery = {
   ],
 };
 
-const practiceAttempt: PracticeAttempt = {
+const practiceAttempt: Full<PracticeAttempt> = {
   id: "pa_sample01",
   userId: USER,
   createdAt: T1,
@@ -205,7 +233,7 @@ const practiceAttempt: PracticeAttempt = {
   planItemId: "pi_01",
 };
 
-const examAttempt: ExamAttempt = {
+const examAttempt: Full<ExamAttempt> = {
   id: "ea_sample01",
   userId: USER,
   createdAt: T1,
@@ -253,7 +281,7 @@ const examAttempt: ExamAttempt = {
   planItemId: "pi_03",
 };
 
-const project: Project = {
+const project: Full<Project> = {
   id: "pj_sample01",
   userId: USER,
   createdAt: T0,
@@ -280,7 +308,7 @@ const project: Project = {
   completedAt: T2,
 };
 
-const retrievalItem: RetrievalItem = {
+const retrievalItem: Full<RetrievalItem> = {
   id: "ri_sample01",
   userId: USER,
   createdAt: T0,
@@ -305,7 +333,7 @@ const retrievalItem: RetrievalItem = {
   tags: ["probability"],
 };
 
-const dailyPlan: DailyPlan = {
+const dailyPlan: Full<DailyPlan> = {
   id: "dp_sample01",
   userId: USER,
   createdAt: T2,
@@ -324,6 +352,339 @@ const dailyPlan: DailyPlan = {
   completedAt: T2,
 };
 
+const conceptEvidence: Full<ConceptEvidence> = {
+  id: "ce_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T1,
+  conceptId: "probability.conditional_probability",
+  kind: "independent",
+  score: 1,
+  correct: true,
+  difficulty: 4,
+  scaffolded: false,
+  hintsUsed: 0,
+  delayDays: 0,
+  transfer: 1,
+  confidence: 0.6,
+  weight: 1.15,
+  independent: true,
+  latencyMs: 84_500,
+  source: { kind: "practice", refId: "pa_sample01", label: "Train" },
+  planItemId: "pi_01",
+};
+
+const lessonSession: Full<LessonSession> = {
+  id: "lsn_sample01",
+  userId: USER,
+  createdAt: T0,
+  updatedAt: T1,
+  lessonId: "ls-probability-conditional-1",
+  conceptIds: ["probability.conditional_probability"],
+  depth: "standard",
+  stepIndex: 7,
+  status: "completed",
+  responses: { q1: "The second test", checkpoint: [1, 0, 1] },
+  checkpointScore: 0.67,
+  explainBack: { text: "Conditioning restricts the sample space to the event.", score: 0.8, feedback: "Named the restriction; missed renormalisation.", aiEvaluated: false },
+  transferScore: 0.5,
+  startedAt: T0,
+  completedAt: T1,
+  minutes: 24,
+  planItemId: "pi_02",
+};
+
+const errorRecord: Full<ErrorRecord> = {
+  id: "er_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T2,
+  category: "BASE_RATE_NEGLECT",
+  skill: "probability",
+  concepts: ["probability.base_rates", "probability.conditional_probability"],
+  question: "A test is 90% sensitive and 95% specific; prevalence is 1%. P(disease | positive)?",
+  response: "0.9",
+  correctReasoning: "Weight the sensitivity by the prevalence before comparing it with the false positives from the healthy majority.",
+  confidence: 0.85,
+  source: { kind: "practice", refId: "pa_sample02" },
+  recurrenceKey: "BASE_RATE_NEGLECT:probability.base_rates",
+  remediatedAt: T2,
+};
+
+const retrievalReview: Full<RetrievalReview> = {
+  id: "rr_sample01",
+  userId: USER,
+  createdAt: T2,
+  updatedAt: T2,
+  itemId: "ri_sample01",
+  conceptId: "probability.conditional_probability",
+  grade: 4,
+  correct: true,
+  score: 0.9,
+  confidence: 0.7,
+  latencyMs: 6_200,
+  mode: "concept",
+  intervalBefore: 4,
+  intervalAfter: 12,
+  delayDays: 4,
+  response: "It restricts the space to the event and renormalises.",
+  planItemId: "pi_01",
+};
+
+const librarySource: Full<LibrarySource> = {
+  id: "ls_sample01",
+  userId: USER,
+  createdAt: T0,
+  updatedAt: T2,
+  type: "book",
+  title: "The Mediterranean and the Mediterranean World in the Age of Philip II",
+  author: "Fernand Braudel",
+  year: 1949,
+  status: "reading",
+  why: "To see whether geography explains more than politics.",
+  currentQuestion: "What did the Cape route change first?",
+  concepts: ["history.venice"],
+  projectIds: ["pj_sample01"],
+  seedId: "src-braudel-mediterranean",
+  unitLabel: "chapter",
+  totalUnits: 12,
+  progressUnit: 3,
+  comprehension: 0.7,
+  retention: 0.6,
+  connectionsCount: 2,
+  startedAt: T0,
+  completedAt: T2,
+  notes: "Volume one only.",
+};
+
+const readingSession: Full<ReadingSession> = {
+  id: "rs_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T2,
+  sourceId: "ls_sample01",
+  question: "What did the Cape route change first?",
+  fromUnit: 3,
+  toUnit: 3,
+  minutes: 35,
+  startedAt: T1,
+  endedAt: T2,
+  status: "closed",
+  recallId: "rc_sample01",
+  planItemId: "pi_04",
+};
+
+const readingRecall: Full<ReadingRecall> = {
+  id: "rc_sample01",
+  userId: USER,
+  createdAt: T2,
+  updatedAt: T2,
+  sourceId: "ls_sample01",
+  sessionId: "rs_sample01",
+  centralIdeas: "Pepper prices in Venice fell after 1503, before volumes did.",
+  argument: "Trade routes shift slowly; prices move first.",
+  evidence: "Lisbon undercut Venice by about a third.",
+  unclear: "How the Ottoman wars interact with the route change.",
+  disagree: "The recovery by 1560 is underplayed.",
+  connections: "Links to elasticity of supply.",
+  extracted: [{ title: "Price signals precede volume", conceptId: "economics.price_signals", nodeId: "price-signal", note: "Chapter 3" }],
+  score: 0.72,
+  feedback: "Four of five ideas recalled; the recovery was missed.",
+  aiEvaluated: false,
+  retrievalItemIds: ["ri_sample02"],
+};
+
+const knowledgeNode: Full<KnowledgeNode> = {
+  id: "kn_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T1,
+  key: "congress-of-vienna",
+  kind: "event",
+  title: "Congress of Vienna",
+  domainId: "history",
+  summary: "The 1814 to 1815 settlement that reorganised Europe after Napoleon.",
+  conceptId: "history.balance_of_power",
+  source: { kind: "reading", refId: "ls_sample01" },
+  year: 1815,
+  tags: ["diplomacy"],
+};
+
+const knowledgeEdge: Full<KnowledgeEdge> = {
+  id: "ke_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T1,
+  from: "congress-of-vienna",
+  to: "balance-of-power",
+  relation: "EXAMPLE_OF",
+  note: "The settlement was designed around it.",
+  origin: "user",
+};
+
+const writingEntry: Full<WritingEntry> = {
+  id: "we_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T2,
+  promptId: "wp-3",
+  level: 3,
+  title: "Should Venice have fought for the spice trade?",
+  prompt: "Construct an argument for or against, answering the strongest objection.",
+  status: "reviewed",
+  currentVersion: 2,
+  concepts: ["history.venice"],
+  wordCount: 640,
+  latestFeedbackId: "wf_sample01",
+  contextRef: { kind: "exam", refId: "ea_sample01" },
+  timeMs: 1_800_000,
+  planItemId: "pi_05",
+};
+
+const writingVersion: Full<WritingVersion> = {
+  id: "wv_sample01",
+  userId: USER,
+  createdAt: T2,
+  updatedAt: T2,
+  entryId: "we_sample01",
+  version: 2,
+  text: "Venice could not have held the spice trade by force; the route, not the fleet, had changed.",
+  wordCount: 640,
+};
+
+const writingFeedback: Full<WritingFeedback> = {
+  id: "wf_sample01",
+  userId: USER,
+  createdAt: T2,
+  updatedAt: T2,
+  entryId: "we_sample01",
+  version: 2,
+  scores: { clarity: 0.8, structure: 0.7, precision: 0.6, logic: 0.7, evidence: 0.5, counterargument: 0.4, depth: 0.6, synthesis: 0.5, originality: 0.5 },
+  overall: 0.6,
+  passages: [{ quote: "Venice could not have held the spice trade by force", note: "State the mechanism before the verdict.", criterion: "logic" }],
+  strengths: ["A clear thesis in the first sentence."],
+  improvements: ["Answer the strongest objection rather than the easiest."],
+  metrics: { words: 640, sentences: 31, avgSentenceLength: 20.6, hedges: 4, passiveHints: 3, paragraphs: 6 },
+  aiEvaluated: false,
+};
+
+const speakingSession: Full<SpeakingSession> = {
+  id: "ss_sample01",
+  userId: USER,
+  createdAt: T2,
+  updatedAt: T2,
+  promptId: "sp-2",
+  mode: "explain_60",
+  durationMs: 58_000,
+  transcript: "Conditional probability is the chance of one thing given that another has happened.",
+  transcriptSource: "typed",
+  metrics: { words: 140, wordsPerMinute: 145, fillers: 3, repetitions: 1, sentences: 9, avgSentenceLength: 15.6 },
+  rubricScores: { clarity: 0.7, accuracy: 0.8 },
+  overall: 0.75,
+  feedback: "Named the restriction; the example came late.",
+  aiEvaluated: false,
+  recorded: false,
+  concepts: ["probability.conditional_probability"],
+  planItemId: "pi_06",
+};
+
+const studyLog: Full<StudyLog> = {
+  id: "sl_sample01",
+  userId: USER,
+  createdAt: T2,
+  updatedAt: T2,
+  date: "2026-09-08",
+  kind: "learn",
+  refId: "ls-probability-conditional-1",
+  minutes: 30,
+  planItemId: "pi_02",
+};
+
+const tutorConversation: Full<TutorConversation> = {
+  id: "tc_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T1,
+  title: "Why does conditioning renormalise?",
+  mode: "socratic",
+  messages: [
+    { role: "user", text: "Why divide by P(B)?", at: T1 },
+    { role: "curator", text: "What must the probabilities inside B add up to?", at: T1, mode: "socratic", thinkFirst: true, provenance: "ai_suggestion", offers: { saveToKnowledge: true, scheduleRetrieval: true, saved: false, scheduled: false, conceptId: "probability.conditional_probability" } },
+  ],
+  contextRef: { kind: "lesson", refId: "ls-probability-conditional-1" },
+  conceptIds: ["probability.conditional_probability"],
+  independentAttempts: 1,
+  directAnswerRequests: 0,
+};
+
+const assistanceEvent: Full<AssistanceEvent> = {
+  id: "ae_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T1,
+  kind: "hint",
+  source: { kind: "practice", refId: "pa_sample01" },
+  conceptIds: ["probability.conditional_probability"],
+};
+
+const application: Full<ApplicationRecord> = {
+  id: "ap_sample01",
+  userId: USER,
+  createdAt: T2,
+  updatedAt: T2,
+  kind: "explained_to_someone",
+  title: "Explained base rates to a colleague",
+  description: "Used the screening example over lunch.",
+  conceptIds: ["probability.base_rates"],
+  reflection: "The tree diagram landed; the formula did not.",
+  selfRating: 0.7,
+};
+
+const generatedV2: Full<GeneratedV2> = {
+  id: "gv_sample01",
+  userId: USER,
+  createdAt: T2,
+  updatedAt: T2,
+  kind: "item",
+  refId: "it-generated-01",
+  payload: { prompt: "A generated practice item.", format: "short", answer: "renormalise" },
+  model: "default",
+  conceptIds: ["probability.base_rates"],
+};
+
+/** Table -> fully populated entity. Every V2 collection has one; V1 keeps a representative few. */
+const SAMPLES: [CollectionName, Entity][] = [
+  ["case_attempts", caseAttempt],
+  ["memory_items", memoryItem],
+  ["red_threads", redThread],
+  ["profiles", profile],
+  ["preferences", preferences],
+  ["concept_mastery", conceptMastery],
+  ["concept_evidence", conceptEvidence],
+  ["lesson_sessions", lessonSession],
+  ["practice_attempts", practiceAttempt],
+  ["error_records", errorRecord],
+  ["retrieval_items", retrievalItem],
+  ["retrieval_reviews", retrievalReview],
+  ["library_sources", librarySource],
+  ["reading_sessions", readingSession],
+  ["reading_recalls", readingRecall],
+  ["knowledge_nodes", knowledgeNode],
+  ["knowledge_edges", knowledgeEdge],
+  ["writing_entries", writingEntry],
+  ["writing_versions", writingVersion],
+  ["writing_feedback", writingFeedback],
+  ["speaking_sessions", speakingSession],
+  ["projects", project],
+  ["exam_attempts", examAttempt],
+  ["daily_plans", dailyPlan],
+  ["study_logs", studyLog],
+  ["tutor_conversations", tutorConversation],
+  ["assistance_events", assistanceEvent],
+  ["applications", application],
+  ["generated_v2", generatedV2],
+];
+
 const camelToSnake = (s: string) => s.replace(/[A-Z]/g, (m) => "_" + m.toLowerCase());
 
 /* ------------------------------------------------------------------ */
@@ -331,24 +692,12 @@ const camelToSnake = (s: string) => s.replace(/[A-Z]/g, (m) => "_" + m.toLowerCa
 /* ------------------------------------------------------------------ */
 
 describe("toRow / fromRow", () => {
-  it.each([
-    ["CaseAttempt", caseAttempt],
-    ["MemoryItem", memoryItem],
-    ["RedThread", redThread],
-    ["UserProfile", profile],
-    ["Preferences", preferences],
-    ["ConceptMastery", conceptMastery],
-    ["PracticeAttempt", practiceAttempt],
-    ["ExamAttempt", examAttempt],
-    ["Project", project],
-    ["RetrievalItem", retrievalItem],
-    ["DailyPlan", dailyPlan],
-  ])("round-trips a %s", (_name, entity) => {
+  it.each(SAMPLES)("round-trips a %s row", (_table, entity) => {
     const row = toRow(entity as unknown as Record<string, unknown>);
     for (const key of Object.keys(row)) expect(key).toMatch(/^[a-z][a-z0-9_]*$/);
     expect(row.user_id).toBe(USER);
     expect(row.created_at).toBe(entity.createdAt);
-    const back = fromRow<typeof entity>(row);
+    const back = fromRow<Entity>(row);
     expect(back).toEqual(entity);
   });
 
@@ -386,7 +735,7 @@ const RESERVED_TOKENS = ["constraint", "check", "unique", "foreign", "primary"];
 
 /** `create table` statements: one entry per table, columns in declaration order. */
 function parseCreateTables(sql: string, tables: Record<string, TableDef>) {
-  const re = /create table (?:if not exists )?(?:public\.)?([a-z_]+)\s*\(([\s\S]*?)\n\);/gi;
+  const re = /create table (?:if not exists )?(?:public\.)?([a-z_][a-z0-9_]*)\s*\(([\s\S]*?)\n\);/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(sql))) {
     const name = m[1];
@@ -395,7 +744,7 @@ function parseCreateTables(sql: string, tables: Record<string, TableDef>) {
     for (const raw of body.split("\n")) {
       const line = raw.trim();
       if (!line || line.startsWith("--")) continue;
-      const first = /^("?[a-z_]+"?)\s+/i.exec(line);
+      const first = /^("?[a-z_][a-z0-9_]*"?)\s+/i.exec(line);
       if (!first) continue;
       const token = first[1].replace(/"/g, "").toLowerCase();
       if (RESERVED_TOKENS.includes(token)) continue;
@@ -409,12 +758,12 @@ function parseCreateTables(sql: string, tables: Record<string, TableDef>) {
 
 /** `alter table … add column [if not exists] …` statements: appends to an existing table (one or many columns per statement). */
 function parseAlterAddColumns(sql: string, tables: Record<string, TableDef>) {
-  const stmt = /alter table (?:if exists )?(?:only )?(?:public\.)?([a-z_]+)\s+([\s\S]*?);/gi;
+  const stmt = /alter table (?:if exists )?(?:only )?(?:public\.)?([a-z_][a-z0-9_]*)\s+([\s\S]*?);/gi;
   let m: RegExpExecArray | null;
   while ((m = stmt.exec(sql))) {
     const name = m[1];
     const body = m[2];
-    const add = /add column (?:if not exists )?("?[a-z_]+"?)/gi;
+    const add = /add column (?:if not exists )?("?[a-z_][a-z0-9_]*"?)/gi;
     let c: RegExpExecArray | null;
     while ((c = add.exec(body))) {
       const col = c[1].replace(/"/g, "").toLowerCase();
@@ -478,23 +827,22 @@ describe("supabase/migrations", () => {
     }
   });
 
-  it.each([
-    ["case_attempts", caseAttempt],
-    ["memory_items", memoryItem],
-    ["red_threads", redThread],
-    ["profiles", profile],
-    ["preferences", preferences],
-    ["concept_mastery", conceptMastery],
-    ["practice_attempts", practiceAttempt],
-    ["exam_attempts", examAttempt],
-    ["projects", project],
-    ["retrieval_items", retrievalItem],
-    ["daily_plans", dailyPlan],
-  ])("has a column for every field of the %s sample", (table, entity) => {
+  it("carries a fully populated sample for every V2 collection", () => {
+    const sampled = SAMPLES.map(([table]) => table);
+    expect(new Set(sampled).size).toBe(sampled.length);
+    for (const c of V2_COLLECTIONS) expect(sampled, `sample for ${c}`).toContain(c);
+  });
+
+  it.each(SAMPLES)("has a column for every field of the %s sample", (table, entity) => {
     const cols = TABLES[table].columns;
     for (const key of Object.keys(entity)) {
       expect(cols, `${table}.${camelToSnake(key)}`).toContain(camelToSnake(key));
     }
+  });
+
+  it("parses identifiers that contain digits (generated_v2, profiles.v2)", () => {
+    expect(TABLES.generated_v2?.columns).toEqual(expect.arrayContaining(["id", "user_id", "kind", "ref_id", "payload", "model", "concept_ids"]));
+    expect(TABLES.profiles.columns).toContain("v2");
   });
 
   it("adds the V2 profile and preference columns in 0002", () => {

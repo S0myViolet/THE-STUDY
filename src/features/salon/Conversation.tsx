@@ -134,7 +134,7 @@ export function Conversation({ scenario, pastId }: { scenario: SalonScenario; pa
   return (
     <div className="page !pb-6">
       <div className="flex items-center justify-between gap-4 mb-4">
-        <Link href="/salon" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5"><I.ArrowLeft size={12} /> The Salon</Link>
+        <Link href="/v1/salon" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5"><I.ArrowLeft size={12} /> The Salon</Link>
         <div className="flex items-center gap-4 text-[11px] text-ink-3">{inSession ? <span className="mark"><span className="mark-dot" /> Today&apos;s session</span> : null}<span>{useModel ? `Live character · ${aiStatus.model}` : "Scripted character"}</span></div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
@@ -178,7 +178,7 @@ export function Conversation({ scenario, pastId }: { scenario: SalonScenario; pa
               ) : null}
             </div>
           ) : (
-            <Review scenario={scenario} session={session} onDone={async () => { if (!(await finish())) router.push("/salon"); }} inSession={inSession} />
+            <Review scenario={scenario} session={session} onDone={async () => { if (!(await finish())) router.push("/v1/salon"); }} inSession={inSession} />
           )}
         </div>
 

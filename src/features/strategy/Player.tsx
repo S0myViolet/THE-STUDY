@@ -160,7 +160,7 @@ export function Player({ scenario }: { scenario: StrategyScenario }) {
   return (
     <div className="page">
       <div className="flex items-center justify-between gap-4 mb-4">
-        <Link href="/strategy" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5"><I.ArrowLeft size={12} /> Strategy Table</Link>
+        <Link href="/v1/strategy" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5"><I.ArrowLeft size={12} /> Strategy Table</Link>
         <div className="flex items-center gap-4 text-[11px] text-ink-3">{inSession ? <span className="mark"><span className="mark-dot" /> Today&apos;s session</span> : null}<span>{MODE_LABEL[scenario.mode]} · {DIFFICULTY_LABEL[scenario.difficulty]} · {minutes(scenario.estimatedMinutes)}</span></div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-8">
@@ -243,7 +243,7 @@ export function Player({ scenario }: { scenario: StrategyScenario }) {
           ) : null}
 
           {run.status === "completed" || (node?.terminal && !debrief) ? (
-            <Debrief scenario={scenario} run={run} debrief={debrief ?? { text: node?.debrief ?? run.debrief ?? "", score: run.score ?? 0 }} onDone={async () => { if (!(await finish())) router.push("/strategy"); }} inSession={inSession} />
+            <Debrief scenario={scenario} run={run} debrief={debrief ?? { text: node?.debrief ?? run.debrief ?? "", score: run.score ?? 0 }} onDone={async () => { if (!(await finish())) router.push("/v1/strategy"); }} inSession={inSession} />
           ) : null}
         </div>
 

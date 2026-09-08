@@ -40,7 +40,7 @@ export function CuriosityPage({ id }: { id: string }) {
           title="Nothing in the cabinet by that name."
           body="It may have been generated on another device, or the link is old."
           action={
-            <Link href="/cabinet" className="btn btn-secondary">
+            <Link href="/v1/cabinet" className="btn btn-secondary">
               The Cabinet
             </Link>
           }
@@ -161,7 +161,7 @@ function Reading({ c, view, cab, archive }: { c: Curiosity; view: CuriosityView 
 
   function strange() {
     const pick = randomUnseen(cab.items, cab.views, Math.random, c.id);
-    if (pick) router.push(`/cabinet/${pick.id}`);
+    if (pick) router.push(`/v1/cabinet/${pick.id}`);
   }
 
   return (
@@ -206,7 +206,7 @@ function Reading({ c, view, cab, archive }: { c: Curiosity; view: CuriosityView 
               {connected.map(({ entry, yours }) => (
                 <li key={entry.id} className={cx("py-2.5 group", entry.id === freshId && "anim-place")}>
                   <div className="flex items-start justify-between gap-3">
-                    <Link href={`/archive/${entry.id}`} className="min-w-0 block">
+                    <Link href={`/v1/archive/${entry.id}`} className="min-w-0 block">
                       <span className="text-[11px] tracking-[0.08em] uppercase text-ink-3 block">
                         {DOMAIN_LABEL[entry.domain]}
                         {yours ? " · yours" : ""}
@@ -318,7 +318,7 @@ function Reading({ c, view, cab, archive }: { c: Curiosity; view: CuriosityView 
               <>
                 <div>
                   {nb.prev ? (
-                    <Link href={`/cabinet/${nb.prev.id}`} className="group block">
+                    <Link href={`/v1/cabinet/${nb.prev.id}`} className="group block">
                       <span className="eyebrow block">Previous in {label}</span>
                       <span className="serif text-[17px] text-ink group-hover:text-ink-2 leading-snug block mt-1">{nb.prev.title}</span>
                     </Link>
@@ -328,7 +328,7 @@ function Reading({ c, view, cab, archive }: { c: Curiosity; view: CuriosityView 
                 </div>
                 <div className="text-right">
                   {nb.next ? (
-                    <Link href={`/cabinet/${nb.next.id}`} className="group block">
+                    <Link href={`/v1/cabinet/${nb.next.id}`} className="group block">
                       <span className="eyebrow block">Next in {label}</span>
                       <span className="serif text-[17px] text-ink group-hover:text-ink-2 leading-snug block mt-1">{nb.next.title}</span>
                     </Link>
@@ -350,7 +350,7 @@ function Reading({ c, view, cab, archive }: { c: Curiosity; view: CuriosityView 
                 Something else strange
               </Button>
             )}
-            <Link href="/cabinet" className="btn btn-ghost">
+            <Link href="/v1/cabinet" className="btn btn-ghost">
               The Cabinet
             </Link>
           </div>

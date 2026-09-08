@@ -170,7 +170,7 @@ export function World() {
     return (
       <div className="page">
         <ArchiveHeader eyebrow="The Archive · World" title="Where the ideas happened" lede="Where the ideas happened. Places are approximate." />
-        <Empty title="Nothing on the map yet." body="Entries with a place appear here as you add them." action={<Link href="/archive" className="btn btn-secondary">Back to the Archive</Link>} />
+        <Empty title="Nothing on the map yet." body="Entries with a place appear here as you add them." action={<Link href="/v1/archive" className="btn btn-secondary">Back to the Archive</Link>} />
       </div>
     );
   }
@@ -372,7 +372,7 @@ function SideSheet({ marker, links, elsewhere, onPick, onClose }: { marker: Mark
       <div className="mt-3 flex items-center gap-2 text-[12px] text-ink-3">
         <StatusMark status={marker.status} /> {STATUS_LABEL[marker.status]}
       </div>
-      <Link href={`/archive/${e.id}`} className="btn mt-4">
+      <Link href={`/v1/archive/${e.id}`} className="btn mt-4">
         Open entry <I.ArrowRight size={14} />
       </Link>
 
@@ -404,7 +404,7 @@ function SideSheet({ marker, links, elsewhere, onPick, onClose }: { marker: Mark
           <ul className="mt-1 text-[14px] text-ink-2 space-y-1">
             {elsewhere.slice(0, 6).map((o) => (
               <li key={o.id}>
-                <Link href={`/archive/${o.id}`} className="serif text-[16px] hover:text-ink">{o.title}</Link>
+                <Link href={`/v1/archive/${o.id}`} className="serif text-[16px] hover:text-ink">{o.title}</Link>
               </li>
             ))}
             {elsewhere.length > 6 ? <li className="text-[12px] text-ink-4">and {elsewhere.length - 6} more on the entry</li> : null}

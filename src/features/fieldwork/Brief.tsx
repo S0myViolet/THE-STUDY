@@ -116,7 +116,7 @@ export function Brief({ id }: { id: string }) {
                 Do the assignment first. The report has {plural(a.reportPrompts.length, "prompt")} and one reflection, and it saves as you write.
               </p>
               <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
-                <Link href={`/fieldwork/${a.id}/report${suffix}`} className="btn btn-lg">
+                <Link href={`/v1/fieldwork/${a.id}/report${suffix}`} className="btn btn-lg">
                   {answered ? "Continue the report" : "Write the report"} <I.ArrowRight size={14} />
                 </Link>
                 {inSession ? (
@@ -139,7 +139,7 @@ export function Brief({ id }: { id: string }) {
                   {last ? "Take it again" : "Take this assignment"}
                 </Button>
                 {last ? (
-                  <Link href={`/fieldwork/reports/${last.id}${suffix}`} className="text-[12px] text-ink-3 hover:text-ink">
+                  <Link href={`/v1/fieldwork/reports/${last.id}${suffix}`} className="text-[12px] text-ink-3 hover:text-ink">
                     Filed {completed.length === 1 ? "once" : completed.length === 2 ? "twice" : `${completed.length} times`} · last {shortDate(last.completedAt ?? last.updatedAt)}
                   </Link>
                 ) : null}

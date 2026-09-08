@@ -76,7 +76,7 @@ export function SeenLegend({ className }: { className?: string }) {
 export function BackToCabinet({ right }: { right?: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-4 mb-4">
-      <Link href="/cabinet" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
+      <Link href="/v1/cabinet" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
         <I.ArrowLeft size={12} /> The Cabinet
       </Link>
       {right}

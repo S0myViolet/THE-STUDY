@@ -9,8 +9,12 @@ import { updatePrefs, updateProfile } from "@/lib/services/profile";
 import { hasV1Data, importV1 } from "./migrate-v1";
 import { PLAN_MODE_MINUTES, type DevelopGoal, type EducationLevel, type InterestId, type PlanMode, type ProfileV2 } from "./types";
 
-/** A person needs the V2 entrance until `profile.v2.onboardingComplete` is true. The V1 flag alone is not enough. */
-export function needsV2Onboarding(profile: Pick<UserProfile, "v2"> | null | undefined): boolean {
+/**
+ * A person needs the V2 entrance until `profile.v2.onboardingComplete` is true.
+ * The V1 `onboardingComplete` flag alone is not enough (it is accepted in the
+ * argument type only so callers can pass either flag without a cast).
+ */
+export function needsV2Onboarding(profile: Partial<Pick<UserProfile, "v2" | "onboardingComplete">> | null | undefined): boolean {
   return profile?.v2?.onboardingComplete !== true;
 }
 

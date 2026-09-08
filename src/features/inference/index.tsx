@@ -43,8 +43,8 @@ function Index() {
   }
   const cal = calibrationVerdict(confidences.data ?? []);
   const rows: { mode: string; title: string; blurb: string; minutes: number; href: string }[] = [
-    ...MODES.map((m) => ({ mode: m, title: MODE_META[m].title, blurb: MODE_META[m].blurb, minutes: MODE_META[m].minutes, href: `/inference/${m}` })),
-    { mode: "causal", title: "Causal Reasoning", blurb: "Reverse causation, confounding, selection, regression to the mean. Which explains the claim?", minutes: 4, href: "/inference/causal" },
+    ...MODES.map((m) => ({ mode: m, title: MODE_META[m].title, blurb: MODE_META[m].blurb, minutes: MODE_META[m].minutes, href: `/v1/inference/${m}` })),
+    { mode: "causal", title: "Causal Reasoning", blurb: "Reverse causation, confounding, selection, regression to the mean. Which explains the claim?", minutes: 4, href: "/v1/inference/causal" },
   ];
 
   return (

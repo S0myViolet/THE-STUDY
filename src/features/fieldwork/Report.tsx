@@ -109,7 +109,7 @@ export function Report({ id }: { id: string }) {
                 Continue the session <I.ArrowRight size={14} />
               </Button>
             ) : null}
-            <Link href={`/fieldwork/reports/${filed.report.id}${suffix}`} className={cx("btn", inSession ? "btn-secondary" : "")} aria-disabled={!filed.done}>
+            <Link href={`/v1/fieldwork/reports/${filed.report.id}${suffix}`} className={cx("btn", inSession ? "btn-secondary" : "")} aria-disabled={!filed.done}>
               Read the report
             </Link>
             <Link href={`/fieldwork${suffix}`} className="btn btn-ghost">
@@ -127,7 +127,7 @@ export function Report({ id }: { id: string }) {
     const state = latest?.status === "completed" ? "filed" : latest?.status === "skipped" ? "set-aside" : "untaken";
     return (
       <div className="page">
-        <TopBar back={`/fieldwork/${a.id}${suffix}`} backLabel={a.title} inSession={inSession} />
+        <TopBar back={`/v1/fieldwork/${a.id}${suffix}`} backLabel={a.title} inSession={inSession} />
         <Empty
           title={state === "filed" ? "This assignment has been filed." : state === "set-aside" ? "This assignment was set aside." : "This assignment has not been taken yet."}
           body={
@@ -140,7 +140,7 @@ export function Report({ id }: { id: string }) {
           action={
             <div className="flex flex-wrap justify-center gap-3">
               {state === "filed" && latest ? (
-                <Link href={`/fieldwork/reports/${latest.id}${suffix}`} className="btn">
+                <Link href={`/v1/fieldwork/reports/${latest.id}${suffix}`} className="btn">
                   Read the report
                 </Link>
               ) : null}
@@ -152,7 +152,7 @@ export function Report({ id }: { id: string }) {
               <Button variant={state === "untaken" ? "primary" : "secondary"} onClick={takeNow} disabled={busy}>
                 {state === "filed" ? "Take it again" : state === "set-aside" ? "Take it fresh" : "Take this assignment"}
               </Button>
-              <Link href={`/fieldwork/${a.id}${suffix}`} className="btn btn-ghost">
+              <Link href={`/v1/fieldwork/${a.id}${suffix}`} className="btn btn-ghost">
                 The brief
               </Link>
             </div>
@@ -164,7 +164,7 @@ export function Report({ id }: { id: string }) {
 
   return (
     <div className="page">
-      <TopBar back={`/fieldwork/${a.id}${suffix}`} backLabel="The brief" inSession={inSession} />
+      <TopBar back={`/v1/fieldwork/${a.id}${suffix}`} backLabel="The brief" inSession={inSession} />
       <ReportForm key={active.id} assignment={a} report={active} onFile={file} />
     </div>
   );

@@ -28,7 +28,7 @@ export function Entry({ id }: { id: string }) {
     return (
       <div className="page">
         <ArchiveHeader title="Not in the Archive" />
-        <Empty title="There is no entry with that name yet." body="Ask the Archive from the index and a model can write one; or start from something that is already here." action={<Link href="/archive" className="btn btn-secondary">Back to the Archive</Link>} />
+        <Empty title="There is no entry with that name yet." body="Ask the Archive from the index and a model can write one; or start from something that is already here." action={<Link href="/v1/archive" className="btn btn-secondary">Back to the Archive</Link>} />
       </div>
     );
   }
@@ -123,13 +123,13 @@ function EntryView({ entry, data }: { entry: ArchiveEntry; data: ArchiveData }) 
 
           <nav className="mt-14 border-t border-line pt-5 flex items-start justify-between gap-6 text-[13px]" aria-label="Neighbouring entries">
             {prev ? (
-              <Link href={`/archive/${prev.id}`} className="group min-w-0">
+              <Link href={`/v1/archive/${prev.id}`} className="group min-w-0">
                 <span className="eyebrow block">Previous · {DOMAIN_LABEL[prev.domain]}</span>
                 <span className="serif text-[17px] text-ink-2 group-hover:text-ink inline-flex items-center gap-1.5"><I.ArrowLeft size={12} /> {prev.title}</span>
               </Link>
             ) : <span />}
             {next ? (
-              <Link href={`/archive/${next.id}`} className="group min-w-0 text-right">
+              <Link href={`/v1/archive/${next.id}`} className="group min-w-0 text-right">
                 <span className="eyebrow block">Next · {DOMAIN_LABEL[next.domain]}</span>
                 <span className="serif text-[17px] text-ink-2 group-hover:text-ink inline-flex items-center gap-1.5">{next.title} <I.ArrowRight size={12} /></span>
               </Link>
@@ -265,8 +265,8 @@ function ExplainAndKeep({ entry, progress, inSession, onFinish }: { entry: Archi
           </Button>
           <Button variant="secondary" disabled={busy} onClick={() => keep("saved")}>{keptCount ? "Saved to Memory" : "Save to Memory"}</Button>
           <Button variant="ghost" disabled={busy} onClick={() => keep("scheduled")}>Test me later</Button>
-          {kept === "saved" || (keptCount && !kept) ? <span className="text-[12px] text-ink-3">{plural(keptCount || entry.recall.length, "prompt")} in the palace{soonest ? `, first due ${new Date(soonest).toLocaleDateString(undefined, { month: "short", day: "numeric" })}` : ""}. <Link href="/memory/review" className="underline underline-offset-4 hover:text-ink">Review</Link></span> : null}
-          {kept === "scheduled" ? <span className="text-[12px] text-ink-3">Scheduled. The palace will ask tomorrow. <Link href="/memory" className="underline underline-offset-4 hover:text-ink">Memory Palace</Link></span> : null}
+          {kept === "saved" || (keptCount && !kept) ? <span className="text-[12px] text-ink-3">{plural(keptCount || entry.recall.length, "prompt")} in the palace{soonest ? `, first due ${new Date(soonest).toLocaleDateString(undefined, { month: "short", day: "numeric" })}` : ""}. <Link href="/v1/memory/review" className="underline underline-offset-4 hover:text-ink">Review</Link></span> : null}
+          {kept === "scheduled" ? <span className="text-[12px] text-ink-3">Scheduled. The palace will ask tomorrow. <Link href="/v1/memory" className="underline underline-offset-4 hover:text-ink">Memory Palace</Link></span> : null}
           {progress?.explanationScore !== undefined && !kept ? <span className="text-[12px] text-ink-4 numeral ml-auto">Last explanation {Math.round(progress.explanationScore * 100)}%</span> : null}
         </div>
       ) : null}
@@ -333,7 +333,7 @@ function PathView({ entry, data }: { entry: ArchiveEntry; data: ArchiveData }) {
   const nextUp = items.find((e) => statusRank(data.progress.get(e.id)?.status ?? "unread") === 0) ?? items[0];
   return (
     <div className="page">
-      <ArchiveHeader eyebrow={<>Path · {plural(items.length, "entry", "entries")}</>} title={entry.title} lede={entry.summary} aside={nextUp ? <Link href={`/archive/${nextUp.id}`} className="btn btn-lg">{pr.done ? "Continue the path" : "Begin the path"} <I.ArrowRight size={14} /></Link> : null}>
+      <ArchiveHeader eyebrow={<>Path · {plural(items.length, "entry", "entries")}</>} title={entry.title} lede={entry.summary} aside={nextUp ? <Link href={`/v1/archive/${nextUp.id}`} className="btn btn-lg">{pr.done ? "Continue the path" : "Begin the path"} <I.ArrowRight size={14} /></Link> : null}>
         <div className="mt-5 max-w-[420px]">
           <div className="flex justify-between text-[12px] text-ink-3 mb-2"><span>Read</span><span className="numeral">{pr.done} / {pr.total}</span></div>
           <HairlineProgress value={pr.total ? pr.done / pr.total : 0} />
@@ -359,7 +359,7 @@ function PathView({ entry, data }: { entry: ArchiveEntry; data: ArchiveData }) {
             <div className="eyebrow">Remember, by the end</div>
             <ul className="mt-2 space-y-2 serif text-[16px] text-ink-2">{entry.remember.map((r) => <li key={r}>{r}</li>)}</ul>
           </div>
-          {nextUp ? <Link href={`/archive/${nextUp.id}`} className="btn btn-lg w-full lg:hidden">{pr.done ? "Continue the path" : "Begin the path"}</Link> : null}
+          {nextUp ? <Link href={`/v1/archive/${nextUp.id}`} className="btn btn-lg w-full lg:hidden">{pr.done ? "Continue the path" : "Begin the path"}</Link> : null}
         </aside>
       </div>
     </div>

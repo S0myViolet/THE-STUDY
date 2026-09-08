@@ -53,7 +53,7 @@ export function Synthesis({ id }: { id: string }) {
   if (!inv) {
     return (
       <div className="page">
-        <Empty title="No investigation by that id." action={<Link href="/investigations" className="btn btn-secondary">Back</Link>} />
+        <Empty title="No investigation by that id." action={<Link href="/v1/investigations" className="btn btn-secondary">Back</Link>} />
       </div>
     );
   }
@@ -98,7 +98,7 @@ export function Synthesis({ id }: { id: string }) {
 
   async function archive() {
     await db.store("investigations").update(inv!.id, { status: "archived" });
-    router.push("/investigations");
+    router.push("/v1/investigations");
   }
 
   async function reopen() {
@@ -109,7 +109,7 @@ export function Synthesis({ id }: { id: string }) {
   return (
     <div className="page">
       <div className="flex items-center justify-between gap-4 mb-6">
-        <Link href={`/investigations/${inv.id}`} className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
+        <Link href={`/v1/investigations/${inv.id}`} className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
           <I.ArrowLeft size={12} /> Workbench
         </Link>
         <span className="text-[12px] text-ink-3 capitalize">{inv.status}</span>
@@ -181,7 +181,7 @@ export function Synthesis({ id }: { id: string }) {
                 <Button variant="ghost" size="sm" onClick={archive}>
                   Archive this investigation
                 </Button>
-                <Link href="/after-action" className="btn btn-ghost btn-sm">
+                <Link href="/v1/after-action" className="btn btn-ghost btn-sm">
                   After Action <I.ArrowRight size={12} />
                 </Link>
               </div>

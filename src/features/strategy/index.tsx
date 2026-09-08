@@ -29,7 +29,7 @@ export function StrategyRoom({ slug }: { slug: string[] }) {
   const all: StrategyScenario[] = [...STRATEGY_SCENARIOS, ...((generated.data ?? []).map((g) => g.payload as StrategyScenario))];
   if (slug[0]) {
     const s = all.find((x) => x.id === slug[0]);
-    if (!s) return generated.loading ? null : <div className="page"><Empty title="No scenario by that name." action={<Link href="/strategy" className="btn btn-secondary">Back to the table</Link>} /></div>;
+    if (!s) return generated.loading ? null : <div className="page"><Empty title="No scenario by that name." action={<Link href="/v1/strategy" className="btn btn-secondary">Back to the table</Link>} /></div>;
     return <Player key={s.id} scenario={s} />;
   }
   return <Index scenarios={all} />;
@@ -56,7 +56,7 @@ function Index({ scenarios }: { scenarios: StrategyScenario[] }) {
             const st = by.get(s.id);
             return (
               <li key={s.id}>
-                <Link href={`/strategy/${s.id}`} className="group flex items-start gap-6 py-5 -mx-3 px-3 rounded-sm hover:bg-paper-3">
+                <Link href={`/v1/strategy/${s.id}`} className="group flex items-start gap-6 py-5 -mx-3 px-3 rounded-sm hover:bg-paper-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-3 flex-wrap"><span className="serif text-[22px] text-ink group-hover:text-ink-2">{s.title}</span><span className="eyebrow">{s.mode.replace("_", " ")}</span></div>
                     <p className="text-[14px] text-ink-2 mt-1 max-w-[62ch]">{s.summary}</p>

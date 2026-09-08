@@ -69,7 +69,7 @@ export default function Graph() {
     return (
       <div className="page">
         <ArchiveHeader eyebrow="The Archive · Graph" title="The knowledge graph" />
-        <Empty title="No entries to draw yet." action={<Link href="/archive" className="btn btn-secondary">Back to the Archive</Link>} />
+        <Empty title="No entries to draw yet." action={<Link href="/v1/archive" className="btn btn-secondary">Back to the Archive</Link>} />
       </div>
     );
   }
@@ -132,10 +132,10 @@ export default function Graph() {
               return (
                 <a
                   key={n.id}
-                  href={`/archive/${n.id}`}
+                  href={`/v1/archive/${n.id}`}
                   onClick={(ev) => {
                     ev.preventDefault();
-                    router.push(`/archive/${n.id}`);
+                    router.push(`/v1/archive/${n.id}`);
                   }}
                   onMouseEnter={() => setHover(n.id)}
                   onMouseLeave={() => setHover(null)}
@@ -180,7 +180,7 @@ export default function Graph() {
                   const e = data.byId.get(n.id)!;
                   return (
                     <li key={n.id}>
-                      <Link href={`/archive/${n.id}`} className="flex items-baseline justify-between gap-3 py-1.5 hover:text-ink">
+                      <Link href={`/v1/archive/${n.id}`} className="flex items-baseline justify-between gap-3 py-1.5 hover:text-ink">
                         <span className="serif text-[16px]">{e.title}</span>
                         <span className="numeral text-[11px] text-ink-4">{n.degree}{h === "bridges" ? ` · ${n.neighbourDomains} domains` : ""}</span>
                       </Link>

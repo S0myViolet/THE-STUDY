@@ -69,13 +69,13 @@ export function statusFor(data: ArchiveData, id: string): Status {
 /* ------------------------------------------------------------------ */
 
 export const ARCHIVE_VIEWS = [
-  { href: "/archive/graph", label: "Graph", icon: "Graph" as const },
-  { href: "/archive/world", label: "World", icon: "Map" as const },
-  { href: "/archive/timeline", label: "Timeline", icon: "Timeline" as const },
-  { href: "/archive/reading", label: "Bookshelf", icon: "Book" as const },
+  { href: "/v1/archive/graph", label: "Graph", icon: "Graph" as const },
+  { href: "/v1/archive/world", label: "World", icon: "Map" as const },
+  { href: "/v1/archive/timeline", label: "Timeline", icon: "Timeline" as const },
+  { href: "/v1/archive/reading", label: "Bookshelf", icon: "Book" as const },
 ];
 
-export function ArchiveHeader({ title, eyebrow = "The Archive", lede, aside, back = "/archive", backLabel = "The Archive", children }: { title: React.ReactNode; eyebrow?: React.ReactNode; lede?: React.ReactNode; aside?: React.ReactNode; back?: string; backLabel?: string; children?: React.ReactNode }) {
+export function ArchiveHeader({ title, eyebrow = "The Archive", lede, aside, back = "/v1/archive", backLabel = "The Archive", children }: { title: React.ReactNode; eyebrow?: React.ReactNode; lede?: React.ReactNode; aside?: React.ReactNode; back?: string; backLabel?: string; children?: React.ReactNode }) {
   return (
     <header className="mb-8">
       <div className="flex items-center justify-between gap-4 mb-4">
@@ -117,7 +117,7 @@ export function ViewLinks({ className }: { className?: string }) {
 /** Row used in lists throughout the room. */
 export function EntryRow({ entry, status, meta, compact }: { entry: ArchiveEntry; status: Status; meta?: React.ReactNode; compact?: boolean }) {
   return (
-    <Link href={`/archive/${entry.id}`} className={cx("group flex items-start justify-between gap-4 -mx-2 px-2 rounded-sm hover:bg-paper-3", compact ? "py-2" : "py-3")}>
+    <Link href={`/v1/archive/${entry.id}`} className={cx("group flex items-start justify-between gap-4 -mx-2 px-2 rounded-sm hover:bg-paper-3", compact ? "py-2" : "py-3")}>
       <span className="min-w-0">
         <span className="eyebrow block">{meta ?? entry.domain}</span>
         <span className={cx("serif text-ink group-hover:text-ink-2 block leading-snug", compact ? "text-[17px]" : "text-[20px]")}>{entry.title}</span>

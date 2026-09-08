@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ALL_ROOMS, CHORDS, ROOMS, SECTIONS, V1_ROOMS, chordTarget, isV1Path, roomFor, sectionFor } from "@/lib/nav";
+import { ALL_ROOMS, CHORDS, ROOMS, SECTIONS, V1_MOVED_ROOMS, V1_ROOMS, chordTarget, isV1Path, roomFor, sectionFor, v1Href } from "@/lib/nav";
 
 describe("V2 navigation model", () => {
   it("has the six sections in order with Today first", () => {
@@ -49,5 +49,15 @@ describe("V2 navigation model", () => {
     expect(isV1Path("/v1")).toBe(true);
     expect(isV1Path("/v10")).toBe(false);
     expect(isV1Path("/today")).toBe(false);
+  });
+
+  it("builds archive addresses for the rooms that moved, keeping segments and query", () => {
+    expect(v1Href("casebook")).toBe("/v1/casebook");
+    expect(v1Href("casebook", ["case-1"], { stage: "2" })).toBe("/v1/casebook/case-1?stage=2");
+    expect(v1Href("archive", ["reading", "rd_1"])).toBe("/v1/archive/reading/rd_1");
+    expect(v1Href("inference", ["base_rate"], { session: "s1", item: ["a", "b"], missing: undefined })).toBe("/v1/inference/base_rate?session=s1&item=a&item=b");
+    expect(v1Href("profile", ["a b"])).toBe("/v1/profile/a%20b");
+    expect(v1Href("desk", undefined, { begin: "case" })).toBe("/v1/desk?begin=case");
+    for (const room of V1_MOVED_ROOMS) expect(V1_ROOMS.some((r) => r.href === v1Href(room)), room).toBe(true);
   });
 });

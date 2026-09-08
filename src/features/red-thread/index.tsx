@@ -21,7 +21,7 @@ const STATUS_TEXT: Record<RedThreadStatus, string> = {
   improving: "Recent evidence on the targeted skill has been strong, with no recurrence.",
   resolved: "It stopped recurring.",
 };
-const SOURCE_HREF: Record<string, string> = { case: "/casebook", observation: "/observation", inference: "/inference", salon: "/salon", strategy: "/strategy", memory: "/memory", archive: "/archive", rhetoric: "/rhetoric", forecast: "/forecasts", decision: "/decisions", baseline: "/profile", fieldwork: "/fieldwork", curator: "/curator", investigation: "/investigations", cabinet: "/cabinet", reading: "/archive/reading" };
+const SOURCE_HREF: Record<string, string> = { case: "/v1/casebook", observation: "/v1/observation", inference: "/v1/inference", salon: "/v1/salon", strategy: "/v1/strategy", memory: "/v1/memory", archive: "/v1/archive", rhetoric: "/v1/rhetoric", forecast: "/forecasts", decision: "/decisions", baseline: "/v1/profile", fieldwork: "/v1/fieldwork", curator: "/v1/curator", investigation: "/v1/investigations", cabinet: "/v1/cabinet", reading: "/v1/archive/reading" };
 
 export function RedThreadRoom({ slug }: { slug: string[] }) {
   const { db } = useStudy();
@@ -48,9 +48,9 @@ function Index() {
 
   return (
     <div className="page">
-      <PageHeader eyebrow="The Red Thread" title="What recurs" lede="Patterns across your mistakes, biases and blind spots. The Study accumulates evidence before it names one, and stops naming it once you have corrected it." aside={<Link href="/red-thread/errors" className="text-[13px] text-ink-3 hover:text-ink">Every instance</Link>} />
+      <PageHeader eyebrow="The Red Thread" title="What recurs" lede="Patterns across your mistakes, biases and blind spots. The Study accumulates evidence before it names one, and stops naming it once you have corrected it." aside={<Link href="/v1/red-thread/errors" className="text-[13px] text-ink-3 hover:text-ink">Every instance</Link>} />
       {!all.length && !threads.loading ? (
-        <Empty title="Nothing has repeated enough to call a pattern yet." body="Keep working. The Study is still collecting evidence." action={<Link href="/casebook" className="btn btn-secondary">Open the Casebook</Link>} />
+        <Empty title="Nothing has repeated enough to call a pattern yet." body="Keep working. The Study is still collecting evidence." action={<Link href="/v1/casebook" className="btn btn-secondary">Open the Casebook</Link>} />
       ) : (
         STATUS_ORDER.filter((s) => all.some((t) => t.status === s)).map((s) => (
           <section key={s} className="mb-10">
@@ -58,7 +58,7 @@ function Index() {
             <ul className="divide-y divide-line border-t border-line">
               {all.filter((t) => t.status === s).map((t) => (
                 <li key={t.id}>
-                  <Link href={`/red-thread/${t.id}`} className="group block py-4 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
+                  <Link href={`/v1/red-thread/${t.id}`} className="group block py-4 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
                     <div className="flex items-baseline justify-between gap-4">
                       <span className="serif text-[21px] text-ink group-hover:text-ink-2">{t.title}</span>
                       <span className="text-[11px] text-ink-3 uppercase tracking-wider shrink-0">{t.patternType} · {t.confidence}</span>
@@ -94,14 +94,14 @@ function ThreadDetail({ id }: { id: string }) {
     return { errors: errs, counter: ev };
   }, ["error_events", "skill_evidence", "red_threads"], [thread?.id, thread?.evidenceIds.length, thread?.counterEvidenceIds.length]);
   if (t.loading) return <div className="page" />;
-  if (!thread) return <div className="page"><Empty title="No such thread." action={<Link href="/red-thread" className="btn btn-secondary">Back</Link>} /></div>;
+  if (!thread) return <div className="page"><Empty title="No such thread." action={<Link href="/v1/red-thread" className="btn btn-secondary">Back</Link>} /></div>;
   const def = patternFor(thread.patternKey);
   const errs = evidence.data?.errors ?? [];
   const counter = evidence.data?.counter ?? [];
 
   return (
     <div className="page">
-      <Link href="/red-thread" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5 mb-4"><I.ArrowLeft size={12} /> The Red Thread</Link>
+      <Link href="/v1/red-thread" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5 mb-4"><I.ArrowLeft size={12} /> The Red Thread</Link>
       <div className="eyebrow eyebrow-wine">{thread.patternType} pattern · {thread.status}</div>
       <h1 className="display text-[32px] md:text-[40px] mt-2">{thread.title}</h1>
       <p className="serif text-[19px] text-ink-2 mt-3 max-w-[64ch]">{thread.description}</p>
@@ -116,7 +116,7 @@ function ThreadDetail({ id }: { id: string }) {
               {errs.map((e) => (
                 <li key={e.id} className="py-3 flex gap-4 text-[13px]">
                   <span className="numeral text-ink-3 w-16 shrink-0">{shortDate(e.createdAt)}</span>
-                  <span className="flex-1"><span className="text-ink">{e.detail}</span><span className="block text-ink-3 mt-0.5">{ERROR_META[e.type]?.label ?? e.type}{e.subskill ? ` · ${subskillLabel(e.subskill)}` : ""} · <Link href={SOURCE_HREF[e.source.kind] ?? "/desk"} className="underline underline-offset-4 hover:text-ink">{e.source.label ?? e.source.kind}</Link></span></span>
+                  <span className="flex-1"><span className="text-ink">{e.detail}</span><span className="block text-ink-3 mt-0.5">{ERROR_META[e.type]?.label ?? e.type}{e.subskill ? ` · ${subskillLabel(e.subskill)}` : ""} · <Link href={SOURCE_HREF[e.source.kind] ?? "/v1/desk"} className="underline underline-offset-4 hover:text-ink">{e.source.label ?? e.source.kind}</Link></span></span>
                 </li>
               ))}
             </ul>
@@ -170,7 +170,7 @@ function WhatRecurs() {
   }, [errors.data]);
   return (
     <div className="page">
-      <Link href="/red-thread" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5 mb-4"><I.ArrowLeft size={12} /> The Red Thread</Link>
+      <Link href="/v1/red-thread" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5 mb-4"><I.ArrowLeft size={12} /> The Red Thread</Link>
       <PageHeader eyebrow="The Red Thread" title="What recurs" lede="Every recorded slip, by kind. Recurring kinds raise training priority; they are not a scorecard." />
       {!by.length ? <Empty title="Nothing recorded yet." /> : (
         <div className="space-y-8">

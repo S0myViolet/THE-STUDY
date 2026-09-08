@@ -265,7 +265,7 @@ export function CasePlayer({ kase, onComplete, sourceKind = "case" }: { kase: Ca
     if (!attempt) return;
     if (attempt.status === "completed") {
       if (onComplete) return onComplete();
-      if (!(await finish())) router.push("/desk");
+      if (!(await finish())) router.push("/v1/desk");
       return;
     }
     const summary = composeSummary(kase, outcomes, { alternativesMean: baselineAlt });
@@ -285,7 +285,7 @@ export function CasePlayer({ kase, onComplete, sourceKind = "case" }: { kase: Ca
     await detectRedThreads(db);
     setAttempt({ ...attempt, status: "completed", summary });
     if (onComplete) return onComplete();
-    if (!(await finish())) router.push(`/after-action`);
+    if (!(await finish())) router.push(`/v1/after-action`);
   }
 
   /* ---------------- render ---------------- */
@@ -298,7 +298,7 @@ export function CasePlayer({ kase, onComplete, sourceKind = "case" }: { kase: Ca
         {sourceKind === "baseline" ? (
           <span className="text-[12px] text-ink-3">The first case</span>
         ) : (
-          <Link href="/casebook" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
+          <Link href="/v1/casebook" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
             <I.ArrowLeft size={12} /> Casebook
           </Link>
         )}

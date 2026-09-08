@@ -63,7 +63,7 @@ export function Overview() {
         aside={
           completed.length ? (
             <span className="hidden md:block">
-              <Link href={`/fieldwork/reports${suffix}`} className="btn btn-secondary">
+              <Link href={`/v1/fieldwork/reports${suffix}`} className="btn btn-secondary">
                 Reports
               </Link>
             </span>
@@ -99,7 +99,7 @@ export function Overview() {
                   const n = answeredCount(a, r);
                   return (
                     <li key={r.id}>
-                      <Link href={`/fieldwork/${a.id}/report${suffix}`} className="group flex items-baseline gap-4 py-3.5 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
+                      <Link href={`/v1/fieldwork/${a.id}/report${suffix}`} className="group flex items-baseline gap-4 py-3.5 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
                         <span className="flex-1 min-w-0">
                           <span className="serif text-[18px] text-ink block">{a.title}</span>
                           <span className="text-[12px] text-ink-3 block mt-0.5">
@@ -139,7 +139,7 @@ export function Overview() {
             <div className="flex items-baseline justify-between gap-4 mb-1">
               <div className="eyebrow">Reports · {completed.length}</div>
               {completed.length > 5 ? (
-                <Link href={`/fieldwork/reports${suffix}`} className="text-[12px] text-ink-3 hover:text-ink">
+                <Link href={`/v1/fieldwork/reports${suffix}`} className="text-[12px] text-ink-3 hover:text-ink">
                   All reports
                 </Link>
               ) : null}
@@ -150,7 +150,7 @@ export function Overview() {
                 if (!a) return null;
                 return (
                   <li key={r.id}>
-                    <Link href={`/fieldwork/reports/${r.id}${suffix}`} className="group flex items-baseline gap-4 py-3.5 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
+                    <Link href={`/v1/fieldwork/reports/${r.id}${suffix}`} className="group flex items-baseline gap-4 py-3.5 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
                       <span className="numeral text-[12px] text-ink-3 w-14 shrink-0">{shortDate(r.completedAt ?? r.updatedAt)}</span>
                       <span className="flex-1 min-w-0">
                         <span className="serif text-[17px] text-ink block truncate">{a.title}</span>
@@ -179,7 +179,7 @@ function AssignmentRow({ a, state, suffix, featured }: { a: FieldAssignment; sta
   else status = briefExcerpt(a.brief);
   return (
     <li>
-      <Link href={`/fieldwork/${a.id}${suffix}`} className="group flex items-baseline gap-4 py-3 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
+      <Link href={`/v1/fieldwork/${a.id}${suffix}`} className="group flex items-baseline gap-4 py-3 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
         <span className="flex-1 min-w-0">
           <span className="serif text-[17px] text-ink block">
             {a.title}
@@ -204,7 +204,7 @@ function WeeklyPick({ pick, state, suffix, allFiled }: { pick?: FieldAssignment;
       </section>
     );
   }
-  const href = state?.active ? `/fieldwork/${pick.id}/report${suffix}` : `/fieldwork/${pick.id}${suffix}`;
+  const href = state?.active ? `/v1/fieldwork/${pick.id}/report${suffix}` : `/v1/fieldwork/${pick.id}${suffix}`;
   return (
     <section className="border-t border-ink pt-4" aria-label="This week's assignment">
       <div className="eyebrow eyebrow-brass">This week&apos;s assignment</div>

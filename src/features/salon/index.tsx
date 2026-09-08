@@ -20,7 +20,7 @@ export function SalonRoom({ slug }: { slug: string[] }) {
   const all: SalonScenario[] = [...SALON_SCENARIOS, ...((generated.data ?? []).map((g) => g.payload as SalonScenario))];
   if (slug[0]) {
     const s = all.find((x) => x.id === slug[0]);
-    if (!s) return generated.loading ? null : <div className="page"><Empty title="No one by that name in the Salon." action={<Link href="/salon" className="btn btn-secondary">Back</Link>} /></div>;
+    if (!s) return generated.loading ? null : <div className="page"><Empty title="No one by that name in the Salon." action={<Link href="/v1/salon" className="btn btn-secondary">Back</Link>} /></div>;
     return <Conversation key={`${s.id}:${past ?? "live"}`} scenario={s} pastId={past} />;
   }
   return <Index scenarios={all} />;
@@ -48,7 +48,7 @@ function Index({ scenarios }: { scenarios: SalonScenario[] }) {
             const st = by.get(s.id);
             return (
               <li key={s.id}>
-                <Link href={`/salon/${s.id}`} className="group flex items-start gap-6 py-5 -mx-3 px-3 rounded-sm hover:bg-paper-3">
+                <Link href={`/v1/salon/${s.id}`} className="group flex items-start gap-6 py-5 -mx-3 px-3 rounded-sm hover:bg-paper-3">
                   <div className="flex-1 min-w-0">
                     <div className="serif text-[22px] text-ink group-hover:text-ink-2">{s.character.name} <span className="text-ink-3 text-[16px]">· {s.character.role}</span></div>
                     <p className="text-[14px] text-ink-2 mt-1 max-w-[62ch]">{s.title}. {s.objectives[0]?.text}</p>
@@ -72,7 +72,7 @@ function Index({ scenarios }: { scenarios: SalonScenario[] }) {
                   const sc = scenarios.find((x) => x.id === s.scenarioId);
                   return (
                     <li key={s.id}>
-                      <Link href={`/salon/${s.scenarioId}?past=${s.id}`} className="group flex items-baseline justify-between gap-3 text-[13px]">
+                      <Link href={`/v1/salon/${s.scenarioId}?past=${s.id}`} className="group flex items-baseline justify-between gap-3 text-[13px]">
                         <span className="text-ink-2 group-hover:text-ink truncate">{sc?.character.name ?? s.scenarioId}</span>
                         <span className="numeral text-ink-3 shrink-0">{Math.round((s.review?.score ?? 0) * 100)} · {s.completedAt ? shortDate(s.completedAt) : ""}</span>
                       </Link>

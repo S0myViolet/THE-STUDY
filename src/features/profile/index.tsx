@@ -31,7 +31,7 @@ export function ProfileRoom({ slug }: { slug: string[] }) {
   if (head) {
     return (
       <div className="page">
-        <Empty title="No such faculty in the Profile." action={<Link href="/profile" className="btn btn-secondary">Back to the map</Link>} />
+        <Empty title="No such faculty in the Profile." action={<Link href="/v1/profile" className="btn btn-secondary">Back to the map</Link>} />
       </div>
     );
   }
@@ -51,7 +51,7 @@ function CapabilityMap() {
     let alive = true;
     import("@/lib/profile/qa-seed").then(async ({ seedProfileQA }) => {
       await seedProfileQA(db);
-      if (alive) router.replace("/profile");
+      if (alive) router.replace("/v1/profile");
     });
     return () => {
       alive = false;
@@ -85,7 +85,7 @@ function CapabilityMap() {
             title="The Study has no evidence yet. Begin with a case."
             body="Every exercise leaves evidence behind. The constellation fills in as it accumulates; nothing here is assumed."
             action={
-              <Link href="/casebook" className="btn btn-lg">
+              <Link href="/v1/casebook" className="btn btn-lg">
                 Open the Casebook <I.ArrowRight size={14} />
               </Link>
             }
@@ -113,7 +113,7 @@ function CapabilityMap() {
           </section>
 
           <p className="mt-10 text-[12px] text-ink-4 max-w-[60ch]">
-            Levels need evidence before they move: three pieces to leave Untested, twenty for Advanced, forty for Exceptional. <Link href="/profile/methodology" className="underline underline-offset-4 hover:text-ink">How the estimates are made.</Link>
+            Levels need evidence before they move: three pieces to leave Untested, twenty for Advanced, forty for Exceptional. <Link href="/v1/profile/methodology" className="underline underline-offset-4 hover:text-ink">How the estimates are made.</Link>
           </p>
         </>
       )}

@@ -58,7 +58,7 @@ export function Reading() {
                     <ul className="divide-y divide-line">
                       {group.map((it) => (
                         <li key={it.id}>
-                          <Link href={`/archive/reading/${it.id}`} className="group flex items-start justify-between gap-4 py-3 -mx-2 px-2 rounded-sm hover:bg-paper-3">
+                          <Link href={`/v1/archive/reading/${it.id}`} className="group flex items-start justify-between gap-4 py-3 -mx-2 px-2 rounded-sm hover:bg-paper-3">
                             <span className="min-w-0">
                               <span className="eyebrow block">{READING_KIND_LABEL[it.kind]}{it.author ? ` · ${it.author}` : ""}</span>
                               <span className="serif text-[19px] text-ink group-hover:text-ink-2 block leading-snug">{it.title}</span>
@@ -113,7 +113,7 @@ function Shelf({ items, fresh }: { items: ReadingItem[]; fresh: string | null })
             <React.Fragment key={it.id}>
               {gap ? <span className="w-5 shrink-0" aria-hidden /> : null}
               <Link
-                href={`/archive/reading/${it.id}`}
+                href={`/v1/archive/reading/${it.id}`}
                 role="listitem"
                 title={`${it.title}${it.author ? ` · ${it.author}` : ""} · ${READING_STATUS_LABEL[it.status]}`}
                 className={cx("relative shrink-0 flex flex-col items-center justify-between rounded-t-[2px] border border-b-0 border-line-2/60 hover:-translate-y-1 focus-visible:-translate-y-1 transition-transform duration-200 outline-none focus-visible:ring-1 focus-visible:ring-[var(--focus)]", it.id === fresh && "anim-place")}

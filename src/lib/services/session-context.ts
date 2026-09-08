@@ -24,7 +24,7 @@ export function useSessionItem() {
     async (status: "done" | "skipped" = "done") => {
       if (!sessionId || !itemId) return false;
       await completeSessionItem(db, sessionId, itemId, status);
-      router.push(`/desk?session=${sessionId}`);
+      router.push(`/v1/desk?session=${sessionId}`);
       return true;
     },
     [db, sessionId, itemId, router],

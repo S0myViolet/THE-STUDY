@@ -36,9 +36,9 @@ export async function computeInsights(db: StudyDatabase): Promise<Insight[]> {
     const conf = buckets.reduce((s, b) => s + b.meanConfidence * b.n, 0) / n;
     const gap = conf - acc;
     if (Math.abs(gap) > 0.06) {
-      out.push({ id: "cal-hi", text: `Your ${Math.round(conf * 100)}% confidence answers are currently correct ${Math.round(acc * 100)}% of the time (n = ${n}).`, href: "/profile/evidence", n });
+      out.push({ id: "cal-hi", text: `Your ${Math.round(conf * 100)}% confidence answers are currently correct ${Math.round(acc * 100)}% of the time (n = ${n}).`, href: "/v1/profile/evidence", n });
     } else {
-      out.push({ id: "cal-ok", text: `At ${Math.round(conf * 100)}% confidence you are right ${Math.round(acc * 100)}% of the time. That is well calibrated (n = ${n}).`, href: "/profile/evidence", n });
+      out.push({ id: "cal-ok", text: `At ${Math.round(conf * 100)}% confidence you are right ${Math.round(acc * 100)}% of the time. That is well calibrated (n = ${n}).`, href: "/v1/profile/evidence", n });
     }
   }
 
@@ -47,8 +47,8 @@ export async function computeInsights(db: StudyDatabase): Promise<Insight[]> {
   if (obs.length >= 5) {
     const cov = obs.reduce((s, o) => s + (o.coverage ?? 0), 0) / obs.length;
     const prec = obs.reduce((s, o) => s + (o.precision ?? 0), 0) / obs.length;
-    if (prec - cov > 0.15) out.push({ id: "obs-prec", text: `You invent very little (precision ${Math.round(prec * 100)}%) but notice less than is there (coverage ${Math.round(cov * 100)}%). Look longer before you look away.`, href: "/observation", n: obs.length });
-    else if (cov - prec > 0.15) out.push({ id: "obs-cov", text: `You notice a great deal (coverage ${Math.round(cov * 100)}%) but some of it was never there (precision ${Math.round(prec * 100)}%). Hedge what you are not sure of.`, href: "/observation", n: obs.length });
+    if (prec - cov > 0.15) out.push({ id: "obs-prec", text: `You invent very little (precision ${Math.round(prec * 100)}%) but notice less than is there (coverage ${Math.round(cov * 100)}%). Look longer before you look away.`, href: "/v1/observation", n: obs.length });
+    else if (cov - prec > 0.15) out.push({ id: "obs-cov", text: `You notice a great deal (coverage ${Math.round(cov * 100)}%) but some of it was never there (precision ${Math.round(prec * 100)}%). Hedge what you are not sure of.`, href: "/v1/observation", n: obs.length });
   }
 
   // Spatial vs chronology, detail vs anomaly comparisons
@@ -66,7 +66,7 @@ export async function computeInsights(db: StudyDatabase): Promise<Insight[]> {
     const ea = est(a);
     const eb = est(b);
     if (ea && eb && ea.evidenceCount >= 5 && eb.evidenceCount >= 5 && ea.value - eb.value >= 0.15) {
-      out.push({ id: `pair-${a}-${b}`, text: `${text} (${subskillLabel(a)} ${Math.round(ea.value * 100)} vs ${subskillLabel(b)} ${Math.round(eb.value * 100)}.)`, href: "/profile", n: ea.evidenceCount + eb.evidenceCount });
+      out.push({ id: `pair-${a}-${b}`, text: `${text} (${subskillLabel(a)} ${Math.round(ea.value * 100)} vs ${subskillLabel(b)} ${Math.round(eb.value * 100)}.)`, href: "/v1/profile", n: ea.evidenceCount + eb.evidenceCount });
     }
   }
 
@@ -86,8 +86,8 @@ export async function computeInsights(db: StudyDatabase): Promise<Insight[]> {
   if (story && fact && story.n >= 6 && fact.n >= 6) {
     const s = story.ok / story.n;
     const f = fact.ok / fact.n;
-    if (s - f > 0.15) out.push({ id: "mem-story", text: `You remember stories better than isolated facts (${Math.round(s * 100)}% vs ${Math.round(f * 100)}%). Give facts a narrative.`, href: "/memory", n: story.n + fact.n });
-    else if (f - s > 0.15) out.push({ id: "mem-fact", text: `Isolated facts stick better than sequences and stories for you (${Math.round(f * 100)}% vs ${Math.round(s * 100)}%).`, href: "/memory", n: story.n + fact.n });
+    if (s - f > 0.15) out.push({ id: "mem-story", text: `You remember stories better than isolated facts (${Math.round(s * 100)}% vs ${Math.round(f * 100)}%). Give facts a narrative.`, href: "/v1/memory", n: story.n + fact.n });
+    else if (f - s > 0.15) out.push({ id: "mem-fact", text: `Isolated facts stick better than sequences and stories for you (${Math.round(f * 100)}% vs ${Math.round(s * 100)}%).`, href: "/v1/memory", n: story.n + fact.n });
   }
 
   // Speed and accuracy
@@ -98,8 +98,8 @@ export async function computeInsights(db: StudyDatabase): Promise<Insight[]> {
     if (fast.length >= 6 && slow.length >= 6) {
       const fa = fast.filter((e) => e.correct).length / fast.length;
       const sa = slow.filter((e) => e.correct).length / slow.length;
-      if (sa - fa > 0.15) out.push({ id: "speed", text: `You become less accurate when responding in under 15 seconds (${Math.round(fa * 100)}% vs ${Math.round(sa * 100)}%). The pause is worth it.`, href: "/profile/evidence", n: timed.length });
-      else if (fa - sa > 0.15) out.push({ id: "speed-ok", text: `Your fast answers are as good as your slow ones (${Math.round(fa * 100)}% vs ${Math.round(sa * 100)}%). Your intuition is earning its keep here.`, href: "/profile/evidence", n: timed.length });
+      if (sa - fa > 0.15) out.push({ id: "speed", text: `You become less accurate when responding in under 15 seconds (${Math.round(fa * 100)}% vs ${Math.round(sa * 100)}%). The pause is worth it.`, href: "/v1/profile/evidence", n: timed.length });
+      else if (fa - sa > 0.15) out.push({ id: "speed-ok", text: `Your fast answers are as good as your slow ones (${Math.round(fa * 100)}% vs ${Math.round(sa * 100)}%). Your intuition is earning its keep here.`, href: "/v1/profile/evidence", n: timed.length });
     }
   }
 
@@ -108,7 +108,7 @@ export async function computeInsights(db: StudyDatabase): Promise<Insight[]> {
     const reviewsS = salons.map((s) => s.review).filter(Boolean) as NonNullable<(typeof salons)[number]["review"]>[];
     const asked = reviewsS.reduce((s, r) => s + r.questionsAsked, 0);
     const forcing = reviewsS.reduce((s, r) => s + r.questionsForcingNewInfo, 0);
-    if (asked >= 10 && forcing / asked < 0.4) out.push({ id: "salon-q", text: `Across ${salons.length} conversations, only ${forcing} of ${asked} questions forced new information. Ask fewer, better questions.`, href: "/salon", n: asked });
+    if (asked >= 10 && forcing / asked < 0.4) out.push({ id: "salon-q", text: `Across ${salons.length} conversations, only ${forcing} of ${asked} questions forced new information. Ask fewer, better questions.`, href: "/v1/salon", n: asked });
   }
 
   // Social confidence inflation
@@ -119,7 +119,7 @@ export async function computeInsights(db: StudyDatabase): Promise<Insight[]> {
     const sa = social.filter((c) => c.correct).length / social.length;
     const oc = other.reduce((s, c) => s + c.confidence, 0) / other.length;
     const oa = other.filter((c) => c.correct).length / other.length;
-    if (sc - sa > 0.1 && sc - sa > oc - oa + 0.08) out.push({ id: "social-conf", text: `When a scenario includes social information your confidence rises (${Math.round(sc * 100)}%) but your accuracy does not (${Math.round(sa * 100)}%).`, href: "/salon", n: social.length });
+    if (sc - sa > 0.1 && sc - sa > oc - oa + 0.08) out.push({ id: "social-conf", text: `When a scenario includes social information your confidence rises (${Math.round(sc * 100)}%) but your accuracy does not (${Math.round(sa * 100)}%).`, href: "/v1/salon", n: social.length });
   }
 
   // Sort: biggest evidence first, cap 4

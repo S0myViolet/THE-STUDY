@@ -61,7 +61,7 @@ export function Review() {
     return (
       <div className="page">
         <MemoryHeader title="Recall" />
-        <Empty title="Nothing is due. That is not the same as having nothing to learn." action={<Link href="/archive" className="btn btn-secondary">Explore the Archive</Link>} />
+        <Empty title="Nothing is due. That is not the same as having nothing to learn." action={<Link href="/v1/archive" className="btn btn-secondary">Explore the Archive</Link>} />
       </div>
     );
   }

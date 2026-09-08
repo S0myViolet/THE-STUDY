@@ -104,7 +104,7 @@ function PalaceView({ palace, items, palaces, onNew }: { palace: MemoryPalace; i
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
       <div>
         {palaces.length > 1 ? (
-          <div className="flex flex-wrap gap-2 mb-4">{palaces.map((p) => <a key={p.id} href={`/memory/palace/${p.id}`} className={cx("choice !w-auto !py-1.5 !px-3 text-[13px]", p.id === palace.id && "!border-ink")}>{p.name}</a>)}</div>
+          <div className="flex flex-wrap gap-2 mb-4">{palaces.map((p) => <a key={p.id} href={`/v1/memory/palace/${p.id}`} className={cx("choice !w-auto !py-1.5 !px-3 text-[13px]", p.id === palace.id && "!border-ink")}>{p.name}</a>)}</div>
         ) : null}
         <div className="stage relative">
           <svg viewBox="0 0 800 480" className="w-full h-auto block cursor-crosshair" role="img" aria-label={`Room map of ${palace.name}`} onClick={(e) => { if (walk !== null) return; const r = (e.currentTarget as SVGSVGElement).getBoundingClientRect(); setAdding({ x: Math.round(((e.clientX - r.left) / r.width) * 100), y: Math.round(((e.clientY - r.top) / r.height) * 100) }); }}>

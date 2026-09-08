@@ -35,6 +35,6 @@ export async function reachMilestone(db: StudyDatabase, key: string): Promise<Mi
   if (existing.length) return existing[0];
   const m = stamp<Milestone>(db.userId, "ms", { key, title: meta.title, description: meta.description, reachedAt: new Date().toISOString() });
   await store.put(m);
-  await notify(db, { kind: "milestone", title: meta.title, body: meta.description, href: "/profile" });
+  await notify(db, { kind: "milestone", title: meta.title, body: meta.description, href: "/v1/profile" });
   return m;
 }

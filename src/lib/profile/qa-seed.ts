@@ -1,7 +1,7 @@
 /**
  * QA-ONLY SEEDING for the Profile room.
  *
- * Reached solely through `/profile?qa-seed=1`. Never surfaced in the interface.
+ * Reached solely through `/v1/profile?qa-seed=1`. Never surfaced in the interface.
  * Writes ~60 varied pieces of SkillEvidence (backdated across 30 days) through the
  * real evidence write path, 30 confidence entries, and a handful of observation
  * attempts, memory reviews, salon sessions, daily sessions, red threads and

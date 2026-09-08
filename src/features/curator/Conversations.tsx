@@ -14,14 +14,14 @@ export function Conversations({ currentId, limit = 8, className }: { currentId?:
     <section className={className} aria-label="Previous consultations">
       <div className="flex items-baseline justify-between mb-2">
         <span className="eyebrow">Consultations</span>
-        {currentId ? <Link href="/curator" className="text-[11px] text-ink-3 hover:text-ink">New</Link> : null}
+        {currentId ? <Link href="/v1/curator" className="text-[11px] text-ink-3 hover:text-ink">New</Link> : null}
       </div>
       <ul className="divide-y divide-line border-t border-line">
         {rows.map((c) => {
           const active = c.id === currentId;
           return (
             <li key={c.id}>
-              <Link href={`/curator/${c.id}`} className={cx("block py-2 group", active ? "text-ink" : "text-ink-2 hover:text-ink")} aria-current={active ? "page" : undefined}>
+              <Link href={`/v1/curator/${c.id}`} className={cx("block py-2 group", active ? "text-ink" : "text-ink-2 hover:text-ink")} aria-current={active ? "page" : undefined}>
                 <span className="block text-[13px] leading-snug serif truncate">{c.title}</span>
                 <span className="block text-[11px] text-ink-4 mt-0.5">{modeMeta(c.mode).label} · {relativeDays(c.updatedAt)}</span>
               </Link>

@@ -40,7 +40,7 @@ export function GenerateSalon() {
     await db.store("generated_content").put(stamp<GeneratedContent>(db.userId, "gen", { kind: "salon", refId: id, payload: final, model: res.model }));
     setBusy(false);
     setOpen(false);
-    router.push(`/salon/${id}`);
+    router.push(`/v1/salon/${id}`);
   }
 
   return (

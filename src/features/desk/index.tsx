@@ -46,7 +46,7 @@ export function DeskRoom({ slug: _slug }: { slug?: string[] } = {}) {
 
   // Command-palette commands land here.
   useEffect(() => {
-    if (params.get("begin") === "case" && kase.data) router.replace(`/casebook/${kase.data.id}`);
+    if (params.get("begin") === "case" && kase.data) router.replace(`/v1/casebook/${kase.data.id}`);
   }, [params, kase.data, router]);
   const autoBegun = useRef(false);
   useEffect(() => {
@@ -68,11 +68,11 @@ export function DeskRoom({ slug: _slug }: { slug?: string[] } = {}) {
     return <Arrival onDone={async () => {
       const sid = params.get("session"); const iid = params.get("item");
       if (sid && iid) await completeSessionItem(db, sid, iid);
-      router.replace(sid ? `/desk?session=${sid}` : "/desk");
+      router.replace(sid ? `/v1/desk?session=${sid}` : "/v1/desk");
     }} />;
   }
   if (params.get("debrief") === "1" && session.data) {
-    return <SessionDebrief session={session.data} onDone={() => router.replace("/desk")} />;
+    return <SessionDebrief session={session.data} onDone={() => router.replace("/v1/desk")} />;
   }
 
   const s = session.data;
@@ -156,7 +156,7 @@ export function DeskRoom({ slug: _slug }: { slug?: string[] } = {}) {
                 </div>
               </div>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href={`/casebook/${kase.data.id}`} className="btn btn-lg">
+                <Link href={`/v1/casebook/${kase.data.id}`} className="btn btn-lg">
                   {activeCase.data?.[0]?.caseId === kase.data.id ? "Resume" : "Begin"} <I.ArrowRight size={14} />
                 </Link>
                 <div className="flex flex-wrap items-center gap-3 md:ml-auto">
@@ -181,7 +181,7 @@ export function DeskRoom({ slug: _slug }: { slug?: string[] } = {}) {
               <ul className="space-y-4 stagger">
                 {insights.data.map((ins) => (
                   <li key={ins.id} className="border-l-2 border-brass pl-4">
-                    <Link href={ins.href ?? "/profile"} className="block group">
+                    <Link href={ins.href ?? "/v1/profile"} className="block group">
                       <p className="serif text-[19px] leading-snug text-ink group-hover:text-ink-2">{ins.text}</p>
                     </Link>
                   </li>
@@ -196,29 +196,29 @@ export function DeskRoom({ slug: _slug }: { slug?: string[] } = {}) {
           <section className="mt-12" aria-labelledby="continue">
             <div id="continue" className="eyebrow mb-4">Continue</div>
             <ul className="divide-y divide-line border-t border-line">
-              <ContinueRow label="Active book" title={reading.data?.[0]?.title} href={reading.data?.[0] ? `/archive/reading/${reading.data[0].id}` : "/archive/reading"} empty="Nothing open. Add a book to the shelf." />
-              <ContinueRow label="Active case" title={activeCase.data?.[0] ? [...C.CASES, BASELINE_CASE].find((c) => c.id === activeCase.data![0].caseId)?.title : undefined} href={activeCase.data?.[0] ? `/casebook/${activeCase.data[0].caseId}` : "/casebook"} empty="No case left open." />
-              <ContinueRow label="Knowledge trail" title={(() => { const path = C.ARCHIVE_ENTRIES.find((e) => e.kind === "path" && (progress.data ?? []).some((p) => e.pathEntries?.includes(p.entryId))); return path?.title; })()} href={(() => { const path = C.ARCHIVE_ENTRIES.find((e) => e.kind === "path" && (progress.data ?? []).some((p) => e.pathEntries?.includes(p.entryId))); return path ? `/archive/${path.id}` : "/archive/paths"; })()} empty="No trail started." />
-              <ContinueRow label="Strategic scenario" title={activeStrategy.data?.[0] ? C.STRATEGY_SCENARIOS.find((s) => s.id === activeStrategy.data![0].scenarioId)?.title : undefined} href={activeStrategy.data?.[0] ? `/strategy/${activeStrategy.data[0].scenarioId}` : "/strategy"} empty="No scenario in progress." />
-              <ContinueRow label="Investigation" title={investigations.data?.[0]?.title} href={investigations.data?.[0] ? `/investigations/${investigations.data[0].id}` : "/investigations"} empty="No open question." />
+              <ContinueRow label="Active book" title={reading.data?.[0]?.title} href={reading.data?.[0] ? `/v1/archive/reading/${reading.data[0].id}` : "/v1/archive/reading"} empty="Nothing open. Add a book to the shelf." />
+              <ContinueRow label="Active case" title={activeCase.data?.[0] ? [...C.CASES, BASELINE_CASE].find((c) => c.id === activeCase.data![0].caseId)?.title : undefined} href={activeCase.data?.[0] ? `/v1/casebook/${activeCase.data[0].caseId}` : "/v1/casebook"} empty="No case left open." />
+              <ContinueRow label="Knowledge trail" title={(() => { const path = C.ARCHIVE_ENTRIES.find((e) => e.kind === "path" && (progress.data ?? []).some((p) => e.pathEntries?.includes(p.entryId))); return path?.title; })()} href={(() => { const path = C.ARCHIVE_ENTRIES.find((e) => e.kind === "path" && (progress.data ?? []).some((p) => e.pathEntries?.includes(p.entryId))); return path ? `/v1/archive/${path.id}` : "/v1/archive/paths"; })()} empty="No trail started." />
+              <ContinueRow label="Strategic scenario" title={activeStrategy.data?.[0] ? C.STRATEGY_SCENARIOS.find((s) => s.id === activeStrategy.data![0].scenarioId)?.title : undefined} href={activeStrategy.data?.[0] ? `/v1/strategy/${activeStrategy.data[0].scenarioId}` : "/v1/strategy"} empty="No scenario in progress." />
+              <ContinueRow label="Investigation" title={investigations.data?.[0]?.title} href={investigations.data?.[0] ? `/v1/investigations/${investigations.data[0].id}` : "/v1/investigations"} empty="No open question." />
             </ul>
           </section>
         </section>
 
         {/* Secondary column */}
         <aside className="space-y-8 lg:pt-1">
-          {!profile.baselineComplete && !profile.isDemo ? <SecondaryItem label="The baseline" value="Not taken yet" href="/enter?again=1&step=baseline" sub="Nine short challenges. Fifteen minutes. The first map gets a lot sharper." /> : null}
-          <SecondaryItem label="Memory due" value={due.data ? (due.data.length ? `${due.data.length} items` : "Nothing due") : "…"} href="/memory/review" sub={due.data?.length ? "Retention decays fastest right after learning." : "That is not the same as having nothing to learn."} />
-          <SecondaryItem label="The Archive" value={unreadEntry ? unreadEntry.title : "All read"} href={unreadEntry ? `/archive/${unreadEntry.id}` : "/archive"} sub={unreadEntry ? "One new piece waiting." : "Add a question to the Archive."} serif />
-          <SecondaryItem label="Open thread" value={threads.data?.[0]?.title ?? "Nothing yet"} href={threads.data?.[0] ? `/red-thread/${threads.data[0].id}` : "/red-thread"} sub={threads.data?.[0] ? `${threads.data[0].status} · ${threads.data[0].confidence} confidence` : "Nothing has repeated enough to call a pattern."} />
-          <SecondaryItem label="Field assignment" value={field.data?.[0] ? (field.data[0].status === "completed" ? "Completed" : "Not completed") : "None assigned"} href="/fieldwork" sub={field.data?.[0] ? C.FIELD_ASSIGNMENTS.find((a) => a.id === field.data![0].assignmentId)?.title : "Take the Study outside."} />
+          {!profile.baselineComplete && !profile.isDemo ? <SecondaryItem label="The baseline" value="Not taken yet" href="/v1/enter?again=1&step=baseline" sub="Nine short challenges. Fifteen minutes. The first map gets a lot sharper." /> : null}
+          <SecondaryItem label="Memory due" value={due.data ? (due.data.length ? `${due.data.length} items` : "Nothing due") : "…"} href="/v1/memory/review" sub={due.data?.length ? "Retention decays fastest right after learning." : "That is not the same as having nothing to learn."} />
+          <SecondaryItem label="The Archive" value={unreadEntry ? unreadEntry.title : "All read"} href={unreadEntry ? `/v1/archive/${unreadEntry.id}` : "/v1/archive"} sub={unreadEntry ? "One new piece waiting." : "Add a question to the Archive."} serif />
+          <SecondaryItem label="Open thread" value={threads.data?.[0]?.title ?? "Nothing yet"} href={threads.data?.[0] ? `/v1/red-thread/${threads.data[0].id}` : "/v1/red-thread"} sub={threads.data?.[0] ? `${threads.data[0].status} · ${threads.data[0].confidence} confidence` : "Nothing has repeated enough to call a pattern."} />
+          <SecondaryItem label="Field assignment" value={field.data?.[0] ? (field.data[0].status === "completed" ? "Completed" : "Not completed") : "None assigned"} href="/v1/fieldwork" sub={field.data?.[0] ? C.FIELD_ASSIGNMENTS.find((a) => a.id === field.data![0].assignmentId)?.title : "Take the Study outside."} />
           {notes.data?.length ? (
             <div>
               <Eyebrow className="mb-3">Notes</Eyebrow>
               <ul className="space-y-3">
                 {notes.data.map((n) => (
                   <li key={n.id} className="text-[13px]">
-                    <Link href={n.href ?? "/desk"} className="text-ink hover:underline underline-offset-4" onClick={() => db.store("notifications").update(n.id, { read: true })}>
+                    <Link href={n.href ?? "/v1/desk"} className="text-ink hover:underline underline-offset-4" onClick={() => db.store("notifications").update(n.id, { read: true })}>
                       {n.title}
                     </Link>
                     <p className="text-ink-3 mt-0.5">{n.body}</p>

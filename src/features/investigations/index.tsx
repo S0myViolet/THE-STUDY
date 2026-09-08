@@ -38,10 +38,10 @@ function Index() {
 
   return (
     <div className="page">
-      <PageHeader eyebrow="Investigations" title="Long questions" lede="A question you cannot answer in an afternoon, pursued over weeks: claims graded by support, counterclaims that are not straw, sources, notes, and eventually a position you can defend." aside={all.length ? <Link href="/investigations/new" className="btn"><I.Plus size={14} /> Start an investigation</Link> : null} />
+      <PageHeader eyebrow="Investigations" title="Long questions" lede="A question you cannot answer in an afternoon, pursued over weeks: claims graded by support, counterclaims that are not straw, sources, notes, and eventually a position you can defend." aside={all.length ? <Link href="/v1/investigations/new" className="btn"><I.Plus size={14} /> Start an investigation</Link> : null} />
 
       {!all.length && !investigations.loading ? (
-        <Empty title="No investigations open. Pick a question you cannot answer in an afternoon." body="Begin from one of the templates below, or bring your own question." action={<Link href="/investigations/new" className="btn btn-lg">Start an investigation</Link>} />
+        <Empty title="No investigations open. Pick a question you cannot answer in an afternoon." body="Begin from one of the templates below, or bring your own question." action={<Link href="/v1/investigations/new" className="btn btn-lg">Start an investigation</Link>} />
       ) : null}
 
       {open.length ? (
@@ -60,7 +60,7 @@ function Index() {
         <ul className="divide-y divide-line border-t border-line">
           {INVESTIGATION_TEMPLATES.map((t) => (
             <li key={t.id}>
-              <Link href={`/investigations?template=${t.id}`} className="group flex items-start justify-between gap-6 py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
+              <Link href={`/v1/investigations?template=${t.id}`} className="group flex items-start justify-between gap-6 py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
                 <span className="min-w-0">
                   <span className="serif text-[20px] text-ink group-hover:text-ink-2 block leading-snug">{t.title}</span>
                   <span className="block text-[14px] text-ink-2 mt-1 max-w-[70ch]">{t.question}</span>
@@ -103,7 +103,7 @@ function InvestigationRow({ inv }: { inv: Investigation }) {
   const b = balance(inv);
   return (
     <li>
-      <Link href={`/investigations/${inv.id}`} className="group block py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
+      <Link href={`/v1/investigations/${inv.id}`} className="group block py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
         <div className="flex items-start justify-between gap-6">
           <div className="min-w-0">
             <div className="serif text-[21px] text-ink group-hover:text-ink-2 leading-snug">{inv.title}</div>
@@ -142,13 +142,13 @@ function StartFromTemplate({ templateId }: { templateId: string }) {
     started.current = true;
     (async () => {
       const inv = await ensureOne(db, "investigations", { templateId: template.id, status: "open" } as Partial<Investigation>, () => fromTemplate(db.userId, template));
-      router.replace(`/investigations/${inv.id}`);
+      router.replace(`/v1/investigations/${inv.id}`);
     })();
   }, [db, router, template]);
   if (!template) {
     return (
       <div className="page">
-        <Empty title="No template by that name." action={<Link href="/investigations" className="btn btn-secondary">Back</Link>} />
+        <Empty title="No template by that name." action={<Link href="/v1/investigations" className="btn btn-secondary">Back</Link>} />
       </div>
     );
   }
@@ -172,12 +172,12 @@ function NewInvestigation() {
     setBusy(true);
     const inv = blank(db.userId, { title: f.title.trim(), question: f.question.trim(), whyItMatters: f.whyItMatters.trim() });
     await db.store("investigations").put(inv);
-    router.push(`/investigations/${inv.id}`);
+    router.push(`/v1/investigations/${inv.id}`);
   }
 
   return (
     <div className="page">
-      <Link href="/investigations" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5 mb-6">
+      <Link href="/v1/investigations" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5 mb-6">
         <I.ArrowLeft size={12} /> Investigations
       </Link>
       <PageHeader eyebrow="A new investigation" title="What is the question?" lede="Pick one you cannot answer in an afternoon and would still care about in a month." />

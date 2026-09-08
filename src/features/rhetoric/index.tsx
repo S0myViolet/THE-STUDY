@@ -33,13 +33,13 @@ export function RhetoricRoom({ slug }: { slug: string[] }) {
   if (isMode(head)) {
     if (!second) return <ModePage mode={head} prompts={promptsFor(prompts, head)} />;
     const p = prompts.find((x) => x.id === second);
-    if (!p) return loading ? null : <Missing href={`/rhetoric/${head}`} />;
+    if (!p) return loading ? null : <Missing href={`/v1/rhetoric/${head}`} />;
     return <Exercise key={p.id} prompt={p} siblings={promptsFor(prompts, p.mode)} />;
   }
 
   const p = prompts.find((x) => x.id === head);
   if (p) return <Exercise key={p.id} prompt={p} siblings={promptsFor(prompts, p.mode)} />;
-  return loading ? null : <Missing href="/rhetoric" />;
+  return loading ? null : <Missing href="/v1/rhetoric" />;
 }
 
 function Missing({ href }: { href: string }) {

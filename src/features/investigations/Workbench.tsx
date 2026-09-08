@@ -40,7 +40,7 @@ export function Workbench({ id }: { id: string }) {
   if (!inv) {
     return (
       <div className="page">
-        <Empty title="No investigation by that id." action={<Link href="/investigations" className="btn btn-secondary">Back</Link>} />
+        <Empty title="No investigation by that id." action={<Link href="/v1/investigations" className="btn btn-secondary">Back</Link>} />
       </div>
     );
   }
@@ -74,13 +74,13 @@ export function Workbench({ id }: { id: string }) {
   return (
     <div className="page">
       <div className="flex items-center justify-between gap-4 mb-6">
-        <Link href="/investigations" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
+        <Link href="/v1/investigations" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
           <I.ArrowLeft size={12} /> Investigations
         </Link>
         <div className="flex items-center gap-4 text-[12px] text-ink-3">
           <span className={cx("capitalize", inv.status === "open" ? "text-forest" : inv.status === "synthesised" ? "text-brass" : "")}>{inv.status}</span>
           <span className="numeral whitespace-nowrap">{plural(daysOpen(inv), "day")}</span>
-          <Link href={`/investigations/${inv.id}/synthesis`} className="btn btn-sm">
+          <Link href={`/v1/investigations/${inv.id}/synthesis`} className="btn btn-sm">
             {inv.synthesis ? "Synthesis" : "Write the synthesis"} <I.ArrowRight size={12} />
           </Link>
         </div>
@@ -388,7 +388,7 @@ function Connections({ ids, onChange }: { ids: string[]; onChange: (ids: string[
           const e = data.byId.get(id);
           return (
             <li key={id} className="inline-flex items-center gap-2 border border-line-2 px-2.5 py-1 text-[13px]">
-              <Link href={`/archive/${id}`} className="text-ink hover:underline underline-offset-4">
+              <Link href={`/v1/archive/${id}`} className="text-ink hover:underline underline-offset-4">
                 {e?.title ?? id}
               </Link>
               <button type="button" className="text-ink-4 hover:text-wine" aria-label={`Remove ${e?.title ?? id}`} onClick={() => onChange(ids.filter((x) => x !== id))}>

@@ -54,7 +54,7 @@ export function GenerateCase({ existing }: { existing: CaseDefinition[] }) {
     await db.store("generated_content").put(gc);
     setBusy(false);
     setOpen(false);
-    router.push(`/casebook/${id}`);
+    router.push(`/v1/casebook/${id}`);
   }
 
   return (

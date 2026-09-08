@@ -612,7 +612,7 @@ export const ITEMS_PROBABILITY_A: PracticeItem[] = [
     commonErrors: [
       { description: "Assumed the bet is fair because the payout looks proportionate.", category: "CONCEPTUAL_ERROR", value: 0 },
       { description: "Counted only the winning branch (35/37), leaving out the loss term.", category: "ALGEBRA_ERROR", value: 0.9459 },
-      { description: "Used 38 pockets, the American wheel.", category: "MISREAD", value: -0.0263 },
+      { description: "Used 38 pockets, the American wheel, whose two zeros give −2/38.", category: "MISREAD", value: -0.0526 },
     ],
     transfer: 0,
     minutes: 3,

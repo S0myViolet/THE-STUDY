@@ -28,7 +28,7 @@ export function FacultyTable({ views }: { views: FacultyView[] }) {
             return (
               <tr key={v.id} className={cx("border-b border-line group", untested && "text-ink-4")}>
                 <td className="py-3 pr-3">
-                  <Link href={`/profile/${v.id}`} className="block">
+                  <Link href={`/v1/profile/${v.id}`} className="block">
                     <span className={cx("serif text-[18px] leading-tight block", untested ? "text-ink-4" : "text-ink group-hover:text-ink-2")}>{v.label}</span>
                     <span className="block text-[12px] text-ink-3 mt-0.5">{v.question}</span>
                   </Link>
@@ -47,7 +47,7 @@ export function FacultyTable({ views }: { views: FacultyView[] }) {
                 <td className="py-3 pr-3 align-middle text-right numeral">{v.evidenceCount}</td>
                 <td className="py-3 pr-3 align-middle text-[12px]">{untested ? <span className="text-ink-4">—</span> : v.confidenceLabel}</td>
                 <td className="py-3 align-middle text-right">
-                  <Link href={`/profile/${v.id}`} aria-label={`Open ${v.label}`} className="inline-flex text-ink-4 group-hover:text-ink">
+                  <Link href={`/v1/profile/${v.id}`} aria-label={`Open ${v.label}`} className="inline-flex text-ink-4 group-hover:text-ink">
                     <I.ArrowRight size={14} />
                   </Link>
                 </td>

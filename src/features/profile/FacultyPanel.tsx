@@ -62,7 +62,7 @@ export function FacultyPanel({ view }: { view: FacultyView }) {
         </>
       )}
 
-      <Link href={`/profile/${view.id}`} className="btn btn-secondary mt-6">
+      <Link href={`/v1/profile/${view.id}`} className="btn btn-secondary mt-6">
         Open {view.label.toLowerCase()} <I.ArrowRight size={14} />
       </Link>
     </aside>

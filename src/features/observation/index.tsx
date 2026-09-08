@@ -77,7 +77,7 @@ function Index() {
             const count = COUNTS[m]();
             return (
               <li key={m}>
-                <Link href={`/observation/${m}`} className="group flex items-start gap-6 py-5 -mx-3 px-3 rounded-sm hover:bg-paper-3">
+                <Link href={`/v1/observation/${m}`} className="group flex items-start gap-6 py-5 -mx-3 px-3 rounded-sm hover:bg-paper-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-3">
                       <span className="serif text-[22px] text-ink group-hover:text-ink-2">{meta.title}</span>

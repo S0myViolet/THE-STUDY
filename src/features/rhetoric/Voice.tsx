@@ -212,7 +212,7 @@ export function Voice({ prompts }: { prompts: RhetoricPrompt[] }) {
 
   return (
     <div className="page">
-      <TopBar href="/rhetoric" label="Rhetoric" />
+      <TopBar href="/v1/rhetoric" label="Rhetoric" />
       <PageHeader eyebrow="Voice" title="Hear yourself" lede="Speak, then read what you said. Fillers and pace are counted from the transcript; the recording stays on this device and is gone when you leave." />
 
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_260px] gap-x-10 gap-y-8">
@@ -349,7 +349,7 @@ export function Voice({ prompts }: { prompts: RhetoricPrompt[] }) {
                         Record another
                       </Button>
                     )}
-                    <Link href="/rhetoric/history" className="btn btn-secondary">
+                    <Link href="/v1/rhetoric/history" className="btn btn-secondary">
                       History
                     </Link>
                   </div>

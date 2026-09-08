@@ -97,7 +97,7 @@ export function Consultation({ conversationId }: { conversationId?: string }) {
       current = { ...conv, mode, messages: [...conv.messages, userMsg] };
     } else {
       current = stamp<CuratorConversation>(db.userId, "cur", { title: titleFrom(userText), mode, messages: [userMsg], independentAttempts: 0, contextRef: sessionId ? { kind: "curator", refId: sessionId } : undefined }) as Conv;
-      if (typeof window !== "undefined") window.history.replaceState(null, "", `/curator/${current.id}`);
+      if (typeof window !== "undefined") window.history.replaceState(null, "", `/v1/curator/${current.id}`);
     }
 
     // Did the user just follow a Think First prompt with an attempt of their own?
@@ -216,7 +216,7 @@ export function Consultation({ conversationId }: { conversationId?: string }) {
     return (
       <div className="page">
         <p className="serif text-[22px] text-ink">That consultation is not in the record.</p>
-        <Link href="/curator" className="btn btn-secondary mt-6">Begin a new one</Link>
+        <Link href="/v1/curator" className="btn btn-secondary mt-6">Begin a new one</Link>
       </div>
     );
   }
@@ -366,7 +366,7 @@ function Offers({ msg, onSave, onTest }: { msg: CuratorMsg; onSave: () => void; 
         </button>
       )}
       {o.scheduled ? (
-        <span className="text-forest inline-flex items-center gap-1"><I.Check size={12} /> Scheduled for recall <Link href="/memory" className="underline underline-offset-4 text-ink-3 hover:text-ink ml-1">Memory</Link></span>
+        <span className="text-forest inline-flex items-center gap-1"><I.Check size={12} /> Scheduled for recall <Link href="/v1/memory" className="underline underline-offset-4 text-ink-3 hover:text-ink ml-1">Memory</Link></span>
       ) : (
         <button type="button" className="text-ink-3 hover:text-ink underline underline-offset-4 disabled:opacity-60" disabled={busy !== null} onClick={async () => { setBusy("test"); await onTest(); setBusy(null); }}>
           Test me later

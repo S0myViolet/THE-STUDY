@@ -101,7 +101,7 @@ export function ModeHeader({ mode, title, children }: { mode: ObservationMode; t
   return (
     <header className="mb-6">
       <div className="flex items-center justify-between gap-4 mb-3">
-        <Link href="/observation" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
+        <Link href="/v1/observation" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5">
           <I.ArrowLeft size={12} /> Observation Room
         </Link>
         {inSession ? <span className="mark"><span className="mark-dot" /> Today&apos;s session</span> : null}
@@ -231,7 +231,7 @@ export function ResultPanel({
         ) : (
           <>
             {onAgain ? <Button size="lg" onClick={onAgain}>{againLabel}</Button> : null}
-            <Button variant="secondary" onClick={() => router.push("/observation")}>Observation Room</Button>
+            <Button variant="secondary" onClick={() => router.push("/v1/observation")}>Observation Room</Button>
           </>
         )}
       </div>

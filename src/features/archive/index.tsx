@@ -65,7 +65,7 @@ function Index() {
   function somethingInteresting() {
     const pool = unread.length ? unread : data.entries.filter((e) => e.kind !== "path");
     const pick = pickRandom(pool);
-    if (pick) router.push(`/archive/${pick.id}`);
+    if (pick) router.push(`/v1/archive/${pick.id}`);
   }
 
   const interesting = (
@@ -121,7 +121,7 @@ function Index() {
                   const pr = pathProgress(p, data.progress);
                   return (
                     <li key={p.id}>
-                      <Link href={`/archive/${p.id}`} className="group block py-4 -mx-2 px-2 rounded-sm hover:bg-paper-3">
+                      <Link href={`/v1/archive/${p.id}`} className="group block py-4 -mx-2 px-2 rounded-sm hover:bg-paper-3">
                         <span className="flex items-baseline justify-between gap-4">
                           <span className="serif text-[22px] text-ink group-hover:text-ink-2">{p.title}</span>
                           <span className="numeral text-[12px] text-ink-3 shrink-0">{pr.done} / {pr.total}</span>
@@ -228,7 +228,7 @@ export function AskTheArchive({ data, initialQuestion = "" }: { data: ArchiveDat
     const t = title.trim() || question.trim().slice(0, 60);
     if (!t) return;
     if (!status.configured) {
-      router.push(`/curator?q=${encodeURIComponent(question.trim() || t)}`);
+      router.push(`/v1/curator?q=${encodeURIComponent(question.trim() || t)}`);
       return;
     }
     setBusy(true);
@@ -250,7 +250,7 @@ export function AskTheArchive({ data, initialQuestion = "" }: { data: ArchiveDat
       await db.store("archive_user_connections").put(stamp<ArchiveConnection & Entity>(db.userId, "uconn", { from: id, to: c.to, relation, note: c.note ? `${c.note} (suggested by the model)` : "Suggested by the model" }));
     }
     setBusy(false);
-    router.push(`/archive/${id}`);
+    router.push(`/v1/archive/${id}`);
   }
 
   return (
@@ -265,7 +265,7 @@ export function AskTheArchive({ data, initialQuestion = "" }: { data: ArchiveDat
       <Field label="Subject" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="The Hanseatic League" />
       <TextArea label="Your question" rows={3} value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Why did a league of towns work without a king?" onKeyDown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") void submit(); }} />
       {existing ? (
-        <p className="text-[12px] text-ink-3">Already here: <Link href={`/archive/${existing.id}`} className="underline underline-offset-4 hover:text-ink">{existing.title}</Link></p>
+        <p className="text-[12px] text-ink-3">Already here: <Link href={`/v1/archive/${existing.id}`} className="underline underline-offset-4 hover:text-ink">{existing.title}</Link></p>
       ) : null}
       {error ? <p className="text-[12px] text-bad">{error}</p> : null}
       <div className="flex items-center gap-3">

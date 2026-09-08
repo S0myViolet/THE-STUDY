@@ -64,7 +64,7 @@ export function Connections({ entry, data }: { entry: ArchiveEntry; data: Archiv
           return (
             <li key={e.id} className={cx("py-2.5 group", e.id === fresh && "anim-place")}>
               <div className="flex items-baseline justify-between gap-3">
-                <Link href={`/archive/${other.id}`} className="min-w-0 hover:text-ink">
+                <Link href={`/v1/archive/${other.id}`} className="min-w-0 hover:text-ink">
                   <span className="text-[11px] tracking-[0.08em] uppercase text-ink-3 block">{outgoing ? RELATION_LABEL[e.relation] : RELATION_INVERSE[e.relation]}{e.user ? " · yours" : ""}</span>
                   <span className="serif text-[17px] text-ink leading-snug block">{other.title}</span>
                 </Link>
@@ -171,7 +171,7 @@ function LocalGraph({ entry, edges, data, fresh }: { entry: ArchiveEntry; edges:
         const label = n.entry.title.length > 22 ? n.entry.title.slice(0, 21) + "…" : n.entry.title;
         const left = n.x < W / 2 - 4;
         return (
-          <Link key={n.entry.id} href={`/archive/${n.entry.id}`}>
+          <Link key={n.entry.id} href={`/v1/archive/${n.entry.id}`}>
             <g className="cursor-pointer" tabIndex={-1}>
               <circle cx={n.x} cy={n.y} r={4} fill={domainColor(n.entry.domain)} />
               <text x={n.x + (left ? -8 : 8)} y={n.y + 3.5} fontSize={10} textAnchor={left ? "end" : "start"} fill="var(--ink-2)" fontFamily="var(--font-sans)">{label}</text>

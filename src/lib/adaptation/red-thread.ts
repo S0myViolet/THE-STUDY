@@ -34,7 +34,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You often settle on a first explanation and stop generating alternatives afterward. Seen ${n} times in ambiguous material.`,
     nextTest: "A Three Stories challenge where the obvious explanation is wrong.",
     targetSubskill: "inference.alternatives",
-    testHref: "/inference/three_stories",
+    testHref: "/v1/inference/three_stories",
   },
   {
     key: "CONFIRMATION_SEEKING",
@@ -44,7 +44,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You tend to notice evidence that supports your current hypothesis and weigh contradicting evidence lightly (${n} instances).`,
     nextTest: "A Disconfirm Me exercise: name what would weaken your own theory.",
     targetSubskill: "inference.disconfirmation",
-    testHref: "/inference/disconfirm",
+    testHref: "/v1/inference/disconfirm",
   },
   {
     key: "INSUFFICIENT_UPDATE",
@@ -54,7 +54,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `When new evidence contradicts your position you notice it but barely move your confidence (${n} cases).`,
     nextTest: "A case with a late contradiction; watch the confidence before and after.",
     targetSubskill: "inference.updating",
-    testHref: "/casebook",
+    testHref: "/v1/casebook",
   },
   {
     key: "BASE_RATE_NEGLECT",
@@ -64,7 +64,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `Vivid specific evidence pulls you away from what is usually true (${n} instances).`,
     nextTest: "A base-rate problem where the specific evidence is compelling and misleading.",
     targetSubskill: "inference.base_rates",
-    testHref: "/inference/base_rate",
+    testHref: "/v1/inference/base_rate",
   },
   {
     key: "CAUSAL_LEAP",
@@ -74,7 +74,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You move from correlation or sequence to cause faster than the evidence allows (${n} instances).`,
     nextTest: "A Missing Variable exercise.",
     targetSubskill: "inference.causal",
-    testHref: "/inference/missing_variable",
+    testHref: "/v1/inference/missing_variable",
   },
   {
     key: "UNEXAMINED_ASSUMPTION",
@@ -84,7 +84,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `Beliefs enter your reasoning without being noticed as assumptions (${n} instances).`,
     nextTest: "An Inference Ladder with an explicit assumptions line.",
     targetSubskill: "inference.evidence_weighting",
-    testHref: "/inference/ladder",
+    testHref: "/v1/inference/ladder",
   },
   {
     key: "FALSE_OBSERVATION",
@@ -94,7 +94,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You report details that were not present. Your coverage is ahead of your precision (${n} invented details).`,
     nextTest: "A Room Scan scored on precision, with hedging rewarded.",
     targetSubskill: "observation.precision",
-    testHref: "/observation/room_scan",
+    testHref: "/v1/observation/room_scan",
   },
   {
     key: "CHRONOLOGY_LOSS",
@@ -104,7 +104,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You remember what was there but lose the order in which things happened (${n} instances).`,
     nextTest: "A chronology reconstruction with two plausible orders.",
     targetSubskill: "observation.chronology",
-    testHref: "/observation/chronology",
+    testHref: "/v1/observation/chronology",
   },
   {
     key: "NUMERIC_DETAIL_LOSS",
@@ -114,7 +114,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You keep the meaning and lose the numbers: times, counts, prices, dates (${n} instances).`,
     nextTest: "A Document Scan with five numeric questions.",
     targetSubskill: "observation.text",
-    testHref: "/observation/document",
+    testHref: "/v1/observation/document",
   },
   {
     key: "SPATIAL_MISS",
@@ -124,7 +124,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You notice objects but misplace where they were (${n} instances).`,
     nextTest: "A Glance with position questions only.",
     targetSubskill: "observation.spatial",
-    testHref: "/observation/glance",
+    testHref: "/v1/observation/glance",
   },
   {
     key: "OBSERVATION_MISS",
@@ -134,7 +134,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `Small, high-information details pass you by (${n} missed).`,
     nextTest: "A Signal vs Noise exercise.",
     targetSubskill: "observation.detail",
-    testHref: "/observation/signal_noise",
+    testHref: "/v1/observation/signal_noise",
   },
   {
     key: "OBSERVATION_BLUR",
@@ -144,7 +144,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You describe what you inferred as though you saw it (${n} instances).`,
     nextTest: "Observation or Story? with hard cases.",
     targetSubskill: "observation.separation",
-    testHref: "/observation/observation_or_story",
+    testHref: "/v1/observation/observation_or_story",
   },
   {
     key: "OVERCONFIDENCE",
@@ -154,7 +154,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n, extra }) => `When you say 80% or more you are right less often than that${extra ? ` (${extra})` : ""}. ${n} confident misses.`,
     nextTest: "How Sure? items in an unfamiliar domain.",
     targetSubskill: "calibration.confidence",
-    testHref: "/inference/how_sure",
+    testHref: "/v1/inference/how_sure",
   },
   {
     key: "UNDERCONFIDENCE",
@@ -164,7 +164,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n, extra }) => `You are right more often than you say${extra ? ` (${extra})` : ""}. ${n} hedged successes.`,
     nextTest: "How Sure? items where you must commit above 70%.",
     targetSubskill: "calibration.confidence",
-    testHref: "/inference/how_sure",
+    testHref: "/v1/inference/how_sure",
   },
   {
     key: "LEADING_TOO_EARLY",
@@ -174,7 +174,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You ask leading questions before you have earned the information, and the conversation gives you less (${n} leading questions).`,
     nextTest: "A Salon objective that requires neutral information gathering.",
     targetSubskill: "social.question_quality",
-    testHref: "/salon",
+    testHref: "/v1/salon",
   },
   {
     key: "WEAK_QUESTIONS",
@@ -184,7 +184,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `Your questions tend to confirm what you already think rather than separate competing explanations (${n} low-value questions).`,
     nextTest: "An Information Value exercise with one question allowed.",
     targetSubskill: "inference.information_value",
-    testHref: "/inference/information_value",
+    testHref: "/v1/inference/information_value",
   },
   {
     key: "SHORTSIGHTED",
@@ -194,7 +194,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You consider the first move and not what follows it (${n} instances).`,
     nextTest: "Three Moves Ahead with a counterparty who responds to incentives.",
     targetSubskill: "strategy.second_order",
-    testHref: "/strategy",
+    testHref: "/v1/strategy",
   },
   {
     key: "TRANSFER_GAP",
@@ -204,7 +204,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `You know principles in the Archive that you do not apply when a case needs them (${n} instances).`,
     nextTest: "A case that quietly uses something you learned last week.",
     targetSubskill: "synthesis.transfer",
-    testHref: "/casebook",
+    testHref: "/v1/casebook",
   },
   {
     key: "VERBOSITY",
@@ -214,7 +214,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `Your explanations run longer than they need to (${n} instances).`,
     nextTest: "A One Sentence and a Precision exercise back to back.",
     targetSubskill: "rhetoric.concision",
-    testHref: "/rhetoric/precision",
+    testHref: "/v1/rhetoric/precision",
   },
   {
     key: "MEMORY_DECAY",
@@ -224,7 +224,7 @@ export const PATTERNS: PatternDef[] = [
     describe: ({ n }) => `Items you learned do not survive their first long interval (${n} lapses).`,
     nextTest: "Reconstruction of an Archive entry from memory.",
     targetSubskill: "memory.retention",
-    testHref: "/memory/review",
+    testHref: "/v1/memory/review",
   },
 ];
 
@@ -342,7 +342,7 @@ async function runDetection(db: StudyDatabase, now: Date): Promise<DetectionResu
         });
         await store.put(thread);
         result.created.push(thread);
-        await notify(db, { kind: "thread_detected", title: `A pattern is forming: ${def.title}`, body: thread.description, href: `/red-thread/${thread.id}`, dedupeKey: def.key });
+        await notify(db, { kind: "thread_detected", title: `A pattern is forming: ${def.title}`, body: thread.description, href: `/v1/red-thread/${thread.id}`, dedupeKey: def.key });
       }
       continue;
     }
@@ -385,7 +385,7 @@ async function runDetection(db: StudyDatabase, now: Date): Promise<DetectionResu
       next.counterEvidenceIds = counter.map((ev) => ev.id);
       changed = true;
       result.improved.push(next);
-      await notify(db, { kind: "thread_improved", title: `${def.title} is improving`, body: "Recent performance on the targeted skill has been strong with no recurrence.", href: `/red-thread/${current.id}`, dedupeKey: def.key + ":improving" });
+      await notify(db, { kind: "thread_improved", title: `${def.title} is improving`, body: "Recent performance on the targeted skill has been strong with no recurrence.", href: `/v1/red-thread/${current.id}`, dedupeKey: def.key + ":improving" });
     } else if (current.status === "improving") {
       const sinceImproving = counter.length;
       const daysQuiet = (now.getTime() - new Date(current.lastReinforced).getTime()) / 86400000;

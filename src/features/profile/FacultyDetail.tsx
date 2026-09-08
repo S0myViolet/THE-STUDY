@@ -23,7 +23,7 @@ export function FacultyDetail({ faculty }: { faculty: FacultyId }) {
 
   return (
     <div className="page">
-      <Link href="/profile" className="inline-flex items-center gap-2 text-[12px] text-ink-3 hover:text-ink mb-6">
+      <Link href="/v1/profile" className="inline-flex items-center gap-2 text-[12px] text-ink-3 hover:text-ink mb-6">
         <I.ArrowLeft size={14} /> Capability map
       </Link>
       <PageHeader
@@ -132,7 +132,7 @@ export function FacultyDetail({ faculty }: { faculty: FacultyId }) {
               ))}
             </ul>
             <p className="mt-6 text-[12px] text-ink-4">
-              Estimates move by shrinkage: each new piece pulls the estimate toward what it showed, less as evidence accumulates. <Link href="/profile/methodology" className="underline underline-offset-4 hover:text-ink">Methodology</Link>
+              Estimates move by shrinkage: each new piece pulls the estimate toward what it showed, less as evidence accumulates. <Link href="/v1/profile/methodology" className="underline underline-offset-4 hover:text-ink">Methodology</Link>
             </p>
           </aside>
         </div>

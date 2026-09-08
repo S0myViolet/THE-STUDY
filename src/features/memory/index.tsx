@@ -51,10 +51,10 @@ function Index() {
 
   return (
     <div className="page">
-      <PageHeader eyebrow="Memory Palace" title="Keep" lede="Working recall, long retention, names and details, sequences, spaces, concepts. Retrieval, spaced, with confidence and speed shaping the next interval." aside={due.length ? <Link href="/memory/review" className="btn btn-lg">Recall {due.length} <I.ArrowRight size={14} /></Link> : null} />
+      <PageHeader eyebrow="Memory Palace" title="Keep" lede="Working recall, long retention, names and details, sequences, spaces, concepts. Retrieval, spaced, with confidence and speed shaping the next interval." aside={due.length ? <Link href="/v1/memory/review" className="btn btn-lg">Recall {due.length} <I.ArrowRight size={14} /></Link> : null} />
       {!all.length && !items.loading ? (
         <div className="mb-10">
-          <Empty title="Nothing is due. That is not the same as having nothing to learn." body="Stock the palace with the Study's starter set: facts with Archive links, concepts, sequences, stories and a few people to remember." action={<div className="flex gap-3"><Button disabled={stocking} onClick={async () => { setStocking(true); await stockStarterSet(db); setStocking(false); }}>{stocking ? "Stocking…" : "Stock the starter set"}</Button><Link href="/archive" className="btn btn-secondary">Explore the Archive</Link></div>} />
+          <Empty title="Nothing is due. That is not the same as having nothing to learn." body="Stock the palace with the Study's starter set: facts with Archive links, concepts, sequences, stories and a few people to remember." action={<div className="flex gap-3"><Button disabled={stocking} onClick={async () => { setStocking(true); await stockStarterSet(db); setStocking(false); }}>{stocking ? "Stocking…" : "Stock the starter set"}</Button><Link href="/v1/archive" className="btn btn-secondary">Explore the Archive</Link></div>} />
         </div>
       ) : null}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-10">
@@ -70,7 +70,7 @@ function Index() {
               </Link>
             </li>
           ))}
-          <li><Link href="/memory/library" className="group flex items-start gap-6 py-5 -mx-3 px-3 rounded-sm hover:bg-paper-3"><div className="flex-1"><span className="serif text-[22px] text-ink group-hover:text-ink-2">Library</span><p className="text-[14px] text-ink-2 mt-1">Everything kept, and when it will be asked. Add your own.</p></div><I.ArrowRight size={14} className="mt-2 text-ink-4 group-hover:text-ink" /></Link></li>
+          <li><Link href="/v1/memory/library" className="group flex items-start gap-6 py-5 -mx-3 px-3 rounded-sm hover:bg-paper-3"><div className="flex-1"><span className="serif text-[22px] text-ink group-hover:text-ink-2">Library</span><p className="text-[14px] text-ink-2 mt-1">Everything kept, and when it will be asked. Add your own.</p></div><I.ArrowRight size={14} className="mt-2 text-ink-4 group-hover:text-ink" /></Link></li>
         </ul>
         <aside className="space-y-6">
           <div className="border-t border-line pt-3"><div className="eyebrow">Due now</div><div className="numeral text-[28px] mt-1">{due.length}</div><div className="text-[12px] text-ink-3 mt-1">{atRisk ? `${atRisk} more at risk soon` : all.length ? `${all.length} items kept` : "Nothing kept yet"}</div></div>

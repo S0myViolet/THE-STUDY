@@ -126,7 +126,7 @@ export function Methodology() {
         </p>
 
         <p className="mt-10 text-[14px] font-sans text-ink-3">
-          The constants above are read from the scoring code at render time. See <Link href="/profile/evidence" className="underline underline-offset-4 hover:text-ink">Evidence</Link> for the charts they produce.
+          The constants above are read from the scoring code at render time. See <Link href="/v1/profile/evidence" className="underline underline-offset-4 hover:text-ink">Evidence</Link> for the charts they produce.
         </p>
       </div>
     </div>

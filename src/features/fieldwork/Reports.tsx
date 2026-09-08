@@ -89,7 +89,7 @@ function Row({ r, suffix }: { r: FieldReport; suffix: string }) {
   }
   return (
     <li>
-      <Link href={`/fieldwork/reports/${r.id}${suffix}`} className="group flex items-baseline gap-4 py-3.5 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
+      <Link href={`/v1/fieldwork/reports/${r.id}${suffix}`} className="group flex items-baseline gap-4 py-3.5 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
         <span className="numeral text-[12px] text-ink-3 w-14 shrink-0">{shortDate(r.status === "completed" ? (r.completedAt ?? r.updatedAt) : r.assignedAt)}</span>
         <span className="flex-1 min-w-0">
           <span className="serif text-[17px] text-ink block">{a.title}</span>
@@ -124,13 +124,13 @@ export function ReportDetail({ id }: { id: string }) {
 
   return (
     <div className="page">
-      <TopBar back={`/fieldwork/reports${suffix}`} backLabel="Reports" inSession={inSession} />
+      <TopBar back={`/v1/fieldwork/reports${suffix}`} backLabel="Reports" inSession={inSession} />
       <article className="max-w-[680px]">
         <div className="eyebrow">
           {kindLabel(a.kind)} · {when}
         </div>
         <h1 className="display text-[32px] md:text-[40px] text-ink mt-2">
-          <Link href={`/fieldwork/${a.id}${suffix}`} className="hover:text-ink-2">
+          <Link href={`/v1/fieldwork/${a.id}${suffix}`} className="hover:text-ink-2">
             {a.title}
           </Link>
         </h1>
@@ -138,7 +138,7 @@ export function ReportDetail({ id }: { id: string }) {
         {r.status !== "completed" ? (
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {r.status === "assigned" ? (
-              <Link href={`/fieldwork/${a.id}/report${suffix}`} className="btn">
+              <Link href={`/v1/fieldwork/${a.id}/report${suffix}`} className="btn">
                 Continue the report <I.ArrowRight size={14} />
               </Link>
             ) : (
@@ -176,10 +176,10 @@ export function ReportDetail({ id }: { id: string }) {
 
         {r.status === "completed" ? (
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href={`/fieldwork/${a.id}${suffix}`} className="btn btn-secondary">
+            <Link href={`/v1/fieldwork/${a.id}${suffix}`} className="btn btn-secondary">
               Take it again
             </Link>
-            <Link href="/after-action" className="text-[12px] text-ink-3 hover:text-ink">
+            <Link href="/v1/after-action" className="text-[12px] text-ink-3 hover:text-ink">
               The After Action for this report
             </Link>
           </div>

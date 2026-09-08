@@ -34,7 +34,7 @@ export function ModePage({ mode, prompts }: { mode: RhetoricMode; prompts: Rheto
 
   return (
     <div className="page">
-      <TopBar href="/rhetoric" label="Rhetoric" />
+      <TopBar href="/v1/rhetoric" label="Rhetoric" />
       <PageHeader eyebrow={`${meta.title} · ${plural(prompts.length, "prompt")}`} title={meta.title} lede={meta.blurb} aside={<GeneratePrompt mode={mode} existing={prompts.length} />} />
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_240px] gap-x-10 gap-y-8">
         <ul className="divide-y divide-line border-t border-line">
@@ -42,7 +42,7 @@ export function ModePage({ mode, prompts }: { mode: RhetoricMode; prompts: Rheto
             const st = byPrompt.get(p.id);
             return (
               <li key={p.id}>
-                <Link href={`/rhetoric/${mode}/${p.id}`} className="group flex items-start gap-6 py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
+                <Link href={`/v1/rhetoric/${mode}/${p.id}`} className="group flex items-start gap-6 py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
                   <div className="flex-1 min-w-0">
                     <div className="serif text-[20px] text-ink group-hover:text-ink-2 leading-snug">{p.title}</div>
                     <p className="text-[13px] text-ink-2 mt-1 max-w-[64ch] line-clamp-2">{p.prompt}</p>
@@ -141,7 +141,7 @@ export function GeneratePrompt({ mode, existing, size = "md" }: { mode: Rhetoric
     }
     await db.store("generated_content").put(stamp<GeneratedContent>(db.userId, "gen", { kind: "rhetoric", refId: final.id, payload: final, model }));
     setBusy(false);
-    router.push(`/rhetoric/${mode}/${final.id}`);
+    router.push(`/v1/rhetoric/${mode}/${final.id}`);
   }
 
   return (

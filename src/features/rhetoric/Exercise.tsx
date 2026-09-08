@@ -138,11 +138,11 @@ export function Exercise({ prompt, siblings }: { prompt: RhetoricPrompt; sibling
   function another() {
     const others = siblings.filter((p) => p.id !== prompt.id);
     if (!others.length) {
-      router.push(`/rhetoric/${prompt.mode}`);
+      router.push(`/v1/rhetoric/${prompt.mode}`);
       return;
     }
     const next = others[Math.floor(Math.random() * others.length)];
-    router.push(`/rhetoric/${prompt.mode}/${next.id}`);
+    router.push(`/v1/rhetoric/${prompt.mode}/${next.id}`);
   }
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -156,7 +156,7 @@ export function Exercise({ prompt, siblings }: { prompt: RhetoricPrompt; sibling
 
   return (
     <div className="page">
-      <TopBar href={`/rhetoric/${prompt.mode}`} label={meta.title} />
+      <TopBar href={`/v1/rhetoric/${prompt.mode}`} label={meta.title} />
       <header className="mb-6 max-w-[72ch]">
         <div className="eyebrow eyebrow-wine">
           {meta.title} · {DIFFICULTY_LABEL[prompt.difficulty]}
@@ -297,7 +297,7 @@ export function Exercise({ prompt, siblings }: { prompt: RhetoricPrompt; sibling
                   </>
                 )}
                 {entryId ? (
-                  <Link href={`/rhetoric/entry/${entryId}`} className="text-[12px] text-ink-3 hover:text-ink ml-auto">
+                  <Link href={`/v1/rhetoric/entry/${entryId}`} className="text-[12px] text-ink-3 hover:text-ink ml-auto">
                     Saved to your history
                   </Link>
                 ) : null}

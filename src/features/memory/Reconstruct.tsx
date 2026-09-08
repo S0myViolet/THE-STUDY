@@ -20,7 +20,7 @@ export function Reconstruct() {
   const concepts = useStudyQuery((db) => db.store("memory_items").list({ filter: (m) => (m.kind === "concept" || m.kind === "reconstruction") && !m.suspended }), ["memory_items"]);
   const candidates = useMemo(() => {
     const read = (progress.data ?? []).map((p) => ARCHIVE_ENTRIES.find((e) => e.id === p.entryId)).filter(Boolean) as typeof ARCHIVE_ENTRIES;
-    const fromArchive = read.map((e) => ({ id: "arc:" + e.id, title: e.title, prompt: `Reconstruct: ${e.title}`, keyPoints: e.remember, href: `/archive/${e.id}` }));
+    const fromArchive = read.map((e) => ({ id: "arc:" + e.id, title: e.title, prompt: `Reconstruct: ${e.title}`, keyPoints: e.remember, href: `/v1/archive/${e.id}` }));
     const fromItems = (concepts.data ?? []).map((m) => ({ id: "mem:" + m.id, title: m.prompt, prompt: m.prompt, keyPoints: m.answer.split(/[;.]\s+/).filter((s) => s.length > 8).slice(0, 5), href: undefined as string | undefined, item: m }));
     return [...fromArchive, ...fromItems];
   }, [progress.data, concepts.data]);
@@ -54,7 +54,7 @@ export function Reconstruct() {
     <div className="page">
       <MemoryHeader title="Reconstruct" />
       {!candidates.length && !progress.loading ? (
-        <Empty title="Nothing to reconstruct yet." body="Read an Archive entry, or learn a concept, and it will appear here." action={<Link href="/archive" className="btn btn-secondary">Open the Archive</Link>} />
+        <Empty title="Nothing to reconstruct yet." body="Read an Archive entry, or learn a concept, and it will appear here." action={<Link href="/v1/archive" className="btn btn-secondary">Open the Archive</Link>} />
       ) : null}
       {candidates.length && !chosen ? (
         <div>

@@ -35,7 +35,7 @@ export function Index({ prompts }: { prompts: RhetoricPrompt[] }) {
               const n = counts.get(id) ?? 0;
               return (
                 <li key={id}>
-                  <Link href={`/rhetoric/${id}`} className="group flex items-baseline gap-4 md:gap-6 py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
+                  <Link href={`/v1/rhetoric/${id}`} className="group flex items-baseline gap-4 md:gap-6 py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
                     <span className="mono text-[11px] text-ink-4 w-5 shrink-0">{String(i + 1).padStart(2, "0")}</span>
                     <span className="flex-1 min-w-0">
                       <span className="serif text-[21px] md:text-[22px] text-ink group-hover:text-ink-2 block leading-snug">{m.title}</span>
@@ -53,7 +53,7 @@ export function Index({ prompts }: { prompts: RhetoricPrompt[] }) {
 
           <div className="eyebrow mt-10 mb-1">Aloud</div>
           <div className="border-t border-line">
-            <Link href="/rhetoric/voice" className="group flex items-baseline gap-4 md:gap-6 py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
+            <Link href="/v1/rhetoric/voice" className="group flex items-baseline gap-4 md:gap-6 py-4 -mx-3 px-3 rounded-sm hover:bg-paper-3">
               <span className="w-5 shrink-0 text-ink-4 self-center">
                 <I.Mic size={14} />
               </span>
@@ -73,7 +73,7 @@ export function Index({ prompts }: { prompts: RhetoricPrompt[] }) {
             <div className="flex items-baseline justify-between gap-3">
               <div className="eyebrow">Recent work</div>
               {entries.length ? (
-                <Link href="/rhetoric/history" className="text-[11px] text-ink-3 hover:text-ink">
+                <Link href="/v1/rhetoric/history" className="text-[11px] text-ink-3 hover:text-ink">
                   All {entries.length}
                 </Link>
               ) : null}
@@ -84,7 +84,7 @@ export function Index({ prompts }: { prompts: RhetoricPrompt[] }) {
                   const fb = readFeedback(e);
                   return (
                     <li key={e.id}>
-                      <Link href={`/rhetoric/entry/${e.id}`} className="group flex items-baseline gap-3 py-2.5 -mx-2 px-2 rounded-sm hover:bg-paper-3">
+                      <Link href={`/v1/rhetoric/entry/${e.id}`} className="group flex items-baseline gap-3 py-2.5 -mx-2 px-2 rounded-sm hover:bg-paper-3">
                         <span className="numeral text-[15px] text-ink w-7 shrink-0">{fb ? Math.round(fb.score * 100) : "—"}</span>
                         <span className="flex-1 min-w-0">
                           <span className="text-[13px] text-ink block truncate">{titles.get(e.promptId) ?? "Prompt no longer available"}</span>

@@ -51,7 +51,7 @@ async function gatherSignals(db: StudyDatabase, profile: UserProfile): Promise<S
     strongest,
     untested,
     dueCount: due.length,
-    threads: threads.map((t) => ({ patternKey: t.patternKey, targetSubskill: t.targetSubskill, testHref: PATTERNS.find((p) => p.key === t.patternKey)?.testHref ?? "/inference", title: t.title })),
+    threads: threads.map((t) => ({ patternKey: t.patternKey, targetSubskill: t.targetSubskill, testHref: PATTERNS.find((p) => p.key === t.patternKey)?.testHref ?? "/v1/inference", title: t.title })),
     interests: profile.interests,
     recentRefs: new Set(sessions.flatMap((s) => s.items.map((i) => i.refId ?? "")).filter(Boolean)),
     completedCases: new Set(attempts.filter((a) => a.status === "completed").map((a) => a.caseId)),
@@ -91,33 +91,33 @@ export function pickCase(signals: Pick<Signals, "weakest" | "completedCases" | "
 function href(kind: SessionModuleKind, refId?: string, mode?: string): string {
   switch (kind) {
     case "glance":
-      return `/observation/glance${refId ? `?exercise=${refId}` : ""}`;
+      return `/v1/observation/glance${refId ? `?exercise=${refId}` : ""}`;
     case "case":
-      return `/casebook/${refId}`;
+      return `/v1/casebook/${refId}`;
     case "archive":
-      return `/archive/${refId}`;
+      return `/v1/archive/${refId}`;
     case "recall":
-      return "/memory/review";
+      return "/v1/memory/review";
     case "salon":
-      return `/salon/${refId}`;
+      return `/v1/salon/${refId}`;
     case "strategy":
-      return `/strategy/${refId}`;
+      return `/v1/strategy/${refId}`;
     case "rhetoric":
-      return `/rhetoric/${refId}`;
+      return `/v1/rhetoric/${refId}`;
     case "inference":
-      return `/inference/${mode}${refId ? `/${refId}` : ""}`;
+      return `/v1/inference/${mode}${refId ? `/${refId}` : ""}`;
     case "question":
-      return `/inference/${mode}${refId ? `/${refId}` : ""}`;
+      return `/v1/inference/${mode}${refId ? `/${refId}` : ""}`;
     case "cabinet":
-      return `/cabinet/${refId}`;
+      return `/v1/cabinet/${refId}`;
     case "fieldwork":
-      return "/fieldwork";
+      return "/v1/fieldwork";
     case "forecast":
       return "/forecasts?new=1";
     case "arrival":
-      return "/desk?arrival=1";
+      return "/v1/desk?arrival=1";
     case "after_action":
-      return "/desk?debrief=1";
+      return "/v1/desk?debrief=1";
   }
 }
 

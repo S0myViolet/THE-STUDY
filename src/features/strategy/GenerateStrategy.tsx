@@ -35,7 +35,7 @@ export function GenerateStrategy() {
     await db.store("generated_content").put(stamp<GeneratedContent>(db.userId, "gen", { kind: "strategy", refId: id, payload: final, model: res.model }));
     setBusy(false);
     setOpen(false);
-    router.push(`/strategy/${id}`);
+    router.push(`/v1/strategy/${id}`);
   }
 
   return (

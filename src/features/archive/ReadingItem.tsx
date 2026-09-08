@@ -25,8 +25,8 @@ export function ReadingItemView({ id }: { id: string }) {
   if (!item.data) {
     return (
       <div className="page">
-        <ArchiveHeader eyebrow="The Archive · Bookshelf" title="Not on the shelf" back="/archive/reading" backLabel="Bookshelf" />
-        <Empty title="There is no item with that name." body="It may have been removed. The shelf has everything that remains." action={<Link href="/archive/reading" className="btn btn-secondary">Back to the Bookshelf</Link>} />
+        <ArchiveHeader eyebrow="The Archive · Bookshelf" title="Not on the shelf" back="/v1/archive/reading" backLabel="Bookshelf" />
+        <Empty title="There is no item with that name." body="It may have been removed. The shelf has everything that remains." action={<Link href="/v1/archive/reading" className="btn btn-secondary">Back to the Bookshelf</Link>} />
       </div>
     );
   }
@@ -73,7 +73,7 @@ function ItemPage({ item }: { item: ReadingItem }) {
 
   async function remove() {
     await db.store("reading_items").delete(item.id);
-    router.push("/archive/reading");
+    router.push("/v1/archive/reading");
   }
 
   const filled = NOTE_FIELDS.filter((f) => (item[f.key] ?? "").trim()).length;
@@ -86,7 +86,7 @@ function ItemPage({ item }: { item: ReadingItem }) {
         eyebrow={<>Bookshelf · {READING_KIND_LABEL[item.kind]}{item.finishedAt ? ` · finished ${shortDate(item.finishedAt)}` : ""}</>}
         title={item.title}
         lede={item.author ? <span className="serif italic text-[18px] text-ink-2">{item.author}</span> : undefined}
-        back="/archive/reading"
+        back="/v1/archive/reading"
         backLabel="Bookshelf"
       >
         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -131,7 +131,7 @@ function ItemPage({ item }: { item: ReadingItem }) {
                 </div>
                 {!ready ? <p className="mt-3 text-[13px] text-ink-3">Write at least two full sentences across key idea, argument and evidence, then the notes can be hidden and rebuilt from memory.</p> : <p className="mt-3 text-[13px] text-ink-3">The notes are hidden; you write the argument as you remember it; the two are compared sentence by sentence.</p>}
                 {keptCount > 0 || justKept ? (
-                  <p className="mt-2 text-[12px] text-ink-3">The key idea is in the palace and will be asked tomorrow. <Link href="/memory/review" className="underline underline-offset-4 hover:text-ink">Review</Link></p>
+                  <p className="mt-2 text-[12px] text-ink-3">The key idea is in the palace and will be asked tomorrow. <Link href="/v1/memory/review" className="underline underline-offset-4 hover:text-ink">Review</Link></p>
                 ) : item.status !== "finished" && (item.keyIdea ?? "").trim() ? (
                   <p className="mt-2 text-[12px] text-ink-4">Mark it finished to save the key idea to Memory.</p>
                 ) : null}
@@ -261,7 +261,7 @@ function ConnectionsEditor({ item }: { item: ReadingItem }) {
         <ul className="flex flex-wrap gap-2 mb-3">
           {linked.map((e) => (
             <li key={e.id} className="inline-flex items-center gap-1.5 border border-line-2 rounded-sm pl-2 pr-1 py-0.5 text-[12.5px] text-ink-2">
-              <Link href={`/archive/${e.id}`} className="serif text-[14px] text-ink hover:underline underline-offset-4">{e.title}</Link>
+              <Link href={`/v1/archive/${e.id}`} className="serif text-[14px] text-ink hover:underline underline-offset-4">{e.title}</Link>
               <button type="button" className="text-ink-4 hover:text-ink p-0.5" aria-label={`Remove connection to ${e.title}`} onClick={() => removeLink(e.id)}>
                 <I.Close size={11} />
               </button>

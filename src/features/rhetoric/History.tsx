@@ -22,7 +22,7 @@ export function History({ prompts }: { prompts: RhetoricPrompt[] }) {
 
   return (
     <div className="page">
-      <TopBar href="/rhetoric" label="Rhetoric" />
+      <TopBar href="/v1/rhetoric" label="Rhetoric" />
       <PageHeader eyebrow="History" title="What you have said" lede="Every entry, with its review. Read your own sentences a week later; that is where most of the learning is." />
       {modesWithEntries.length > 1 ? (
         <Select label="Mode" value={mode} onChange={(e) => setMode(e.target.value as RhetoricMode | "all")} className="max-w-[220px] -mt-3 mb-6">
@@ -35,7 +35,7 @@ export function History({ prompts }: { prompts: RhetoricPrompt[] }) {
         </Select>
       ) : null}
       {!entries.length && !loading ? (
-        <Empty title="Nothing said yet." body="The history fills in as you complete exercises. Each entry keeps your text and its review." action={<Link href="/rhetoric" className="btn btn-lg">Choose a mode</Link>} />
+        <Empty title="Nothing said yet." body="The history fills in as you complete exercises. Each entry keeps your text and its review." action={<Link href="/v1/rhetoric" className="btn btn-lg">Choose a mode</Link>} />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_260px] gap-x-10 gap-y-10">
           <ul className="divide-y divide-line border-t border-line">
@@ -43,7 +43,7 @@ export function History({ prompts }: { prompts: RhetoricPrompt[] }) {
               const fb = readFeedback(e);
               return (
                 <li key={e.id}>
-                  <Link href={`/rhetoric/entry/${e.id}`} className="group flex items-baseline gap-4 md:gap-6 py-3.5 -mx-3 px-3 rounded-sm hover:bg-paper-3">
+                  <Link href={`/v1/rhetoric/entry/${e.id}`} className="group flex items-baseline gap-4 md:gap-6 py-3.5 -mx-3 px-3 rounded-sm hover:bg-paper-3">
                     <span className="numeral text-[18px] text-ink w-9 shrink-0">{fb ? Math.round(fb.score * 100) : "—"}</span>
                     <span className="flex-1 min-w-0">
                       <span className="serif text-[17px] text-ink block truncate">{titles.get(e.promptId) ?? "Prompt no longer available"}</span>
@@ -69,7 +69,7 @@ export function History({ prompts }: { prompts: RhetoricPrompt[] }) {
             <div className="border-t border-line pt-3">
               <div className="flex items-baseline justify-between gap-3">
                 <div className="eyebrow">Voice</div>
-                <Link href="/rhetoric/voice" className="text-[11px] text-ink-3 hover:text-ink">
+                <Link href="/v1/rhetoric/voice" className="text-[11px] text-ink-3 hover:text-ink">
                   Practise
                 </Link>
               </div>
@@ -105,7 +105,7 @@ export function EntryDetail({ id, prompts }: { id: string; prompts: RhetoricProm
   if (!entry)
     return (
       <div className="page">
-        <Empty title="No such entry." action={<Link href="/rhetoric/history" className="btn btn-secondary">History</Link>} />
+        <Empty title="No such entry." action={<Link href="/v1/rhetoric/history" className="btn btn-secondary">History</Link>} />
       </div>
     );
   const prompt = prompts.find((p) => p.id === entry.promptId);
@@ -113,7 +113,7 @@ export function EntryDetail({ id, prompts }: { id: string; prompts: RhetoricProm
   const meta = MODE_META[entry.mode];
   return (
     <div className="page">
-      <TopBar href="/rhetoric/history" label="History" />
+      <TopBar href="/v1/rhetoric/history" label="History" />
       <div className="max-w-[72ch]">
         <div className="eyebrow eyebrow-wine">
           {meta.title} · {shortDate(entry.createdAt)} · {plural(entry.wordCount, "word")}
@@ -128,11 +128,11 @@ export function EntryDetail({ id, prompts }: { id: string; prompts: RhetoricProm
         {fb ? <FeedbackView feedback={fb} prompt={prompt} configured={aiStatus.configured || fb.aiEvaluated} className="mt-8" /> : <p className="mt-6 text-[13px] text-ink-3">This entry was saved without a review.</p>}
         <div className="mt-8 flex flex-wrap gap-3">
           {prompt ? (
-            <Link href={`/rhetoric/${prompt.mode}/${prompt.id}`} className="btn">
+            <Link href={`/v1/rhetoric/${prompt.mode}/${prompt.id}`} className="btn">
               Try this prompt again
             </Link>
           ) : null}
-          <Link href={`/rhetoric/${entry.mode}`} className="btn btn-secondary">
+          <Link href={`/v1/rhetoric/${entry.mode}`} className="btn btn-secondary">
             More {meta.title.toLowerCase()} prompts
           </Link>
         </div>

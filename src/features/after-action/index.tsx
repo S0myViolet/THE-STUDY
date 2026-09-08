@@ -9,7 +9,7 @@ import { ReasoningPath } from "@/components/ui/ReasoningPath";
 import { I } from "@/components/ui/icons";
 import { cx, longDate, shortDate } from "@/lib/util/format";
 
-const SOURCE_HREF: Record<string, string> = { case: "/casebook", salon: "/salon", strategy: "/strategy", observation: "/observation", inference: "/inference", baseline: "/profile", memory: "/memory", rhetoric: "/rhetoric", fieldwork: "/fieldwork" };
+const SOURCE_HREF: Record<string, string> = { case: "/v1/casebook", salon: "/v1/salon", strategy: "/v1/strategy", observation: "/v1/observation", inference: "/v1/inference", baseline: "/v1/profile", memory: "/v1/memory", rhetoric: "/v1/rhetoric", fieldwork: "/v1/fieldwork" };
 
 export function AfterActionRoom({ slug }: { slug: string[] }) {
   if (slug[0]) return <Detail id={slug[0]} />;
@@ -29,14 +29,14 @@ function Index() {
   return (
     <div className="page">
       <PageHeader eyebrow="After Action" title="Debriefs" lede="What you saw, what you missed, what you assumed, what you did well, the turning point, and one thing to change." />
-      {!groups.length && !q.loading ? <Empty title="No debriefs yet." body="Every case, conversation and scenario ends here." action={<Link href="/casebook" className="btn btn-secondary">Open the Casebook</Link>} /> : null}
+      {!groups.length && !q.loading ? <Empty title="No debriefs yet." body="Every case, conversation and scenario ends here." action={<Link href="/v1/casebook" className="btn btn-secondary">Open the Casebook</Link>} /> : null}
       {groups.map(([day, list]) => (
         <section key={day} className="mb-8">
           <div className="eyebrow mb-1">{longDate(day + "T12:00:00")}</div>
           <ul className="divide-y divide-line border-t border-line">
             {list.map((a) => (
               <li key={a.id}>
-                <Link href={`/after-action/${a.id}`} className="group flex items-baseline gap-4 py-4 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
+                <Link href={`/v1/after-action/${a.id}`} className="group flex items-baseline gap-4 py-4 -mx-3 px-3 hover:bg-paper-3 rounded-sm">
                   <span className="flex-1 min-w-0"><span className="serif text-[19px] text-ink group-hover:text-ink-2 block">{a.title}</span><span className="text-[13px] text-ink-2 block mt-0.5 truncate">{a.oneThing}</span></span>
                   {a.score !== undefined ? <span className="numeral text-[13px] text-ink-3 shrink-0">{Math.round(a.score * 100)}</span> : null}
                   <I.ArrowRight size={14} className="text-ink-4 group-hover:text-ink shrink-0" />
@@ -54,11 +54,11 @@ function Detail({ id }: { id: string }) {
   const q = useStudyQuery((db) => db.store("after_actions").get(id), ["after_actions"], [id]);
   const a = q.data;
   if (q.loading) return <div className="page" />;
-  if (!a) return <div className="page"><Empty title="No such debrief." action={<Link href="/after-action" className="btn btn-secondary">Back</Link>} /></div>;
+  if (!a) return <div className="page"><Empty title="No such debrief." action={<Link href="/v1/after-action" className="btn btn-secondary">Back</Link>} /></div>;
   return (
     <div className="page">
-      <Link href="/after-action" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5 mb-4"><I.ArrowLeft size={12} /> After Action</Link>
-      <div className="eyebrow eyebrow-wine">{shortDate(a.createdAt)} · <Link href={SOURCE_HREF[a.source.kind] ?? "/desk"} className="hover:text-ink">{a.source.kind}</Link></div>
+      <Link href="/v1/after-action" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5 mb-4"><I.ArrowLeft size={12} /> After Action</Link>
+      <div className="eyebrow eyebrow-wine">{shortDate(a.createdAt)} · <Link href={SOURCE_HREF[a.source.kind] ?? "/v1/desk"} className="hover:text-ink">{a.source.kind}</Link></div>
       <h1 className="display text-[32px] md:text-[40px] mt-2">{a.title}</h1>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10 mt-8">
         <div className="space-y-8">

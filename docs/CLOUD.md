@@ -57,9 +57,10 @@ table with the same name. The cloud adapter is deliberately mechanical:
 - **Optional fields**: `undefined` is sent as `null`; `null` columns are
   dropped when reading, so an entity round-trips to the same shape it had
   in local mode.
-- **Scalars**: strings -> `text`, numbers -> `numeric` or `integer`,
-  booleans -> `boolean`, ISO date strings -> `timestamptz`,
-  `DailySession.date` (`YYYY-MM-DD`) -> `date`.
+- **Scalars**: strings -> `text`, numbers -> `numeric` / `double precision`
+  or `integer`, booleans -> `boolean`, ISO date strings -> `timestamptz`,
+  `YYYY-MM-DD` strings (`DailySession.date`, `DailyPlan.date`,
+  `StudyLog.date`) -> `date`.
 - **Arrays and objects** (`stages`, `turns`, `history`, `items`, `source`,
   `person`, `review`, `summary`, `loci`, ...) -> `jsonb`, stored exactly as
   the entity holds them, still camelCase inside.
@@ -72,7 +73,8 @@ table with the same name. The cloud adapter is deliberately mechanical:
 - **References**: `case_stage_attempts.attempt_id` -> `case_attempts` and
   `memory_reviews.item_id` -> `memory_items` are composite foreign keys on
   `(id, user_id)`, so a child row can only ever point at a parent owned by the
-  same user, and deleting the parent removes its children. Looser links
+  same user, and deleting the parent removes its children (the V2 equivalents
+  are listed under migration 0002 below). Looser links
   (`red_threads.evidence_ids`, `archive_progress.memory_item_ids`,
   `sessionId` everywhere) stay plain ids or jsonb arrays, because those
   records are allowed to outlive what they point at.
@@ -91,6 +93,103 @@ One known difference: Postgres returns `timestamptz` values as
 Both are valid ISO 8601 and sort identically; code that compares dates as
 strings across the two forms should normalise with `new Date(x).toISOString()`.
 
+## Migration 0002: the V2 tables
+
+`supabase/migrations/0002_v2.sql` extends the schema for V2 (LEARN / TRAIN /
+BUILD / PROVE / REVIEW). It depends on `0001_init.sql` and is idempotent:
+every statement is `create table if not exists`, `add column if not exists`,
+`create index if not exists` or a drop-then-create of a policy or trigger, so
+it can be re-run on a project that already has it. Apply it the same way as
+0001 (`supabase db push` applies every file in order; or paste it into the SQL
+editor after 0001).
+
+What it adds:
+
+- **`profiles.v2 jsonb`**: the whole `ProfileV2` object (`goals`,
+  `interests`, `educationLevel`, `dailyMinutes`, `onboardingComplete`,
+  `baselineAttemptId`, `baselineSkipped`, `startedAt`, `v1ImportedAt`) in one
+  column, because the app reads and writes it as a unit and never filters on
+  its parts. A row written by V1 holds `null` there, which `fromRow` drops, so
+  `profile.v2` is simply absent and `needsV2Onboarding()`
+  (`src/lib/v2/profile.ts`) sends the person to `/enter`. The V1
+  `onboarding_complete` flag on its own does not open the V2 rooms; it still
+  opens the archived `/v1/*` rooms.
+- **Preference columns** `plan_mode text`, `custom_minutes integer`,
+  `lesson_depth text` (all nullable, with `check` constraints mirroring the
+  union types) and `reading_pace double precision not null default 2`.
+  `ensureProfile()` (`src/lib/services/profile.ts`) back-fills the defaults
+  (`standard`, 60, `standard`, 2) on any preferences row that lacks a key and
+  writes them through. On a project where 0002 has not been applied the write
+  fails on the unknown columns; the failure is caught, and the app boots with
+  the defaults held in memory, so a schema at 0001 still works until 0002 is
+  run.
+- **One table per V2 collection**, named as in `V2_COLLECTIONS`:
+
+  | Table | Entity | Notes |
+  |---|---|---|
+  | `concept_mastery` | `ConceptMastery` | `counts`, `successes`, `history` jsonb; `state`, `trend`, `evidence_confidence` are checked enums |
+  | `concept_evidence` | `ConceptEvidence` | one row per evidence event; `source` jsonb |
+  | `lesson_sessions` | `LessonSession` | `responses`, `explain_back` jsonb |
+  | `practice_attempts` | `PracticeAttempt` | `response` is jsonb of any shape (number, index, indexes, text, ordering); `evaluation` jsonb |
+  | `error_records` | `ErrorRecord` | `recurrence_key` indexed for recurrence detection |
+  | `retrieval_items` | `RetrievalItem` | the scheduling columns of `memory_items` plus `stage` (0..4), `encoding`, `key_points` |
+  | `retrieval_reviews` | `RetrievalReview` | FK -> `retrieval_items` |
+  | `library_sources` | `LibrarySource` | `concepts`, `project_ids` jsonb |
+  | `reading_sessions` | `ReadingSession` | FK -> `library_sources` |
+  | `reading_recalls` | `ReadingRecall` | `extracted`, `retrieval_item_ids` jsonb; FK -> `library_sources` |
+  | `knowledge_nodes` | `KnowledgeNode` | `key` is the graph slug (indexed); seed nodes live in content, not here |
+  | `knowledge_edges` | `KnowledgeEdge` | `"from"`, `"to"` quoted, as on `archive_user_connections` |
+  | `writing_entries` | `WritingEntry` | `context_ref` jsonb |
+  | `writing_versions` | `WritingVersion` | FK -> `writing_entries` |
+  | `writing_feedback` | `WritingFeedback` | `scores`, `passages`, `metrics` jsonb; FK -> `writing_entries` |
+  | `speaking_sessions` | `SpeakingSession` | `metrics`, `rubric_scores` jsonb |
+  | `projects` | `Project` | sources, notes, claims, evidence, counterarguments, milestones, retrospective all jsonb |
+  | `exam_attempts` | `ExamAttempt` | `form` (the frozen items and passages), `responses`, `result` jsonb |
+  | `daily_plans` | `DailyPlan` | `items`, `signals` jsonb; `date` is a `date` |
+  | `study_logs` | `StudyLog` | `date` is a `date` |
+  | `tutor_conversations` | `TutorConversation` | `messages`, `context_ref` jsonb |
+  | `assistance_events` | `AssistanceEvent` | `source`, `concept_ids` jsonb |
+  | `applications` | `ApplicationRecord` | `concept_ids` jsonb |
+  | `generated_v2` | `GeneratedV2` | validated model output; `payload` jsonb |
+
+The conventions of 0001 hold, with these refinements:
+
+- Numbers that are whole by definition (`reps`, `lapses`, `retries`,
+  `version`, `word_count`, `difficulty`, `level`, `stage`, `grade`,
+  `step_index`, `section_index`, `hints_used`, counts) are `integer`; measures
+  that may be fractional (`score`, `estimate`, `weight`, `ease`, `minutes`,
+  `*_ms`, `*_days`, `overall`) are `double precision`. Range checks mirror the
+  type comments: 0..1 scores and confidences, difficulty 1..8, transfer 0..3,
+  stage 0..4, grade 0..5, writing level 1..7.
+- Composite foreign keys on `(id, user_id)`, all `on delete cascade`:
+  `retrieval_reviews.item_id -> retrieval_items`, `reading_sessions.source_id`
+  and `reading_recalls.source_id -> library_sources`,
+  `writing_versions.entry_id` and `writing_feedback.entry_id ->
+  writing_entries`. Write the parent before the child; `importAll()` already
+  walks `COLLECTIONS` in that order. Every other link (`concept_id`,
+  `item_id` on practice attempts, `plan_item_id`, `context_ref`, `source`)
+  is a plain id or jsonb and may outlive its target.
+- Every V2 table gets the same `(user_id, created_at)` index, `set_updated_at`
+  trigger and four owner-only policies as the V1 tables: the loop at the end
+  of the file is the one from 0001, run over the 24 V2 table names.
+  `LOCAL_INDEXES` entries become `(user_id, column)` indexes as before.
+
+The row-mapping test (`src/lib/persistence/__tests__/row-mapping.test.ts`)
+parses every file in `supabase/migrations/` (`create table` bodies and
+`alter table ... add column` statements) and checks that every collection has
+exactly one table, that a fully populated sample entity for each V2
+collection has a column for every field, that the `LOCAL_INDEXES` columns are
+indexed, and that every table is inside a policy loop. When you add a field
+to an entity type, add the column in a new migration and the field to the
+sample; the test fails until both are done.
+
+V1 data is imported into V2 by the app, not by SQL (`src/lib/v2/migrate-v1.ts`):
+at the end of the V2 entrance, V1 `memory_items` of kind fact, concept or
+archive are copied into `retrieval_items` (`source = { kind: "v1", refId }`,
+id `ri_v1_<memoryItemId>`, scheduling copied, stage 0) and
+`profile.v2.v1ImportedAt` is stamped. The import is idempotent and never
+writes `concept_mastery`; V1 evidence stays in its own tables as history.
+
 ## How row level security protects ownership
 
 Ownership is enforced in three layers, and the database is the one that
@@ -99,8 +198,9 @@ matters.
 1. **Adapter**: `CloudStore` adds `.eq("user_id", userId)` to every read,
    update and delete, and stamps `userId` onto every write. This is a
    convenience, not the guarantee.
-2. **Policies**: `0001_init.sql` enables row level security on all 33 tables
-   and creates four policies per table, all `to authenticated`:
+2. **Policies**: `0001_init.sql` (the 33 V1 tables) and `0002_v2.sql` (the
+   24 V2 tables) enable row level security on every table and create four
+   policies per table, all `to authenticated`:
 
    ```sql
    for select using (auth.uid() = user_id)
@@ -132,8 +232,8 @@ variable or in client code.
 AI is a server-side add-on that sits beside persistence, not inside it.
 
 - **Configuration**: `ANTHROPIC_API_KEY` (required to enable),
-  `ANTHROPIC_MODEL` (default `claude-fable-5-1`) and optional
-  `ANTHROPIC_FAST_MODEL` for low-effort operations. Read once by `aiConfig()`
+  `ANTHROPIC_MODEL` (optional; the default is set in `provider.ts`) and
+  optional `ANTHROPIC_FAST_MODEL` for low-effort operations. Read once by `aiConfig()`
   in `src/lib/ai/provider.ts`, which is marked `server-only`; the key can
   never reach the browser bundle.
 - **Single entry point**: every model call goes through
@@ -154,7 +254,10 @@ AI is a server-side add-on that sits beside persistence, not inside it.
   strategy scenario, archive entry, curiosity or rhetoric prompt, the browser
   stores it in `generated_content` (`kind`, `refId`, `payload`, `model`)
   through the ordinary adapter before using it, so it is owned by the user,
-  covered by the same RLS, and identical in local and cloud mode.
+  covered by the same RLS, and identical in local and cloud mode. V2 does the
+  same for generated lessons, items, transfer challenges and prompts in
+  `generated_v2` (plus `conceptIds`), after validating them against the
+  content schema; exam items are never generated once an exam has started.
 - **Never during navigation or render**: AI runs only on explicit user
   actions. Opening a room, listing attempts or booting the app never calls a
   model, which is also why cloud mode and AI are independent switches: you
@@ -170,5 +273,6 @@ all three                     -> cloud mode, model-backed review
 ```
 
 Setup steps for the Supabase side are in `supabase/README.md`; the schema is
-`supabase/migrations/0001_init.sql`; the auth helpers are
+`supabase/migrations/0001_init.sql` (V1) followed by
+`supabase/migrations/0002_v2.sql` (V2); the auth helpers are
 `src/lib/persistence/auth.ts`.

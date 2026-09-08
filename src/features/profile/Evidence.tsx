@@ -99,7 +99,7 @@ export function EvidenceSection() {
           title="The Study has no evidence yet. Begin with a case."
           body="Charts appear as evidence accumulates. None of them are drawn from assumptions."
           action={
-            <Link href="/casebook" className="btn btn-lg">
+            <Link href="/v1/casebook" className="btn btn-lg">
               Open the Casebook <I.ArrowRight size={14} />
             </Link>
           }
@@ -128,7 +128,7 @@ export function EvidenceSection() {
                 return (
                   <div key={f} className="min-w-0">
                     <div className="flex items-baseline justify-between gap-2">
-                      <Link href={`/profile/${f}`} className="text-[13px] text-ink hover:underline underline-offset-4 truncate">
+                      <Link href={`/v1/profile/${f}`} className="text-[13px] text-ink hover:underline underline-offset-4 truncate">
                         {FACULTY_META[f].label}
                       </Link>
                       <span className="numeral text-[11px] text-ink-3 shrink-0">n = {n}</span>
@@ -205,7 +205,7 @@ export function EvidenceSection() {
             <Figure title="Red Thread history" explain="Each recurring pattern from first detection to its last reinforcement, or to the day it stopped recurring. A dotted line is a resolved thread." n={thr.length} minN={1} aside={threadCounts.length ? <span>{threadCounts.join(" · ")}</span> : null} table={{ columns: ["Thread", "Status", "First seen", "Last"], rows: thr.map((t) => [t.title, t.status, shortDate(t.firstDetected), shortDate(t.resolvedAt ?? t.lastReinforced)]) }}>
               <Timeline rows={threadRows} from={from} to={to} />
               <p className="mt-1 text-[11px] text-ink-4">
-                <Link href="/red-thread" className="underline underline-offset-4 hover:text-ink">
+                <Link href="/v1/red-thread" className="underline underline-offset-4 hover:text-ink">
                   Open the Red Thread
                 </Link>
               </p>

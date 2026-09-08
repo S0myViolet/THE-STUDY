@@ -83,7 +83,7 @@ export function ModeHeader({ mode, title, children }: { mode: InferenceMode; tit
   return (
     <header className="mb-6">
       <div className="flex items-center justify-between gap-4 mb-3">
-        <Link href="/inference" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5"><I.ArrowLeft size={12} /> Inference Room</Link>
+        <Link href="/v1/inference" className="text-[12px] text-ink-3 hover:text-ink inline-flex items-center gap-1.5"><I.ArrowLeft size={12} /> Inference Room</Link>
         {inSession ? <span className="mark"><span className="mark-dot" /> Today&apos;s session</span> : null}
       </div>
       <div className="eyebrow eyebrow-wine">{MODE_META[mode].title}</div>
@@ -128,7 +128,7 @@ export function Finish({ onAgain, againLabel = "Another" }: { onAgain?: () => vo
       ) : (
         <>
           {onAgain ? <Button size="lg" onClick={onAgain}>{againLabel}</Button> : null}
-          <Button variant="secondary" onClick={() => router.push("/inference")}>Inference Room</Button>
+          <Button variant="secondary" onClick={() => router.push("/v1/inference")}>Inference Room</Button>
         </>
       )}
     </div>

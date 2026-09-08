@@ -119,13 +119,13 @@ export function Onboarding() {
   // Test hook and a shortcut for returning users: /enter?skip=1&name=...
   useEffect(() => {
     if (params.get("skip") === "1") {
-      updateProfile(db, { onboardingComplete: true, displayName: params.get("name") ?? profile.displayName }).then(() => router.replace("/desk"));
+      updateProfile(db, { onboardingComplete: true, displayName: params.get("name") ?? profile.displayName }).then(() => router.replace("/v1/desk"));
     }
   }, [params, db, router, profile.displayName]);
 
   // Already through the door: back to the Desk.
   useEffect(() => {
-    if (hydrated && profile.onboardingComplete && params.get("auth") !== "1" && params.get("again") !== "1") router.replace("/desk");
+    if (hydrated && profile.onboardingComplete && params.get("auth") !== "1" && params.get("again") !== "1") router.replace("/v1/desk");
   }, [hydrated, profile.onboardingComplete, params, router]);
 
   function go(step: Step, patch: Partial<Draft> = {}) {
@@ -154,7 +154,7 @@ export function Onboarding() {
     try {
       localStorage.removeItem(KEY);
     } catch {}
-    router.replace("/desk");
+    router.replace("/v1/desk");
   }
 
   async function demonstration() {
@@ -164,7 +164,7 @@ export function Onboarding() {
     try {
       localStorage.removeItem(KEY);
     } catch {}
-    router.replace("/desk");
+    router.replace("/v1/desk");
   }
 
   if (!hydrated || params.get("skip") === "1") return null;
@@ -172,7 +172,7 @@ export function Onboarding() {
   if (auth) {
     return (
       <Frame>
-        <AuthScreen embedded onBack={() => { setAuth(false); router.replace("/enter"); }} />
+        <AuthScreen embedded onBack={() => { setAuth(false); router.replace("/v1/enter"); }} />
       </Frame>
     );
   }
