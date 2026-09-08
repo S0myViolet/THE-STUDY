@@ -63,6 +63,8 @@ export interface UserProfile extends Entity {
   isDemo: boolean;
   enteredAt: ISODate;
   timezone?: string;
+  /** V2 academy profile (goals, interests, time, baseline). Absent on V1-only profiles. */
+  v2?: import("@/lib/v2/types").ProfileV2;
 }
 
 export interface Preferences extends Entity {
@@ -78,6 +80,15 @@ export interface Preferences extends Entity {
   challengeStyle: ChallengeStyle;
   reducedMotion: boolean;
   soundEnabled: boolean;
+  /* ---- V2 ---- */
+  /** Default Today length. */
+  planMode?: import("@/lib/v2/types").PlanMode;
+  /** Minutes when planMode is "custom". */
+  customMinutes?: number;
+  /** Default lesson depth. */
+  lessonDepth?: import("@/lib/v2/content-types").LessonDepth;
+  /** Multiplier on every timed exposure to material (baseline memory study, transfer cases). Default 2. */
+  readingPace?: number;
 }
 
 /* ------------------------------------------------------------------ */

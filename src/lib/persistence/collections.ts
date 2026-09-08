@@ -1,4 +1,5 @@
 import type * as T from "@/lib/domain/types";
+import type * as V2 from "@/lib/v2/types";
 
 /**
  * Every persisted collection, mapped to its entity type.
@@ -39,6 +40,31 @@ export interface CollectionMap {
   notifications: T.Notification;
   milestones: T.Milestone;
   generated_content: T.GeneratedContent;
+  /* ---------------- V2 ---------------- */
+  concept_mastery: V2.ConceptMastery;
+  concept_evidence: V2.ConceptEvidence;
+  lesson_sessions: V2.LessonSession;
+  practice_attempts: V2.PracticeAttempt;
+  error_records: V2.ErrorRecord;
+  retrieval_items: V2.RetrievalItem;
+  retrieval_reviews: V2.RetrievalReview;
+  library_sources: V2.LibrarySource;
+  reading_sessions: V2.ReadingSession;
+  reading_recalls: V2.ReadingRecall;
+  knowledge_nodes: V2.KnowledgeNode;
+  knowledge_edges: V2.KnowledgeEdge;
+  writing_entries: V2.WritingEntry;
+  writing_versions: V2.WritingVersion;
+  writing_feedback: V2.WritingFeedback;
+  speaking_sessions: V2.SpeakingSession;
+  projects: V2.Project;
+  exam_attempts: V2.ExamAttempt;
+  daily_plans: V2.DailyPlan;
+  study_logs: V2.StudyLog;
+  tutor_conversations: V2.TutorConversation;
+  assistance_events: V2.AssistanceEvent;
+  applications: V2.ApplicationRecord;
+  generated_v2: V2.GeneratedV2;
 }
 
 export type CollectionName = keyof CollectionMap;
@@ -77,7 +103,35 @@ export const COLLECTIONS: CollectionName[] = [
   "notifications",
   "milestones",
   "generated_content",
+  // V2
+  "concept_mastery",
+  "concept_evidence",
+  "lesson_sessions",
+  "practice_attempts",
+  "error_records",
+  "retrieval_items",
+  "retrieval_reviews",
+  "library_sources",
+  "reading_sessions",
+  "reading_recalls",
+  "knowledge_nodes",
+  "knowledge_edges",
+  "writing_entries",
+  "writing_versions",
+  "writing_feedback",
+  "speaking_sessions",
+  "projects",
+  "exam_attempts",
+  "daily_plans",
+  "study_logs",
+  "tutor_conversations",
+  "assistance_events",
+  "applications",
+  "generated_v2",
 ];
+
+/** V2 collections, for migration and export grouping. */
+export const V2_COLLECTIONS: CollectionName[] = COLLECTIONS.slice(COLLECTIONS.indexOf("concept_mastery"));
 
 /** Secondary indexes per collection for the local adapter (beyond id, userId, createdAt, updatedAt). */
 export const LOCAL_INDEXES: Partial<Record<CollectionName, string[]>> = {
@@ -110,4 +164,29 @@ export const LOCAL_INDEXES: Partial<Record<CollectionName, string[]>> = {
   notifications: ["read", "kind"],
   milestones: ["key"],
   generated_content: ["kind", "refId"],
+  // V2
+  concept_mastery: ["conceptId", "state"],
+  concept_evidence: ["conceptId", "kind"],
+  lesson_sessions: ["lessonId", "status"],
+  practice_attempts: ["itemId", "skill", "context"],
+  error_records: ["category", "recurrenceKey"],
+  retrieval_items: ["due", "mode", "conceptId"],
+  retrieval_reviews: ["itemId", "conceptId"],
+  library_sources: ["status", "type"],
+  reading_sessions: ["sourceId", "status"],
+  reading_recalls: ["sourceId"],
+  knowledge_nodes: ["key", "kind"],
+  knowledge_edges: ["from", "to"],
+  writing_entries: ["status", "level"],
+  writing_versions: ["entryId"],
+  writing_feedback: ["entryId"],
+  speaking_sessions: ["promptId", "mode"],
+  projects: ["status", "kind"],
+  exam_attempts: ["blueprintId", "kind", "status"],
+  daily_plans: ["date", "status"],
+  study_logs: ["date", "kind"],
+  tutor_conversations: ["mode"],
+  assistance_events: ["kind"],
+  applications: ["kind"],
+  generated_v2: ["kind", "refId"],
 };

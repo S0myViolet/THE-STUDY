@@ -5,7 +5,7 @@ import { applyListOptions, matchesWhere, nowIso, type ListOptions, type Store, t
 import { changeBus } from "./events";
 
 const DB_NAME = "the-study";
-const DB_VERSION = 1;
+const DB_VERSION = 2; // 2: V2 collections added (Dexie diffs the schema against the stored one)
 
 function buildSchema(): Record<string, string> {
   const schema: Record<string, string> = {};
