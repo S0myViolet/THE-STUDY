@@ -127,6 +127,60 @@ export const I = {
       <path d="M12 3l2.5 6 6.5.5-5 4.2 1.7 6.3L12 16.5 6.3 20l1.7-6.3-5-4.2 6.5-.5z" />
     </svg>
   ),
+  /* V2 sections and rooms */
+  Today: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M8 14h5" />
+    </svg>
+  ),
+  Learn: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <path d="M3 5h6a3 3 0 013 3v12a2 2 0 00-2-2H3zM21 5h-6a3 3 0 00-3 3v12a2 2 0 012-2h7zM6 9h3M15 9h3M6 13h3" />
+    </svg>
+  ),
+  Train: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 4v3M12 17v3M4 12h3M17 12h3" />
+    </svg>
+  ),
+  Build: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <path d="M4 20h16M6 20V9M12 20V9M18 20V9M3 9l9-5 9 5" />
+    </svg>
+  ),
+  Prove: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <circle cx="12" cy="10" r="6" />
+      <path d="M9 15l-1.5 6 4.5-2.5L16.5 21 15 15M9.5 10l1.8 1.8L14.5 8.5" />
+    </svg>
+  ),
+  Review: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <path d="M4 20h16M6 16v-5M10 16V6M14 16v-8M18 16v-3" />
+    </svg>
+  ),
+  Library: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <path d="M4 4h4v16H4zM9 4h4v16H9zM15 6l4-1 2 14-4 1zM4 16h9" />
+    </svg>
+  ),
+  Pen: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <path d="M4 20h16M6 16l10-10 2 2L8 18l-3 1zM14 8l2 2" />
+    </svg>
+  ),
+  Door: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <path d="M5 21V4a1 1 0 011-1h12a1 1 0 011 1v17M3 21h18M15 12h.01" />
+    </svg>
+  ),
+  Leave: ({ size, ...p }: P) => (
+    <svg {...base(size)} {...p}>
+      <path d="M10 4H5a1 1 0 00-1 1v14a1 1 0 001 1h5M14 8l4 4-4 4M9 12h9" />
+    </svg>
+  ),
   ArrowRight: ({ size, ...p }: P) => (
     <svg {...base(size)} {...p}>
       <path d="M5 12h14M13 6l6 6-6 6" />

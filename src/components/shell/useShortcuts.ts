@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ROOMS } from "@/lib/nav";
+import { CHORDS, chordTarget } from "@/lib/nav";
 
 function isEditable(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false;
@@ -12,10 +12,12 @@ function isEditable(el: EventTarget | null): boolean {
 
 /**
  * Global keyboard controls.
- *  Cmd/Ctrl+K   search
- *  g then <key> go to room
+ *  Cmd/Ctrl+K   search and commands
+ *  g then <key> go to a section or room (see CHORDS in src/lib/nav)
  *  ?            shortcut reference
  *  Escape       handled by overlays themselves
+ * Chords are ignored while an exam surface is open (`data-exam` on the root), so a
+ * stray key never leaves an attempt.
  */
 export function useShortcuts(handlers: { openSearch: () => void; openHelp: () => void }) {
   const router = useRouter();
@@ -37,13 +39,14 @@ export function useShortcuts(handlers: { openSearch: () => void; openHelp: () =>
         h.current.openHelp();
         return;
       }
+      if (document.documentElement.hasAttribute("data-exam")) return;
       const now = Date.now();
       if (pending.current && now - pending.current.at < 1200 && pending.current.key === "g") {
-        const room = ROOMS.find((r) => r.key === e.key.toLowerCase());
+        const href = chordTarget(e.key.toLowerCase());
         pending.current = null;
-        if (room) {
+        if (href) {
           e.preventDefault();
-          router.push(room.href);
+          router.push(href);
         }
         return;
       }
@@ -58,17 +61,7 @@ export function useShortcuts(handlers: { openSearch: () => void; openHelp: () =>
 
 export const SHORTCUTS: { keys: string[]; label: string }[] = [
   { keys: ["⌘", "K"], label: "Search and commands" },
-  { keys: ["G", "D"], label: "Desk" },
-  { keys: ["G", "C"], label: "Casebook" },
-  { keys: ["G", "O"], label: "Observation" },
-  { keys: ["G", "I"], label: "Inference" },
-  { keys: ["G", "S"], label: "Salon" },
-  { keys: ["G", "T"], label: "Strategy" },
-  { keys: ["G", "M"], label: "Memory" },
-  { keys: ["G", "A"], label: "Archive" },
-  { keys: ["G", "R"], label: "Rhetoric" },
-  { keys: ["G", "X"], label: "Red Thread" },
-  { keys: ["G", "U"], label: "Profile" },
+  ...CHORDS.map((c) => ({ keys: ["G", c.key.toUpperCase()], label: c.label })),
   { keys: ["Space"], label: "Advance a timed challenge" },
   { keys: ["⌘", "Enter"], label: "Submit a response" },
   { keys: ["Esc"], label: "Close overlay" },

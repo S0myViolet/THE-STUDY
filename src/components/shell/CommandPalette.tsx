@@ -3,26 +3,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useStudy } from "@/lib/persistence/provider";
-import { search, staticIndex, userIndex, type SearchHit } from "@/lib/search";
+import { KIND_LABEL, isV1Hit } from "@/lib/search";
+import { search, staticIndexV2, userIndexV2, type SearchHit } from "@/lib/v2/search";
 import { I } from "@/components/ui/icons";
 import { applyAppearance, currentTheme } from "@/lib/theme";
 import { updatePrefs } from "@/lib/services/profile";
 import { cx } from "@/lib/util/format";
 
-const KIND_LABEL: Record<SearchHit["kind"], string> = {
-  room: "Room",
-  command: "Command",
-  case: "Case",
-  archive: "Archive",
-  curiosity: "Cabinet",
-  book: "Book",
-  decision: "Decision",
-  forecast: "Forecast",
-  thread: "Red Thread",
-  note: "Note",
-  investigation: "Investigation",
-  person: "Person",
-};
+const SERIF_KINDS = new Set<SearchHit["kind"]>(["concept", "lesson", "path", "source", "archive", "case", "node"]);
 
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const router = useRouter();
@@ -31,13 +19,13 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const [idx, setIdx] = useState(0);
   const [userHits, setUserHits] = useState<SearchHit[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const base = useMemo(() => staticIndex(), []);
+  const base = useMemo(() => staticIndexV2(), []);
 
   useEffect(() => {
     if (!open) return;
     setQ("");
     setIdx(0);
-    userIndex(db).then(setUserHits).catch(() => setUserHits([]));
+    userIndexV2(db).then(setUserHits).catch(() => setUserHits([]));
     setTimeout(() => inputRef.current?.focus(), 10);
   }, [open, db]);
 
@@ -82,7 +70,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                 onClose();
               }
             }}
-            placeholder="Search the Study, or type a command"
+            placeholder="Search concepts, sources, projects, or type a command"
             className="flex-1 bg-transparent outline-none text-[15px] placeholder:text-ink-4"
             aria-label="Search"
             aria-activedescendant={hits[idx] ? `hit-${hits[idx].id}` : undefined}
@@ -104,9 +92,9 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
               onMouseEnter={() => setIdx(i)}
               onClick={() => void go(h)}
             >
-              <span className="eyebrow w-24 shrink-0">{KIND_LABEL[h.kind]}</span>
+              <span className={cx("eyebrow w-24 shrink-0", isV1Hit(h) && "text-brass")}>{isV1Hit(h) ? "V1 · " + KIND_LABEL[h.kind] : KIND_LABEL[h.kind]}</span>
               <span className="min-w-0 flex-1">
-                <span className={cx("block text-[14px] truncate", h.kind === "archive" || h.kind === "case" ? "serif text-[15px]" : "")}>{h.title}</span>
+                <span className={cx("block text-[14px] truncate", SERIF_KINDS.has(h.kind) ? "serif text-[15px]" : "")}>{h.title}</span>
                 {h.subtitle ? <span className="block text-[12px] text-ink-3 truncate">{h.subtitle}</span> : null}
               </span>
               {i === idx ? <I.ArrowRight size={14} className="text-ink-3" /> : null}

@@ -1,12 +1,12 @@
 "use client";
 
 import { StudyGate } from "@/components/shell/StudyGate";
-import { Onboarding } from "@/features/onboarding";
+import { OnboardingV2 } from "@/features/v2/onboarding";
 
 export default function EnterPage() {
   return (
     <StudyGate requireOnboarding={false}>
-      <Onboarding />
+      <OnboardingV2 />
     </StudyGate>
   );
 }

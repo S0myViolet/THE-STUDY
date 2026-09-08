@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { CuratorRoom } from "@/features/curator";
+import { CuratorRoom } from "@/features/v2/curator";
 
 export default function Page({ params }: { params: Promise<{ slug?: string[] }> }) {
   const { slug } = use(params);

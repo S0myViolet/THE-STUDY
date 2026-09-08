@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { NavRail } from "./NavRail";
 import { MobileBar } from "./MobileBar";
 import { CommandPalette } from "./CommandPalette";
 import { SHORTCUTS, useShortcuts } from "./useShortcuts";
 import { Dialog } from "@/components/ui/primitives";
 import { DemoBanner } from "./DemoBanner";
+import { V1Banner } from "./V1Banner";
+import { isV1Path } from "@/lib/nav";
 
 const RAIL_KEY = "the-study:rail-collapsed";
 
@@ -14,6 +17,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState(false);
   const [help, setHelp] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     try {
@@ -40,6 +44,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <NavRail collapsed={collapsed} onToggle={toggle} onSearch={() => setSearch(true)} />
       <div className="flex-1 min-w-0 flex flex-col">
         <DemoBanner />
+        {isV1Path(pathname) ? <V1Banner /> : null}
         <main id="main" className="flex-1 min-w-0">
           {children}
         </main>

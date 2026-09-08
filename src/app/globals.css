@@ -759,3 +759,267 @@ dialog.study-dialog::backdrop {
   border-bottom: 1px solid var(--line);
   vertical-align: top;
 }
+
+/* ------------------------------------------------------------------ */
+/* V2 additions (additive; everything below uses the tokens above)      */
+/* ------------------------------------------------------------------ */
+
+/* Learn: an annotated textbook. A serif reading measure with marginal notes. */
+.lesson-column {
+  max-width: 66ch;
+  font-family: var(--font-serif);
+  font-feature-settings: "onum", "liga", "kern";
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.lesson-column p + p {
+  margin-top: 1em;
+}
+.lesson-column h2,
+.lesson-column h3 {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 2em 0 0.6em;
+}
+.lesson-column strong {
+  font-weight: 600;
+}
+.lesson-column ul,
+.lesson-column ol {
+  padding-left: 1.2em;
+  margin: 0.6em 0;
+}
+.lesson-column code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+.lesson-note {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  border-left: 1px solid var(--line-2);
+  padding-left: 12px;
+  margin: 1em 0;
+}
+.lesson-note .eyebrow {
+  margin-bottom: 4px;
+}
+@media (min-width: 1180px) {
+  .lesson-column {
+    position: relative;
+  }
+  .lesson-column .lesson-note {
+    float: right;
+    clear: right;
+    width: 220px;
+    margin: 0.15em -260px 1em 0;
+    border-left: 0;
+    border-top: 1px solid var(--line-2);
+    padding: 8px 0 0;
+  }
+}
+
+/* Prove: a very quiet surface. */
+.exam {
+  background: var(--paper);
+  color: var(--ink);
+}
+.exam .exam-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 56px;
+  padding: 0 20px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.exam .exam-body {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px 140px;
+}
+.exam .exam-foot {
+  position: sticky;
+  bottom: 0;
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+}
+.exam .choice,
+.exam .field {
+  background: var(--paper);
+}
+@media (max-width: 767px) {
+  .exam .exam-body {
+    padding: 24px 18px 140px;
+  }
+}
+
+/* Concept states: a small mark, tone from the existing accents only. */
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--state-color, var(--ink-3));
+  white-space: nowrap;
+}
+.state-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  flex: none;
+}
+.state-not_started {
+  --state-color: var(--ink-4);
+}
+.state-not_started .state-dot {
+  background: transparent;
+  border: 1px solid currentColor;
+}
+.state-exposed {
+  --state-color: var(--ink-3);
+}
+.state-exposed .state-dot {
+  background: transparent;
+  border: 1px solid currentColor;
+}
+.state-understood {
+  --state-color: var(--ink-2);
+}
+.state-practicing {
+  --state-color: var(--ink);
+}
+.state-retained {
+  --state-color: var(--forest);
+}
+.state-applied {
+  --state-color: var(--brass);
+}
+.state-durable {
+  --state-color: var(--ok);
+}
+.state-durable .state-dot {
+  box-shadow: 0 0 0 2px var(--forest-soft);
+}
+.state-fragile {
+  --state-color: var(--wine);
+}
+.state-fragile .state-dot {
+  box-shadow: 0 0 0 2px var(--wine-soft);
+}
+/* Row and surface tints, for tables and lists that colour a whole line. */
+.state-row-fragile {
+  background: var(--wine-soft);
+}
+.state-row-durable {
+  background: var(--forest-soft);
+}
+.state-row-applied {
+  background: var(--brass-soft);
+}
+
+/* Today: a desk agenda. */
+.agenda-row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.agenda-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.agenda-row .agenda-minutes {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum";
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.agenda-row .agenda-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.agenda-row .agenda-why {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+.agenda-row[data-status="active"] {
+  border-top: 1px solid var(--ink);
+}
+.agenda-row[data-status="done"] .agenda-title,
+.agenda-row[data-status="skipped"] .agenda-title {
+  color: var(--ink-3);
+  text-decoration: line-through;
+  text-decoration-color: var(--line-2);
+  text-decoration-thickness: 1px;
+}
+.agenda-row[data-optional="true"] .agenda-title {
+  font-style: italic;
+}
+@media (max-width: 767px) {
+  .agenda-row {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+  .agenda-row > :nth-child(3) {
+    grid-column: 2;
+  }
+}
+
+/* Build: a research studio in columns. */
+.studio-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .studio-grid {
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  }
+  .studio-grid-3 {
+    grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr) minmax(220px, 1fr);
+  }
+}
+.studio-column > * + * {
+  margin-top: 16px;
+}
+.studio-column .eyebrow {
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+/* Provenance marks for evidence in the studio. */
+.provenance {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.provenance[data-provenance="source_claim"] {
+  color: var(--forest);
+}
+.provenance[data-provenance="user_interpretation"] {
+  color: var(--ink-2);
+}
+.provenance[data-provenance="ai_suggestion"] {
+  color: var(--brass);
+}

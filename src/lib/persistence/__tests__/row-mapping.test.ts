@@ -1,9 +1,10 @@
 import "fake-indexeddb/auto";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { CaseAttempt, MemoryItem, RedThread } from "@/lib/domain/types";
-import { COLLECTIONS, LOCAL_INDEXES } from "@/lib/persistence/collections";
+import type { CaseAttempt, MemoryItem, Preferences, RedThread, UserProfile } from "@/lib/domain/types";
+import type { ConceptMastery, DailyPlan, ExamAttempt, PracticeAttempt, Project, RetrievalItem } from "@/lib/v2/types";
+import { COLLECTIONS, LOCAL_INDEXES, V2_COLLECTIONS } from "@/lib/persistence/collections";
 import { LocalDatabase } from "@/lib/persistence/local";
 import { stamp } from "@/lib/persistence/store";
 import { fromRow, toRow } from "@/lib/persistence/supabase";
@@ -15,6 +16,7 @@ import { fromRow, toRow } from "@/lib/persistence/supabase";
 const USER = "11111111-1111-4111-8111-111111111111";
 const T0 = "2026-09-01T09:00:00.000Z";
 const T1 = "2026-09-01T09:25:00.000Z";
+const T2 = "2026-09-08T09:00:00.000Z";
 
 const caseAttempt: CaseAttempt = {
   id: "ca_sample01",
@@ -98,6 +100,230 @@ const redThread: RedThread = {
   resolvedAt: T1,
 };
 
+/* ---- V2 (migration 0002) ---- */
+
+const profile: UserProfile = {
+  id: "profile_sample01",
+  userId: USER,
+  createdAt: T0,
+  updatedAt: T1,
+  displayName: "Ada",
+  goals: ["thinking", "knowledge"],
+  interests: ["history", "economics"],
+  onboardingComplete: true,
+  baselineComplete: true,
+  isDemo: false,
+  enteredAt: T0,
+  timezone: "Europe/London",
+  v2: {
+    goals: ["reasoning", "quantitative"],
+    interests: ["history", "ai"],
+    educationLevel: "bachelor",
+    dailyMinutes: 60,
+    onboardingComplete: true,
+    baselineAttemptId: "ea_sample01",
+    baselineSkipped: false,
+    startedAt: T0,
+    v1ImportedAt: T1,
+  },
+};
+
+const preferences: Preferences = {
+  id: "prefs_sample01",
+  userId: USER,
+  createdAt: T0,
+  updatedAt: T1,
+  sessionLength: "standard",
+  preferredFaculties: ["inference"],
+  thinkFirst: true,
+  pressureDefault: "standard",
+  fieldworkEnabled: true,
+  curiositiesEnabled: true,
+  newsEnabled: false,
+  appearance: "system",
+  curatorDepth: "standard",
+  challengeStyle: "demanding",
+  reducedMotion: false,
+  soundEnabled: false,
+  planMode: "custom",
+  customMinutes: 60,
+  lessonDepth: "deep",
+  readingPace: 2,
+};
+
+const conceptMastery: ConceptMastery = {
+  id: "cm_sample01",
+  userId: USER,
+  createdAt: T0,
+  updatedAt: T2,
+  conceptId: "probability.conditional_probability",
+  state: "retained",
+  estimate: 0.71,
+  evidenceConfidence: "medium",
+  evidenceMass: 9.4,
+  evidenceCount: 6,
+  counts: { guided: 2, independent: 3, delayed: 1 },
+  successes: { guided: 2, independent: 2, delayed: 1 },
+  firstExposedAt: T0,
+  lastEvidenceAt: T2,
+  lastSuccessAt: T2,
+  lastDelayedSuccessAt: T2,
+  longestSuccessfulDelayDays: 7,
+  consecutiveFailures: 0,
+  trend: "up",
+  history: [
+    { at: T0, estimate: 0.35 },
+    { at: T1, estimate: 0.52 },
+    { at: T2, estimate: 0.71 },
+  ],
+};
+
+const practiceAttempt: PracticeAttempt = {
+  id: "pa_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T1,
+  itemId: "it-probability-04",
+  skill: "probability",
+  subskill: "conditional_probability",
+  concepts: ["probability.conditional_probability", "probability.base_rates"],
+  level: "intermediate",
+  difficulty: 4,
+  format: "numeric",
+  response: 0.083,
+  correct: true,
+  score: 1,
+  confidence: 0.6,
+  hintsUsed: 1,
+  solutionRevealed: false,
+  retries: 1,
+  timeMs: 84_500,
+  errorCategory: "UNDERCONFIDENCE",
+  evaluation: { feedback: "Right value; the tree diagram was the fastest route.", strengths: ["set up the joint table"], improvements: ["state the reference class first"], covered: ["joint"], missed: [], aiEvaluated: false },
+  context: "train",
+  contextRef: "ls-probability-conditional-1",
+  planItemId: "pi_01",
+};
+
+const examAttempt: ExamAttempt = {
+  id: "ea_sample01",
+  userId: USER,
+  createdAt: T1,
+  updatedAt: T2,
+  blueprintId: "exam-weekly",
+  kind: "weekly",
+  title: "Weekly examination",
+  status: "completed",
+  startedAt: T1,
+  completedAt: T2,
+  timeLimitMinutes: 40,
+  form: {
+    sections: [
+      { id: "quant", title: "Quantitative", weight: 0.5, itemIds: ["it-probability-04"] },
+      { id: "writing", title: "Writing", weight: 0.3, itemIds: [], writingPromptId: "wp-1" },
+      { id: "memory", title: "Memory", weight: 0.2, itemIds: ["it-history-02"], memoryStudy: { itemIds: ["it-history-02"], studySeconds: 90 } },
+    ],
+    items: {
+      "it-probability-04": { id: "it-probability-04", skill: "probability", subskill: "conditional_probability", concepts: ["probability.conditional_probability"], level: "intermediate", difficulty: 4, format: "numeric", prompt: "A test is 90% sensitive...", answer: 0.083, tolerance: 0.005, solution: "Bayes: 0.09 / 1.08", passageId: "pas-screening" },
+      "it-history-02": { id: "it-history-02", skill: "knowledge", subskill: "dates", concepts: ["history.westphalia"], level: "basic", difficulty: 2, format: "short", prompt: "Year of the Peace of Westphalia?", answer: "1648", accept: ["1648 CE"], keyPoints: ["1648"], solution: "1648." },
+    },
+    passages: { "pas-screening": { title: "Screening", text: "A screening test..." } },
+    seed: 42,
+  },
+  responses: {
+    "it-probability-04": { response: 0.083, confidence: 0.7, timeMs: 61_000, correct: true, score: 1 },
+    "it-history-02": { response: "1648", confidence: 0.9, timeMs: 8_000, correct: true, score: 1 },
+    "wp-1": { response: "Argument text.", timeMs: 900_000, score: 0.7 },
+  },
+  sectionIndex: 3,
+  result: {
+    total: 0.86,
+    sections: [
+      { id: "quant", title: "Quantitative", weight: 0.5, score: 1, correct: 1, count: 1 },
+      { id: "writing", title: "Writing", weight: 0.3, score: 0.7, correct: 0, count: 1 },
+      { id: "memory", title: "Memory", weight: 0.2, score: 1, correct: 1, count: 1 },
+    ],
+    bySkill: { probability: { score: 1, n: 1 }, knowledge: { score: 1, n: 1 } },
+    byConcept: { "probability.conditional_probability": { score: 1, n: 1 } },
+    calibration: { brier: 0.05, verdict: "well_calibrated", n: 2 },
+    comparedTo: { attemptId: "ea_sample00", delta: 0.1, improved: ["probability"], flat: ["knowledge"], declined: [] },
+    interventions: ["Write the counterargument before the conclusion."],
+    writingOverall: 0.7,
+  },
+  planItemId: "pi_03",
+};
+
+const project: Project = {
+  id: "pj_sample01",
+  userId: USER,
+  createdAt: T0,
+  updatedAt: T2,
+  kind: "investigation",
+  title: "Why did Venice decline?",
+  question: "Was the decline of Venetian trade after 1500 caused by the Cape route?",
+  whyItMatters: "It tests whether a single cause can carry a century of change.",
+  whatIThinkNow: "Mostly the Cape route, but the Ottoman wars mattered.",
+  requiredConcepts: ["history.venice", "causal_reasoning.confounding"],
+  appliedConcepts: ["causal_reasoning.confounding"],
+  sources: [{ id: "s1", title: "Braudel, The Mediterranean", note: "Vol. 1, ch. 3", url: "https://example.org/braudel", sourceId: "ls_sample01" }],
+  notes: [{ id: "n1", text: "Pepper prices fell in Venice after 1503.", at: T1 }],
+  claims: [{ id: "c1", text: "The Cape route cut Venetian spice income.", support: "moderate" }],
+  evidence: [{ id: "e1", text: "Lisbon pepper undercut Venice by a third.", claimId: "c1", sourceRef: "s1", provenance: "source_claim" }],
+  counterarguments: [{ id: "x1", text: "Venetian spice trade recovered by 1560.", against: "c1" }],
+  openQuestions: ["How large was the Ottoman effect?"],
+  milestones: [{ id: "m1", title: "Read Braudel ch. 3", done: true, doneAt: T1 }],
+  finalOutput: "A two-page argument.",
+  retrospective: { text: "I settled on one cause too early.", at: T2 },
+  status: "completed",
+  templateId: "pt-venice",
+  startedAt: T0,
+  completedAt: T2,
+};
+
+const retrievalItem: RetrievalItem = {
+  id: "ri_sample01",
+  userId: USER,
+  createdAt: T0,
+  updatedAt: T2,
+  mode: "concept",
+  prompt: "What does conditioning on an event do to the sample space?",
+  answer: "It restricts it to the outcomes where the event occurred and renormalises.",
+  accept: ["restricts and renormalises"],
+  keyPoints: ["restriction", "renormalisation"],
+  conceptId: "probability.conditional_probability",
+  nodeId: "conditional-probability",
+  source: { kind: "lesson", refId: "ls-probability-conditional-1", label: "Conditional probability" },
+  ease: 2.6,
+  intervalDays: 12,
+  due: "2026-09-20T09:00:00.000Z",
+  reps: 3,
+  lapses: 0,
+  stage: 2,
+  lastReviewedAt: T2,
+  suspended: false,
+  encoding: "elaboration",
+  tags: ["probability"],
+};
+
+const dailyPlan: DailyPlan = {
+  id: "dp_sample01",
+  userId: USER,
+  createdAt: T2,
+  updatedAt: T2,
+  date: "2026-09-08",
+  mode: "standard",
+  minutes: 90,
+  items: [
+    { id: "pi_01", kind: "recall", title: "Six retrievals due", minutes: 10, href: "/memory/review", reason: "retrieval_due", reasonText: "Six items are due today.", priority: 2, status: "done", completedAt: T2 },
+    { id: "pi_02", kind: "learn", title: "Conditional probability", minutes: 30, href: "/learn/lesson/ls-probability-conditional-1", refId: "ls-probability-conditional-1", conceptIds: ["probability.conditional_probability"], reason: "curriculum", reasonText: "Next on the quantitative path.", priority: 4, optional: false, status: "active" },
+  ],
+  narrative: "Retrievals first, then the lesson.",
+  signals: { dueRetrievals: 6, foundationGaps: ["mathematics.fractions"], recurringErrors: ["BASE_RATE_NEGLECT:probability.base_rates"], activeBook: "ls_sample01", activeProject: "pj_sample01", examDue: "weekly", weakestSkills: ["statistics"] },
+  status: "active",
+  startedAt: T2,
+  completedAt: T2,
+};
+
 const camelToSnake = (s: string) => s.replace(/[A-Z]/g, (m) => "_" + m.toLowerCase());
 
 /* ------------------------------------------------------------------ */
@@ -109,11 +335,19 @@ describe("toRow / fromRow", () => {
     ["CaseAttempt", caseAttempt],
     ["MemoryItem", memoryItem],
     ["RedThread", redThread],
+    ["UserProfile", profile],
+    ["Preferences", preferences],
+    ["ConceptMastery", conceptMastery],
+    ["PracticeAttempt", practiceAttempt],
+    ["ExamAttempt", examAttempt],
+    ["Project", project],
+    ["RetrievalItem", retrievalItem],
+    ["DailyPlan", dailyPlan],
   ])("round-trips a %s", (_name, entity) => {
     const row = toRow(entity as unknown as Record<string, unknown>);
     for (const key of Object.keys(row)) expect(key).toMatch(/^[a-z][a-z0-9_]*$/);
     expect(row.user_id).toBe(USER);
-    expect(row.created_at).toBe(T0);
+    expect(row.created_at).toBe(entity.createdAt);
     const back = fromRow<typeof entity>(row);
     expect(back).toEqual(entity);
   });
@@ -131,19 +365,27 @@ describe("toRow / fromRow", () => {
     const row = toRow(caseAttempt as unknown as Record<string, unknown>);
     expect(row.summary).toBe(caseAttempt.summary);
     expect(Object.keys(row.summary as object)).toContain("recallCorrect");
+    const exam = toRow(examAttempt as unknown as Record<string, unknown>);
+    expect(exam.form).toBe(examAttempt.form);
+    expect(Object.keys((exam.form as ExamAttempt["form"]).items)).toContain("it-probability-04");
+    const prof = toRow(profile as unknown as Record<string, unknown>);
+    expect(prof.v2).toBe(profile.v2);
+    expect(Object.keys(prof.v2 as object)).toContain("onboardingComplete");
   });
 });
 
 /* ------------------------------------------------------------------ */
-/* Schema coverage: entity keys -> columns in 0001_init.sql              */
+/* Schema coverage: entity keys -> columns across every migration file   */
 /* ------------------------------------------------------------------ */
 
 interface TableDef {
   columns: string[];
 }
 
-function parseTables(sql: string): Record<string, TableDef> {
-  const tables: Record<string, TableDef> = {};
+const RESERVED_TOKENS = ["constraint", "check", "unique", "foreign", "primary"];
+
+/** `create table` statements: one entry per table, columns in declaration order. */
+function parseCreateTables(sql: string, tables: Record<string, TableDef>) {
   const re = /create table (?:if not exists )?(?:public\.)?([a-z_]+)\s*\(([\s\S]*?)\n\);/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(sql))) {
@@ -156,23 +398,69 @@ function parseTables(sql: string): Record<string, TableDef> {
       const first = /^("?[a-z_]+"?)\s+/i.exec(line);
       if (!first) continue;
       const token = first[1].replace(/"/g, "").toLowerCase();
-      if (["constraint", "check", "unique", "foreign", "primary"].includes(token)) continue;
+      if (RESERVED_TOKENS.includes(token)) continue;
       // continuation lines of a multi-line check() start with "check" and are skipped above
       columns.push(token);
     }
+    if (tables[name]) throw new Error(`table ${name} is created twice across the migrations`);
     tables[name] = { columns };
   }
-  return tables;
 }
 
-const sqlPath = path.resolve(__dirname, "../../../../supabase/migrations/0001_init.sql");
-const sqlText = readFileSync(sqlPath, "utf8");
-const TABLES = parseTables(sqlText);
+/** `alter table … add column [if not exists] …` statements: appends to an existing table (one or many columns per statement). */
+function parseAlterAddColumns(sql: string, tables: Record<string, TableDef>) {
+  const stmt = /alter table (?:if exists )?(?:only )?(?:public\.)?([a-z_]+)\s+([\s\S]*?);/gi;
+  let m: RegExpExecArray | null;
+  while ((m = stmt.exec(sql))) {
+    const name = m[1];
+    const body = m[2];
+    const add = /add column (?:if not exists )?("?[a-z_]+"?)/gi;
+    let c: RegExpExecArray | null;
+    while ((c = add.exec(body))) {
+      const col = c[1].replace(/"/g, "").toLowerCase();
+      if (!tables[name]) throw new Error(`alter table ${name} before it was created`);
+      if (!tables[name].columns.includes(col)) tables[name].columns.push(col);
+    }
+  }
+}
 
-describe("0001_init.sql", () => {
-  it("defines exactly one table per collection", () => {
+const migrationsDir = path.resolve(__dirname, "../../../../supabase/migrations");
+const migrationFiles = readdirSync(migrationsDir)
+  .filter((f) => f.endsWith(".sql"))
+  .sort();
+const migrations = migrationFiles.map((file) => ({ file, sql: readFileSync(path.join(migrationsDir, file), "utf8") }));
+const sqlText = migrations.map((m) => m.sql).join("\n");
+
+const TABLES: Record<string, TableDef> = {};
+for (const { sql } of migrations) {
+  parseCreateTables(sql, TABLES);
+  parseAlterAddColumns(sql, TABLES);
+}
+
+const V1_COLLECTIONS = COLLECTIONS.filter((c) => !V2_COLLECTIONS.includes(c));
+
+describe("supabase/migrations", () => {
+  it("applies in order: 0001 (V1) then 0002 (V2)", () => {
+    expect(migrationFiles[0]).toBe("0001_init.sql");
+    expect(migrationFiles[1]).toBe("0002_v2.sql");
+    for (const { file, sql } of migrations) {
+      expect(sql, `${file} is transactional`).toMatch(/^\s*(--.*\n)*\s*begin;/m);
+      expect(sql.trimEnd().endsWith("commit;"), `${file} commits`).toBe(true);
+    }
+  });
+
+  it("defines exactly one table per collection across all files", () => {
     for (const c of COLLECTIONS) expect(TABLES[c], `table ${c}`).toBeDefined();
     expect(Object.keys(TABLES).sort()).toEqual([...COLLECTIONS].sort());
+  });
+
+  it("puts V1 tables in 0001 and V2 tables in 0002", () => {
+    const first: Record<string, TableDef> = {};
+    parseCreateTables(migrations[0].sql, first);
+    const second: Record<string, TableDef> = {};
+    parseCreateTables(migrations[1].sql, second);
+    expect(Object.keys(first).sort()).toEqual([...V1_COLLECTIONS].sort());
+    expect(Object.keys(second).sort()).toEqual([...V2_COLLECTIONS].sort());
   });
 
   it("gives every table the base entity columns", () => {
@@ -183,15 +471,41 @@ describe("0001_init.sql", () => {
     }
   });
 
+  it("names every column in snake_case with no duplicates", () => {
+    for (const [table, def] of Object.entries(TABLES)) {
+      for (const col of def.columns) expect(col, `${table}.${col}`).toMatch(/^[a-z][a-z0-9_]*$/);
+      expect(new Set(def.columns).size, `${table} duplicate columns`).toBe(def.columns.length);
+    }
+  });
+
   it.each([
     ["case_attempts", caseAttempt],
     ["memory_items", memoryItem],
     ["red_threads", redThread],
+    ["profiles", profile],
+    ["preferences", preferences],
+    ["concept_mastery", conceptMastery],
+    ["practice_attempts", practiceAttempt],
+    ["exam_attempts", examAttempt],
+    ["projects", project],
+    ["retrieval_items", retrievalItem],
+    ["daily_plans", dailyPlan],
   ])("has a column for every field of the %s sample", (table, entity) => {
     const cols = TABLES[table].columns;
     for (const key of Object.keys(entity)) {
       expect(cols, `${table}.${camelToSnake(key)}`).toContain(camelToSnake(key));
     }
+  });
+
+  it("adds the V2 profile and preference columns in 0002", () => {
+    const second = migrations[1].sql;
+    expect(second).toMatch(/alter table public\.profiles add column if not exists v2 jsonb;/);
+    expect(second).toMatch(/alter table public\.preferences add column if not exists plan_mode text/);
+    expect(second).toMatch(/alter table public\.preferences add column if not exists custom_minutes integer/);
+    expect(second).toMatch(/alter table public\.preferences add column if not exists lesson_depth text/);
+    expect(second).toMatch(/alter table public\.preferences add column if not exists reading_pace double precision not null default 2/);
+    expect(TABLES.profiles.columns).toContain("v2");
+    for (const col of ["plan_mode", "custom_minutes", "lesson_depth", "reading_pace"]) expect(TABLES.preferences.columns).toContain(col);
   });
 
   it("indexes every LOCAL_INDEXES column and (user_id, created_at) for every table", () => {
@@ -207,18 +521,35 @@ describe("0001_init.sql", () => {
     for (const c of COLLECTIONS) expect(sqlText).toContain(`'${c}'`);
   });
 
-  it("enables row level security with owner-only policies and an updated_at trigger", () => {
-    expect(sqlText).toMatch(/enable row level security/);
-    for (const op of ["select", "insert", "update", "delete"]) expect(sqlText).toContain(`for ${op} to authenticated`);
-    expect(sqlText).toContain("auth.uid() = user_id");
-    expect(sqlText).toMatch(/create trigger set_updated_at before insert or update/);
-    expect(sqlText).toMatch(/create or replace function public\.set_updated_at\(\)/);
+  it("enables row level security with owner-only policies and an updated_at trigger in every file", () => {
+    for (const { file, sql } of migrations) {
+      expect(sql, file).toMatch(/enable row level security/);
+      for (const op of ["select", "insert", "update", "delete"]) expect(sql, `${file} ${op}`).toContain(`for ${op} to authenticated`);
+      expect(sql, file).toContain("auth.uid() = user_id");
+      expect(sql, file).toMatch(/create trigger set_updated_at before insert or update/);
+      expect(sql, file).toMatch(/create or replace function public\.set_updated_at\(\)/);
+    }
+    // Every V2 table is in 0002's loop, every V1 table in 0001's.
+    const loopOf = (sql: string) => /tables text\[\] := array\[([\s\S]*?)\];/.exec(sql)?.[1] ?? "";
+    for (const c of V1_COLLECTIONS) expect(loopOf(migrations[0].sql)).toContain(`'${c}'`);
+    for (const c of V2_COLLECTIONS) expect(loopOf(migrations[1].sql)).toContain(`'${c}'`);
   });
 
   it("references parents with foreign keys where entities point at other entities", () => {
     expect(sqlText).toMatch(/foreign key \(attempt_id, user_id\) references public\.case_attempts \(id, user_id\) on delete cascade/);
     expect(sqlText).toMatch(/foreign key \(item_id, user_id\) references public\.memory_items \(id, user_id\) on delete cascade/);
+    expect(sqlText).toMatch(/foreign key \(item_id, user_id\) references public\.retrieval_items \(id, user_id\) on delete cascade/);
+    expect(sqlText).toMatch(/foreign key \(entry_id, user_id\) references public\.writing_entries \(id, user_id\) on delete cascade/);
+    expect(sqlText).toMatch(/foreign key \(source_id, user_id\) references public\.library_sources \(id, user_id\) on delete cascade/);
     expect(TABLES.red_threads.columns).toContain("evidence_ids");
+    expect(TABLES.knowledge_edges.columns).toEqual(expect.arrayContaining(["from", "to"]));
+  });
+
+  it("is idempotent: every table and column is guarded and V2 tables are only created once", () => {
+    const second = migrations[1].sql;
+    expect(second.match(/create table (?!if not exists)/g)).toBeNull();
+    expect(second.match(/add column (?!if not exists)/g)).toBeNull();
+    expect(second.match(/create index (?!if not exists)/g)).toBeNull();
   });
 });
 
@@ -288,6 +619,20 @@ describe("LocalDatabase", () => {
     await store.delete(item.id);
     expect(await store.get(item.id)).toBeUndefined();
     expect(await store.count()).toBe(1);
+  });
+
+  it("stores and lists V2 entities through the same interface", async () => {
+    const db = new LocalDatabase(USER, freshDbName());
+    await db.store("concept_mastery").put(conceptMastery);
+    await db.store("retrieval_items").put(retrievalItem);
+    await db.store("daily_plans").put(dailyPlan);
+    await db.store("exam_attempts").put(examAttempt);
+    expect((await db.store("concept_mastery").list({ where: { state: "retained" } })).map((m) => m.conceptId)).toEqual([conceptMastery.conceptId]);
+    expect((await db.store("retrieval_items").list({ where: { conceptId: conceptMastery.conceptId } }))[0]?.id).toBe(retrievalItem.id);
+    expect((await db.store("daily_plans").list({ where: { date: "2026-09-08" } }))[0]?.items).toHaveLength(2);
+    const exam = await db.store("exam_attempts").get(examAttempt.id);
+    expect(exam?.form.items["it-probability-04"]?.answer).toBe(0.083);
+    expect(exam?.result?.total).toBe(0.86);
   });
 
   it("isolates ownership between two userIds sharing one IndexedDB", async () => {
