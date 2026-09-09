@@ -368,13 +368,20 @@ export async function masteryMap(db: StudyDatabase, now: Date = new Date()): Pro
 
 /**
  * Rebuilds every mastery row by replaying `concept_evidence` in `createdAt` order,
- * using the delay and weight stored on each piece of evidence. Rows without evidence
- * keep their exposure; duplicate rows for one concept collapse into the earliest.
+ * using the delay and weight stored on each piece of evidence. Evidence that shares a
+ * timestamp replays in write order (the store stamps `updatedAt` when it writes), then
+ * by id. Rows without evidence keep their exposure; duplicate rows for one concept
+ * collapse into the earliest.
  */
 export async function rebuildMastery(db: StudyDatabase, now: Date = new Date()): Promise<void> {
   const masteryStore = db.store("concept_mastery");
   const evidence = await db.store("concept_evidence").list();
-  evidence.sort((a, b) => (a.createdAt < b.createdAt ? -1 : a.createdAt > b.createdAt ? 1 : a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  const replayKey = (e: ConceptEvidence) => `${e.createdAt} ${e.updatedAt} ${e.id}`;
+  evidence.sort((a, b) => {
+    const ka = replayKey(a);
+    const kb = replayKey(b);
+    return ka < kb ? -1 : ka > kb ? 1 : 0;
+  });
 
   const rows = await masteryStore.list({ orderBy: "createdAt" });
   const keep = new Map<string, ConceptMastery>();

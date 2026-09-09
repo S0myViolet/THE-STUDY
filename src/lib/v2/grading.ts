@@ -26,24 +26,30 @@ export interface GradeResult {
 /* Text normalisation                                                   */
 /* ------------------------------------------------------------------ */
 
-const QUOTE_MAP: Record<string, string> = { "‘": "'", "’": "'", "“": '"', "”": '"', "−": "-", "–": "-", "—": "-" };
+const CHAR_MAP: Record<string, string> = { "‘": "'", "’": "'", "“": '"', "”": '"', "−": "-", "–": "-", "—": "-", "×": "*", "·": "*", "÷": "/" };
+
+/** Operators that carry meaning in an expression and survive normalisation. */
+const OPERATORS = new Set(["+", "*", "^", "=", "<", ">", "%"]);
 
 /**
  * Lower case, diacritics removed, typographic quotes and minus signs straightened,
- * punctuation replaced by spaces (a decimal point, a fraction slash or a leading minus
- * next to digits is kept), articles dropped, whitespace collapsed.
+ * punctuation replaced by spaces, articles dropped, whitespace collapsed. Arithmetic
+ * operators are kept so that "x + 3" and "x - 3" stay distinct; a decimal point survives
+ * between digits; "-" and "/" are treated as punctuation only when they join two words
+ * ("base-rate", "and/or"), so "x - 3", "-2", "3/4" and "25 / 30" keep their shape.
  */
 export function normalizeText(s: string): string {
   let t = String(s ?? "")
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[‘’“”−–—]/g, (ch) => QUOTE_MAP[ch] ?? ch);
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[‘’“”−–—×·÷]/g, (ch) => CHAR_MAP[ch] ?? ch);
   t = t.replace(/[^\p{L}\p{N}\s]/gu, (ch, offset: number, str: string) => {
     const prev = str[offset - 1] ?? "";
     const next = str[offset + 1] ?? "";
-    if ((ch === "." || ch === "/") && /\d/.test(prev) && /\d/.test(next)) return ch;
-    if (ch === "-" && /\d/.test(next) && !/[\p{L}\p{N}]/u.test(prev)) return ch;
+    if (OPERATORS.has(ch)) return ch;
+    if (ch === "." && /\d/.test(prev) && /\d/.test(next)) return ch;
+    if ((ch === "-" || ch === "/") && !(/\p{L}/u.test(prev) && /\p{L}/u.test(next))) return ch;
     return " ";
   });
   t = t.replace(/\b(the|a|an)\b/g, " ");

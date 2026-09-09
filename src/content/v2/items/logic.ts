@@ -1,13 +1,15 @@
 import type { PracticeItem } from "@/lib/v2/content-types";
 
 /**
- * Logic practice items. Ids it-logic-01 … it-logic-36. British spelling throughout.
+ * Logic practice items. Ids it-logic-01 … it-logic-39. British spelling throughout.
  *
  * Coverage: identifying conclusions and premises, validity and soundness, deduction versus
  * induction, necessary and sufficient conditions, conditionals (converse, inverse,
  * contrapositive), truth-table counting, quantifiers, formal and informal fallacies,
  * consistency, reconstruction and steelmanning. Every mcq distractor encodes a named
- * mistake so the error classifier can attribute it. Items 34–36 are exam-only.
+ * mistake so the error classifier can attribute it. Items 34–36 are exam-only; 37–39
+ * were added so that the steelmanning and consistency lessons have distinct guided,
+ * independent and transfer items.
  */
 export const ITEMS_LOGIC: PracticeItem[] = [
   /* ---------------------------------------------------------------- */
@@ -1037,6 +1039,100 @@ export const ITEMS_LOGIC: PracticeItem[] = [
     minutes: 2,
     examOnly: true,
     tags: ["truth-tables", "biconditional"],
+    origin: "seeded",
+  },
+
+  /* ---------------------------------------------------------------- */
+  /* Lesson support: steelmanning and consistency                       */
+  /* ---------------------------------------------------------------- */
+  {
+    id: "it-logic-37",
+    skill: "argument_analysis",
+    subskill: "steelman",
+    concepts: ["steelmanning", "informal-fallacies"],
+    level: "intermediate",
+    difficulty: 3,
+    format: "mcq",
+    prompt:
+      "A colleague argues that the team should stop estimating tasks in hours: 'The estimates are always wrong and the estimation meetings waste half a day a week.' You disagree and intend to say so. Which of these restatements of the colleague's position is a steelman?",
+    options: [
+      "You think estimation is pointless because you personally are not good at it and would rather skip the meetings.",
+      "Hour estimates carry false precision: the error on individual tasks is large and skewed, the meetings consume a good part of the time they are meant to save, and coarser methods such as counting tasks or relative sizing have been found to forecast delivery about as well at a fraction of the cost. So we should stop unless our estimates can be shown to beat those cheaper methods.",
+      "You are right that the estimates are always wrong and the meetings are a waste, so we should drop them.",
+      "You think the estimates are always wrong and the meetings waste half a day a week.",
+    ],
+    answer: 1,
+    solution:
+      "Option 2 is the steelman. It keeps the colleague's two complaints, gives each its strongest form (false precision and a skewed error distribution rather than 'always wrong'; a cost that eats the benefit rather than 'a waste'), adds the best evidence available to the position (cheaper methods that forecast comparably), and states the claim as a conditional the colleague would gladly sign. Option 1 is a straw man dressed as psychology: it replaces the argument with a motive, which the colleague would not accept as their view. Option 3 is agreement, not steelmanning; a steelman is a restatement you can still argue against, and it has surrendered the disagreement. Option 4 is a faithful repetition, which is a summary: nothing has been strengthened, so refuting it refutes only the colleague's rough first wording. The test is whether the other side would say 'yes, that, and put better than I put it'.",
+    method: "Check each restatement against three tests: would the holder accept it as their own; has it been made stronger, not merely repeated; does it leave a position that can still be criticised.",
+    hints: ["Which restatement would the colleague accept as their view?", "Two options fail for opposite reasons: one weakens the position, one gives it up. Which are they?", "Repeating the words exactly is a summary. What does a steelman add?"],
+    commonErrors: [
+      { description: "Chose the restatement that imputes a motive; the holder would not recognise it, so it is a straw man.", category: "CONCEPTUAL_ERROR", optionIndex: 0 },
+      { description: "Confused steelmanning with agreeing; a steelman leaves a position to argue against.", category: "CONCEPTUAL_ERROR", optionIndex: 2 },
+      { description: "Took a verbatim summary for a steelman; nothing has been strengthened.", category: "PRECISION_ERROR", optionIndex: 3 },
+    ],
+    transfer: 1,
+    minutes: 3,
+    examEligible: true,
+    tags: ["steelman", "straw-man"],
+    origin: "seeded",
+  },
+  {
+    id: "it-logic-38",
+    skill: "argument_analysis",
+    subskill: "steelman",
+    concepts: ["steelmanning", "argument-reconstruction"],
+    level: "advanced",
+    difficulty: 4,
+    format: "free",
+    prompt:
+      "You are convinced that a hospital should replace its paper drug charts with an electronic prescribing system, mainly because illegible and transcribed prescriptions cause avoidable harm. The senior nurses on the wards are resisting. Write the strongest case they could make, in a form they would recognise as their own, before saying anything against it. Then name, in one sentence, the single premise you reject and why.",
+    solution:
+      "A steelman of the nurses' position would contain most of the following. A paper chart shows the whole patient at a glance: every drug, dose, time and signature on one sheet that can be read at the bedside, at handover and during a resuscitation, whereas a screen shows one drug at a time behind a login and several clicks. Electronic systems fail: any outage becomes a ward-wide emergency unless a paper fallback is kept current, which doubles the work. The evidence is not one-sided: electronic prescribing reduces legibility and transcription errors but introduces new ones, such as selecting the wrong patient from a list, accepting a default dose or unit, and alert fatigue from warnings that fire so often that staff learn to dismiss them; a widely cited 2005 study of a United States teaching hospital catalogued twenty-two ways its order-entry system facilitated errors. Implementation is where harm concentrates: the months of dual running, retraining and workarounds fall on nurses, not on the people who chose the system. The value underneath is patient safety as practised at the bedside, not resistance to change, and the nurses would accept a system that was fast, visible and failure-tolerant. Points of agreement: illegible prescriptions do harm; transcription is a known error source; the status quo is not safe either. What the steelman learns: the real objection is to the design and the implementation, not to computerisation. The single premise to reject is that the new error types are as frequent or as harmful as the old ones; the evidence on net medication-error rates after well-implemented systems favours the change, and that is the claim worth settling with the hospital's own incident data.",
+    method: "Restate the position at full strength with its evidence and the value it protects; list agreements and what you learnt; then isolate one premise and say what evidence bears on it.",
+    hints: ["What does a paper chart do well that a screen does badly? Ask a nurse, or imagine a cardiac arrest.", "What new kinds of error could a system introduce that paper could not?", "After writing their case, which one factual claim would you want to test rather than argue about?"],
+    commonErrors: [
+      { description: "Restated the nurses as resistant to change or technophobic; they would not recognise this as their view.", category: "EVIDENCE_ERROR", pattern: "resistant to change|technophob|luddite|afraid of" },
+      { description: "Produced a list of objections without the safety value underneath them, so the position looks like complaint rather than argument.", category: "PRECISION_ERROR", pattern: "they just|complain" },
+      { description: "Ended without narrowing the disagreement to a single premise.", category: "PRECISION_ERROR", pattern: "in conclusion|overall" },
+    ],
+    transfer: 2,
+    keyPoints: ["glance|whole chart|bedside|handover|one sheet|visible", "outage|downtime|fail|fallback|paper backup", "new error|wrong patient|default|alert fatigue|unit|click", "implement|training|workaround|dual running|burden", "safety|patient|value", "agree|common ground|illegible|transcription", "reject|premise|disagree|evidence|incident data"],
+    rubric: [
+      { criterion: "Position restated in a form the nurses would accept, including what paper does well and what screens do badly", weight: 3 },
+      { criterion: "New error types and failure modes of electronic systems identified as evidence for the position", weight: 3 },
+      { criterion: "Underlying value (bedside safety) identified rather than resistance imputed; agreements recorded", weight: 2 },
+      { criterion: "Disagreement narrowed to one premise with the evidence that would bear on it", weight: 2 },
+    ],
+    minutes: 12,
+    tags: ["steelman", "healthcare"],
+    origin: "seeded",
+  },
+  {
+    id: "it-logic-39",
+    skill: "logic",
+    subskill: "consistency",
+    concepts: ["contradiction-and-consistency"],
+    level: "advanced",
+    difficulty: 4,
+    format: "mcq",
+    prompt:
+      "A company's annual plan contains four commitments. Take revenue to be number of customers × units bought per customer × price per unit.\n(a) The price of every unit we sell will be unchanged.\n(b) Revenue will grow by 20 %.\n(c) We will not increase the number of customers we serve, to protect service quality.\n(d) No customer will buy more units than they do today.\nWhich is the smallest set of these commitments that cannot all be kept together?",
+    options: ["(a) and (b)", "(b), (c) and (d)", "(a), (b) and (c)", "All four together, and no smaller set"],
+    answer: 3,
+    solution:
+      "Revenue has three factors. Commitment (a) fixes price, (c) caps the number of customers and (d) caps units per customer. Any two of those caps leave one factor free: with (a) and (c), revenue can grow if customers buy more; with (a) and (d), if more customers arrive; with (c) and (d), if prices rise. So (a) and (b), (b) with (c) and (d), and (a), (b) and (c) are each consistent, because each leaves a route to 20 % growth. Only when all three caps hold at once is revenue fixed, and then (b) cannot be met. The inconsistency lives in the set as a whole, not in any pair, which is exactly why it survives in documents: each commitment is examined and approved on its own, and nobody puts the four side by side. The remedy is the consistency check itself: write the quantities down and ask whether a single situation satisfies every line.",
+    method: "Express the constrained quantity as a product of its factors, note which commitments cap which factor, and find the smallest set of caps that leaves no factor free while a growth target remains.",
+    hints: ["Revenue is a product of three factors. Which commitment caps which factor?", "For each candidate set, ask: is there still a factor that could grow?", "How many of the three factors must be capped before 20 % growth becomes impossible?"],
+    commonErrors: [
+      { description: "Assumed a price freeze alone rules out revenue growth; customers or volume could still rise.", category: "LOGIC_ERROR", optionIndex: 0 },
+      { description: "Overlooked that price is still free to rise when (a) is not in the set.", category: "MISREAD", optionIndex: 1 },
+      { description: "Overlooked that existing customers could buy more units when (d) is not in the set.", category: "LOGIC_ERROR", optionIndex: 2 },
+    ],
+    transfer: 2,
+    minutes: 4,
+    examEligible: true,
+    tags: ["consistency", "strategy"],
     origin: "seeded",
   },
 ];

@@ -10,7 +10,7 @@ import type { DomainId, ErrorCategory, SkillArea } from "./content-types";
 import type { Entity, ErrorRecord, PlanItem } from "./types";
 import type { StudyDatabase } from "@/lib/persistence/store";
 import { stamp } from "@/lib/persistence/store";
-import { conceptContent } from "@/content/v2";
+import { conceptContent, skeletonConcept } from "@/content/v2";
 
 const DAY_MS = 86_400_000;
 
@@ -136,9 +136,14 @@ function humanise(id: string): string {
   return id.replace(/[-_]+/g, " ").trim();
 }
 
+/** The concept's title from the curriculum, the skeleton, or the id itself. */
+export function conceptTitleFor(conceptId: string): string {
+  return conceptContent(conceptId)?.title ?? skeletonConcept(conceptId)?.title ?? humanise(conceptId);
+}
+
 function conceptTitle(conceptId?: string): string | undefined {
   if (!conceptId) return undefined;
-  const title = conceptContent(conceptId)?.title ?? humanise(conceptId);
+  const title = conceptTitleFor(conceptId);
   return title.charAt(0).toLowerCase() + title.slice(1);
 }
 
@@ -245,7 +250,7 @@ const DOMAIN_SKILL: Partial<Record<DomainId, SkillArea>> = {
 
 /** The Train skill a remediation session should open for a recurrence. */
 export function remediationSkill(r: Pick<Recurrence, "conceptId" | "skill" | "category">): SkillArea {
-  const domain = r.conceptId ? conceptContent(r.conceptId)?.domainId : undefined;
+  const domain = r.conceptId ? (conceptContent(r.conceptId)?.domainId ?? skeletonConcept(r.conceptId)?.domainId) : undefined;
   if (domain && DOMAIN_SKILL[domain]) return DOMAIN_SKILL[domain]!;
   if (r.skill) return r.skill;
   switch (r.category) {
@@ -272,7 +277,7 @@ export function remediationPlanItem(r: Recurrence): Omit<PlanItem, "id" | "statu
   const params = new URLSearchParams();
   if (r.conceptId) params.set("concept", r.conceptId);
   params.set("remediate", r.key);
-  const concept = r.conceptId ? conceptContent(r.conceptId)?.title ?? humanise(r.conceptId) : undefined;
+  const concept = r.conceptId ? conceptTitleFor(r.conceptId) : undefined;
   return {
     kind: "remediate",
     title: concept ? `Remediate: ${meta.label.toLowerCase()} in ${concept}` : `Remediate: ${meta.label.toLowerCase()}`,
